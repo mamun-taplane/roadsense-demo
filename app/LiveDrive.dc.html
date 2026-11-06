@@ -153,7 +153,8 @@
 
   <!-- You: connection, voice, speed, limit, heading -->
   <div class="float">
-    <div class="chip"><i class="dot"></i>Connected</div>
+    <sc-if value="{{ notVru }}" hint-placeholder-val="{{ true }}"><div class="chip"><i class="dot"></i>Connected</div></sc-if>
+    <sc-if value="{{ vruOn }}" hint-placeholder-val="{{ false }}"><div class="chip chip-bc" title="Your phone shares your position with nearby vehicles (PSM)"><i class="bc-dot"></i>Broadcasting</div></sc-if>
     <sc-if value="{{ evMode }}" hint-placeholder-val="{{ false }}">
       <div class="chip chip-ev"><i style="background:#EF4444"></i><i style="background:#3B82F6"></i>EV mode</div>
     </sc-if>
@@ -195,6 +196,10 @@
       <div class="set-grab"></div>
       <div class="set-h"><div class="set-t">Settings</div><button class="set-done" onClick="{{ closeSet }}">Done</button></div>
       <div class="set-body">
+      <div class="set-sec">You are</div>
+      <div class="set-grp"><div class="set-row set-row-col"><div class="set-rt"><div class="set-l">{{ modeName }}</div><div class="set-d">Cyclists and pedestrians share their position with nearby vehicles</div></div>
+        <div class="set-seg"><button class="{{ mdDrive }}" onClick="{{ pickDrive }}">Driver</button><button class="{{ mdEv }}" onClick="{{ pickEv }}">Emergency</button><button class="{{ mdBike }}" onClick="{{ pickBike }}">Cyclist</button><button class="{{ mdWalk }}" onClick="{{ pickWalk }}" disabled>Pedestrian</button></div>
+      </div></div>
       <div class="set-sec">Alerts</div>
       <div class="set-grp">
         <div class="set-row"><div class="set-rt"><div class="set-l">Voice alerts</div><div class="set-d">Read every alert out loud</div></div><button class="set-tg {{ tVoice }}" onClick="{{ fVoice }}" aria-label="Voice alerts"><i></i></button></div>
@@ -259,6 +264,8 @@
       <img src="img/roadsense-icon.svg" alt="">
       <div><div class="pnl-t">Live drive</div><div class="pnl-st">S State St, Salt Lake City · northbound</div></div>
     </div>
+    <div class="md-k">You are</div>
+    <div class="seg seg-md" role="group" aria-label="You are"><button class="{{ mdDrive }}" onClick="{{ pickDrive }}">Driver</button><button class="{{ mdEv }}" onClick="{{ pickEv }}">Emergency</button><button class="{{ mdBike }}" onClick="{{ pickBike }}">Cyclist</button><button class="{{ mdWalk }}" onClick="{{ pickWalk }}" disabled>Pedestrian</button></div>
     <div class="ctl">
       <button class="cb pri" onClick="{{ togglePlay }}">
         <sc-if value="{{ playing }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="2" width="3.5" height="12" rx="1"/><rect x="9.5" y="2" width="3.5" height="12" rx="1"/></svg></sc-if>
@@ -314,13 +321,13 @@ class Component extends DCLogic {
       { id: 'ped', name: 'Pedestrian in crosswalk', tag: 'warn', tagText: 'Warning', s: 1960 },
       { id: 'work', name: 'Work zone', tag: 'warn', tagText: 'Warning', s: 2660 },
       { id: 'stopped', name: 'Stopped vehicle in work zone', tag: 'two', tagText: 'Two at once', s: 3150 },
-      { id: 'bridge', name: 'Low clearance · too tall', tag: 'crit', tagText: 'Critical', s: 3720, veh: 2 },
-      { id: 'bridgeok', name: 'Low clearance · fits under', tag: 'base', tagText: 'No alert', s: 3720, veh: 1 },
+      { id: 'bridge', name: 'Low clearance · too tall', tag: 'crit', tagText: 'Critical', s: 3720, veh: 2, modes: ['drive', 'ev'] },
+      { id: 'bridgeok', name: 'Low clearance · fits under', tag: 'base', tagText: 'No alert', s: 3720, veh: 1, modes: ['drive', 'ev'] },
       { id: 'rlr', name: 'Red light runner', tag: 'crit', tagText: 'Critical', s: 4680 },
       { id: 'ev', name: 'Emergency vehicle', tag: 'crit', tagText: 'Critical', s: 5290 },
       { id: 'nolimit', name: 'No speed limit data', tag: 'base', tagText: 'Normal', s: 5760 },
-      { id: 'granted', name: 'Signal priority granted', tag: 'ev', tagText: 'EV mode', s: 6420 },
-      { id: 'denied', name: 'Signal priority denied', tag: 'ev', tagText: 'EV mode', s: 7520 },
+      { id: 'granted', name: 'Signal priority granted', tag: 'ev', tagText: 'EV mode', s: 6420, mode: 'ev', modes: ['ev'] },
+      { id: 'denied', name: 'Signal priority denied', tag: 'ev', tagText: 'EV mode', s: 7520, mode: 'ev', modes: ['ev'] },
       { id: 'uturn', name: 'No U-turn sign at S Temple', tag: 'base', tagText: 'Signal', s: 8470 },
     ];
     this.END = 8800;
@@ -391,9 +398,10 @@ class Component extends DCLogic {
     this.spoken = {};
     this.lastSay = '';
     this.still = (props && props.still) || '';
-    this.state = { screen: this.still && this.still !== 'splash' ? 'drive' : 'splash', playing: false, rate: 1, voice: true, tick: 0, done: false, set: false, sChime: true, sAwake: true, sOver: 0, zoom: 2, sVeh: 1, view: '3d' };
+    this.state = { screen: this.still && this.still !== 'splash' ? 'drive' : 'splash', playing: false, rate: 1, voice: true, tick: 0, done: false, set: false, sChime: true, sAwake: true, sOver: 0, zoom: 2, sVeh: 1, view: '3d', mode: 'drive' };
     // still boards can open Settings (",set") or pick a zoom step (",z0" … ",z4")
     if (/,set/.test(this.still)) this.state.set = true;
+    { const md = this.still.match(/,(ev|bike|walk)\b/); if (md) this.state.mode = md[1]; }
     // map view: 2.5D (tilted, default) or flat 2D (",2d" on a still board; the playable app remembers the viewer's pick)
     if (/,2d/.test(this.still)) this.state.view = '2d';
     // the playable app starts in 2D (client meeting 2026-11-05: 3D isn't feasible in the SDK yet, 2D zoomed-out
@@ -420,7 +428,7 @@ class Component extends DCLogic {
     this.sim = {
       t: 0, s: s0, v: 0, x: 32, vx: 0,
       tRed: at(1600), tPed: at(2017), tRlr: at(4800), tRlrPass: s0 > 4800 ? D : null, tEv: at(5420), tEvPass: s0 > 5420 ? D : null,
-      tR2: at(6550), tR1: at(7650), tStop1: s0 > 8300 ? D : null,
+      tR2: this.mode() === 'ev' ? at(6550) : null, tR1: this.mode() === 'ev' ? at(7650) : null, tStop1: s0 > 8300 ? D : null, // signal priority: EV mode only
       exitSchool: D, exitWork: D, G: {}, fs: null, ep: {}, hold: null, cLim: null, slowAt: null, hdg: 0,
       det: null, detDone: false, tBack: null, wx: 32, wy: -s0, rot: 0, // world position and map rotation (heading up)
     };
@@ -457,8 +465,8 @@ class Component extends DCLogic {
     if (S.tRlr != null && S.tRlrPass == null && this.rlrX() > 70) S.tRlrPass = S.t;
     if (S.tEv == null && S.s >= 5420) S.tEv = S.t;
     if (S.tEv != null && S.tEvPass == null && this.evS() < S.s - 50) S.tEvPass = S.t;
-    if (S.tR2 == null && S.s >= 6550) S.tR2 = S.t;
-    if (S.tR1 == null && S.s >= 7650) S.tR1 = S.t;
+    if (this.mode() === 'ev' && S.tR2 == null && S.s >= 6550) S.tR2 = S.t;
+    if (this.mode() === 'ev' && S.tR1 == null && S.s >= 7650) S.tR1 = S.t;
     if (S.tStop1 == null && S.s > 8200 && S.v < 1) S.tStop1 = S.t;
     // too tall for the overpass: take the last turn before it
     if (!S.det && !S.detDone && this.tooTall() && S.s >= 3700 && S.s < 3940) S.det = this.buildDetour(S.x, -S.s);
@@ -472,6 +480,7 @@ class Component extends DCLogic {
     const pedX = this.pedX();
     if (S.tPed != null && pedX > -58 && S.s > 2117 && S.s < 2487) cruise = Math.min(cruise, 15 * M);
     if (S.s >= 3330 && S.s < 3740) cruise = Math.min(cruise, 14 * M);
+    if (this.mode() === 'bike') cruise = Math.min(cruise, 14 * M); // a cyclist: ~14 mph
     const stops = [];
     const sg7 = this.sig700();
     if (sg7 && (sg7.S.c === 'y' || sg7.S.c === 'r') && S.s < 1828) stops.push([1826, 10]);
@@ -730,7 +739,7 @@ class Component extends DCLogic {
     }
     // 8 over the speed limit (anywhere a limit is known; named when inside a zone)
     const lim = this.limHere(), mph = Math.round(S.v / this.MPH);
-    if (lim != null && mph > lim + ((this.state && this.state.sOver) || 0)) { // tolerance from Settings
+    if (lim != null && this.mode() !== 'bike' && mph > lim + ((this.state && this.state.sOver) || 0)) { // tolerance from Settings; not for cyclists
       const zone = this.onDetour() ? '' : s >= 1050 && s < 1550 ? 'School zone · ' : s >= 3250 && s < 3900 ? 'Work zone · ' : '';
       A({ i: 8, lv: 'warn', ic: 'speed-k', title: 'Slow down', sub: zone + 'Limit ' + lim + ' mph', dv: mph + ' mph', dl: 'your speed', d: -1, key: 'speed', vk: 'speed-' + lim });
     }
@@ -834,7 +843,32 @@ class Component extends DCLogic {
       setVh0: () => this.setState({ sVeh: 0 }), setVh1: () => this.setState({ sVeh: 1 }), setVh2: () => this.setState({ sVeh: 2 }),
     };
   }
-  tooTall() { const v = this.state && this.state.sVeh != null ? this.state.sVeh : 1; return this.VEH[v].h > this.CLEAR; }
+  tooTall() { if (this.mode() === 'bike' || this.mode() === 'walk') return false; const v = this.state && this.state.sVeh != null ? this.state.sVeh : 1; return this.VEH[v].h > this.CLEAR; }
+  // "You are": drive (default) · ev (emergency-vehicle driver: signal priority) · bike (cyclist, VRU: broadcasts
+  // its position, PSM) · walk (pedestrian, VRU — next step, HANDOFF §2a). Client meeting 2026-11-05.
+  mode() { return (this.state && this.state.mode) || 'drive'; }
+  vru() { return this.mode() === 'bike' || this.mode() === 'walk'; }
+  setMode(m) {
+    if (m === this.mode()) return;
+    try { window.speechSynthesis.cancel(); } catch (e) {}
+    this.state.mode = m; this.snaps = null;
+    this.reset(0); this.lastSay = '';
+    this.setState({ mode: m, done: false, playing: this.state.screen === 'drive' ? this.state.playing : false });
+  }
+  sceneFits(sc) { const m = this.mode(); return sc.modes ? sc.modes.includes(m) : true; }
+  // holes for the mode switch (Settings + desktop panel), the chips and the per-mode "Jump to" list (both apps)
+  modeVals(drive, scIdx) {
+    const m = this.mode(), on = (x) => (m === x ? 'on' : '');
+    const pick = (x) => () => this.setMode(x);
+    const list = this.SCENES.map((sc, k) => ({ sc, k })).filter(o => this.sceneFits(o.sc));
+    return {
+      mdDrive: on('drive'), mdEv: on('ev'), mdBike: on('bike'), mdWalk: 'dis',
+      pickDrive: pick('drive'), pickEv: pick('ev'), pickBike: pick('bike'), pickWalk: () => {},
+      evMode: m === 'ev', vruOn: this.vru(), notVru: !this.vru(),
+      modeName: { drive: 'Driver', ev: 'Emergency vehicle', bike: 'Cyclist', walk: 'Pedestrian' }[m],
+      scenes: list.map(({ sc, k }, j) => ({ ...sc, n: String(j + 1).padStart(2, '0'), on: drive && k === scIdx ? 'on' : '', pick: () => this.jump(sc) })),
+    };
+  }
   // the scene the drive is in now (the two overpass scenes share a start; pick the one that matches the vehicle)
   sceneIdx() {
     const s = this.sim.s, tall = this.tooTall();
@@ -845,7 +879,7 @@ class Component extends DCLogic {
   // simulated second (made once per vehicle height) keep each drag step short. Alerts already on at the
   // new spot are not read out again.
   driveSnaps() {
-    const veh = this.state.sVeh;
+    const veh = this.state.sVeh + '/' + this.mode();
     if (this.snaps && this.snaps.veh === veh) return this.snaps.list;
     const keep = this.sim, list = [];
     this.reset(0);
@@ -875,9 +909,10 @@ class Component extends DCLogic {
   jump(sc) {
     try { window.speechSynthesis.cancel(); } catch (e) {}
     this.claim();
+    if (sc.mode && sc.mode !== this.mode()) { this.state.mode = sc.mode; this.snaps = null; }
     if (sc.veh != null) this.state.sVeh = sc.veh;
     this.reset(sc.s); this.lastSay = '';
-    this.setState({ screen: 'drive', playing: true, done: false, ...(sc.veh != null ? { sVeh: sc.veh } : {}) });
+    this.setState({ screen: 'drive', playing: true, done: false, mode: this.state.mode, ...(sc.veh != null ? { sVeh: sc.veh } : {}) });
   }
 
   // how many lines an intersection name needs (the app would measure the text; this is close enough here)
@@ -1318,7 +1353,7 @@ class Component extends DCLogic {
       sig, sigLabel, prio,
       alerts,
       edgeCls: lead && lead.lv === 'crit' && !fsA ? 'on' : '',
-      evMode: S.s >= 6400,
+      ...this.modeVals(drive, scIdx),
       voiceOn: st.voice, voiceOff: !st.voice, voiceLabel: st.voice ? 'Mute voice alerts' : 'Unmute voice alerts',
       toggleVoice: this.toggleVoice,
       mph, spdCls: over ? 'over' : '', dockCls: over ? 'over' : '', // over the limit: the bottom bar pulses
@@ -1336,7 +1371,7 @@ class Component extends DCLogic {
       progStyle: { width: Math.min(100, (S.s / this.END) * 100).toFixed(1) + '%' },
       tlMax: this.END, tlVal: Math.round(Math.min(this.END, S.s)), scrub: (e) => this.scrubTo(+e.target.value),
       tlStyle: { '--tl': Math.min(100, (S.s / this.END) * 100).toFixed(2) + '%' },
-      scenes: this.SCENES.map((sc, k) => ({ ...sc, n: String(k + 1).padStart(2, '0'), on: drive && k === scIdx ? 'on' : '', pick: () => this.jump(sc) })),
+
     };
   }
 }

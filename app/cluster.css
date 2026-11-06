@@ -56,6 +56,10 @@
 .cl-sig-f.p-ok .cl-pr-ic, .cl-sig-f.p-ok .cl-pr-t { color: #22C55E; }
 .cl-sig-f.p-no .cl-pr-ic, .cl-sig-f.p-no .cl-pr-t { color: #EF4444; }
 .cl-spin { width: 14px; height: 14px; border-radius: 50%; border: 2.5px solid rgba(255, 255, 255, .2); border-top-color: #fff; animation: d-spin .8s linear infinite; }
+.cl-bc { display: flex; align-items: center; gap: 7px; background: rgba(37, 99, 235, .22); }
+.cl-bc i { position: relative; width: 7px; height: 7px; border-radius: 50%; background: #8FB0FF; display: block; }
+.cl-bc i::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid #8FB0FF; animation: bc-wave 1.6s ease-out infinite; }
+.d-set-seg button.dis { color: #B8BEC6; cursor: default; }
 .cl-ev { margin-left: auto; padding: 4px 10px; border-radius: 10px; background: rgba(37, 99, 235, .22); color: #8FB0FF; font-size: 12px; font-weight: 700; }
 
 /* 2 · speed */
