@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Road Sense — live drive</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=85af0c9-1793971506">
+<link rel="stylesheet" href="rs2.css?v=ecb9037-1793972356">
 </head>
 <body>
 <x-dc>
@@ -1613,16 +1613,20 @@ class Component extends DCLogic {
     if (fsA) this.tkCache = fsA;
     const tc = fsA || this.tkCache || { lv: 'adv', ic: 'info-w', title: '', sub: '', dv: '', dl: '' };
     const dparts = String(tc.dv || '').split(' ');
-    const second = fsA ? order.find(a => a.key !== fsA.key) : null;
+    // a zone that just ended ("clear", green) never takes a half: it shows as the small card while the lead stays
+    // full screen; once it goes, the alerts left split / become rows (user, v39.7)
+    const okO = fsA ? order.find(a => a.key !== fsA.key && a.lv === 'ok') : null;
+    const second = fsA ? (okO || order.find(a => a.key !== fsA.key)) : null;
+    const split = !!second && !okO;
     // the others on the full screen; on a phone, 3+ at once: the lead stays big, the next two become rows
     const others = fsA ? order.filter(a => a.key !== fsA.key && a.key !== 'hold') : [];
-    const many = others.length >= 2 && this.dev().k === 'phone';
+    const many = !okO && others.length >= 2 && this.dev().k === 'phone';
     const tkRows = many ? others.slice(0, 2).map(a => ({ cls: 'lv-' + a.lv, ic: this.icOn(a.lv, a.ic), title: a.title, sub: a.sub, dv: a.dv || '', dl: a.dl || '' })) : [];
     const tkMore = many && others.length > 2 ? `+${others.length - 2} more · ${others[2].title}` : '';
     if (second) this.tk2Cache = second;
     const t2 = second || this.tk2Cache || { lv: 'adv', ic: 'info-w', title: '', sub: '', dv: '', dl: '' };
     const tk2 = { cls: `lv-${t2.lv}${second ? '' : ' hide'}`, ic: this.icOn(t2.lv, t2.ic), title: t2.title, sub: t2.sub, dv: t2.dv, dl: t2.dl };
-    const tk = { cls: `lv-${tc.lv}${fsA ? ' on' : ''}${second ? ' two' : ''}${many ? ' many' : ''}`, ic: this.icOn(tc.lv, tc.ic), title: tc.fsTitle || tc.title, sub: tc.fsSub || tc.sub, dv: dparts[0], du: dparts[1] || '', dl: tc.dl };
+    const tk = { cls: `lv-${tc.lv}${fsA ? ' on' : ''}${split ? ' two' : ''}${many ? ' many' : ''}`, ic: this.icOn(tc.lv, tc.ic), title: tc.fsTitle || tc.title, sub: tc.fsSub || tc.sub, dv: dparts[0], du: dparts[1] || '', dl: tc.dl };
 
     // map markers, projected from the road plane to the screen
     // 2D shows the road from straight above, so it zooms out (x0.45) to see about as far ahead as 2.5D

@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <title>Road Sense — cluster</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=85af0c9-1793971506">
-<link rel="stylesheet" href="dash.css?v=85af0c9-1793971506">
-<link rel="stylesheet" href="cluster.css?v=85af0c9-1793971506">
+<link rel="stylesheet" href="rs2.css?v=ecb9037-1793972356">
+<link rel="stylesheet" href="dash.css?v=ecb9037-1793972356">
+<link rel="stylesheet" href="cluster.css?v=ecb9037-1793972356">
 </head>
 <body>
 <x-dc>
@@ -1213,11 +1213,14 @@ class Component extends DCLogic {
       ic: String(f.ic).replace(/-w$/, '-k'), sub: f.fsSub || f.sub, dv: fdp[0], du: fdp[1] || '', dl: f.dl, dCls: fdp[0].length > 4 ? 'word' : '',
     };
     // a second alert at the same time gets its own row on the full screen
-    const a2 = fsA ? this.alsoView(others.find(a => a.key !== 'hold'), mph, limit) : null;
+    // a zone that just ended ("clear", green) never takes a half: it shows as the small row while the lead stays
+    // full screen; once it goes, two alerts left split (user, v39.7)
+    const okO = others.find(a => a.lv === 'ok' && a.key !== 'hold');
+    const a2 = fsA ? this.alsoView(okO || others.find(a => a.key !== 'hold'), mph, limit) : null;
     if (a2) this.alsoCache = a2;
     const al2 = a2 || this.alsoCache || { lv: 'adv', ic: 'info-w', title: '', sub: '', dv: '', dl: '' };
     const also = { ...al2, cls: `lv-${al2.lv}${a2 ? '' : ' hide'}` };
-    if (a2) fs.cls += ' two'; // tablet landscape: two alerts side by side, one half each
+    if (a2 && !okO) fs.cls += ' two'; // tablet landscape: two alerts side by side, one half each
     let lead = others[0] || null, slot = null;
     if (det && !(lead && rank[lead.lv] >= 2)) slot = this.routeStage();
     else if (lead) slot = { lv: lead.lv, ic: lead.ic, kick: KICK[lead.lv], title: lead.title, sub: lead.sub, dv: lead.dv, dl: lead.dl };
