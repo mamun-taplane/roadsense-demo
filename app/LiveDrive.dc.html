@@ -270,13 +270,16 @@
         <button class="{{ r1 }}" onClick="{{ rate1 }}">1×</button>
         <button class="{{ r2 }}" onClick="{{ rate2 }}">2×</button>
       </div>
-      <button class="cb" onClick="{{ toggleVoice }}">{{ voiceText }}</button>
+      <button class="cb cb-ic" onClick="{{ toggleVoice }}" aria-label="{{ voiceLabel }}">
+        <sc-if value="{{ voiceOn }}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></sc-if>
+        <sc-if value="{{ voiceOff }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9l5 6M21 9l-5 6"/></svg></sc-if>
+      </button>
     </div>
     <div class="now">
       <div class="now-k">On screen</div>
       <div class="now-v">{{ nowText }}</div>
       <div class="now-q">{{ sayText }}</div>
-      <div class="bar"><i style="{{ progStyle }}"></i></div>
+      <input class="tl" type="range" min="0" max="{{ tlMax }}" step="1" value="{{ tlVal }}" onChange="{{ scrub }}" aria-label="Drive timeline: drag to move along the drive" style="{{ tlStyle }}">
     </div>
     <div class="scn-h">Jump to</div>
     <div class="scn">
@@ -318,6 +321,7 @@ class Component extends DCLogic {
       { id: 'nolimit', name: 'No speed limit data', tag: 'base', tagText: 'Normal', s: 5760 },
       { id: 'granted', name: 'Signal priority granted', tag: 'ev', tagText: 'EV mode', s: 6420 },
       { id: 'denied', name: 'Signal priority denied', tag: 'ev', tagText: 'EV mode', s: 7520 },
+      { id: 'uturn', name: 'No U-turn sign at S Temple', tag: 'base', tagText: 'Signal', s: 8470 },
     ];
     this.END = 8800;
     // one announcement per alert, said once when it first appears; the full screen does not repeat it
@@ -327,7 +331,7 @@ class Component extends DCLogic {
       'ped': 'Pedestrian at the crosswalk ahead. Slow down.',
       'work-a': 'Work zone ahead. Right lane closed, limit 25.', 'work-e': 'Work zone ended.',
       'stop': 'Stopped vehicle ahead. Change lanes.',
-      'bridge': 'Low clearance ahead. Your vehicle will not fit. Turn right at 500 South.',
+      'bridge': 'Low clearance ahead. Your vehicle will not fit. Turn left at 500 South.',
       'bridge-ok': 'Overpass avoided. You will rejoin State Street at 400 South.',
       'rlr': 'Stop! Red light runner from the left.',
       'ev': 'Emergency vehicle approaching. Pull over to the right.',
@@ -361,14 +365,17 @@ class Component extends DCLogic {
     // low clearance: the alert only exists when the vehicle is taller than the overpass
     this.CLEAR = 162; // overpass clearance, inches (13 ft 6 in)
     this.VEH = [{ l: '9 ft 6 in', h: 114 }, { l: '11 ft 2 in', h: 134 }, { l: '14 ft 0 in', h: 168 }];
-    // the way round it: right on 500 S, left on 200 E, left on 400 S, right back onto State St (map px; corners carry a radius)
+    // the way round it, with the real one-way streets (Mapbox / OSM; checked with Mapbox Directions):
+    // left on 500 S (one-way westbound), right on Main St (northbound side, x -870), right on 400 S
+    // (eastbound side of the divided street, s 5120), left back onto State St. (500 S can't be driven east:
+    // the first version turned right there, against the one-way arrows.) Map px; corners carry a radius.
     this.DET_END = 5340;
     this.DET = [
-      [40, -3990],
-      [40, -4050, 30, 'State St & 500 S', '500 S', 'right'],
-      [902, -4050, 40, '500 S & 200 E', '200 E', 'left'],
-      [902, -5212, 40, '200 E & 400 S', '400 S', 'left'],
-      [32, -5212, 30, 'State St & 400 S', 'State St', 'right'],
+      [12, -3990],
+      [12, -4068, 30, 'State St & 500 S', '500 S', 'left'],
+      [-870, -4068, 40, '500 S & Main St', 'Main St', 'right'],
+      [-870, -5120, 40, 'Main St & 400 S', '400 S', 'right'],
+      [32, -5120, 30, 'State St & 400 S', 'State St', 'left'],
       [32, -5340],
     ];
     this.REACT = 2.5; // seconds the simulated driver takes to slow down for a lower limit
@@ -694,9 +701,9 @@ class Component extends DCLogic {
     // it points you to the last turn before it, then confirms the way round
     const Dt = S.det, c1 = Dt && Dt.corners[0];
     if (this.tooTall() && !S.detDone && !(Dt && Dt.tOff != null) && s >= 3700 && s < 4600) {
-      const to = Dt ? (c1.d0 + c1.d1) / 2 - Dt.d : 4040 - s; // to the turn
+      const to = Dt ? (c1.d0 + c1.d1) / 2 - Dt.d : 4060 - s; // to the turn
       if (!Dt && s >= 3940) A({ i: 5, lv: 'crit', ic: 'bridge-w', title: 'Low clearance', sub: '13 ft 6 in · Too low for you', dv: this.dist(4600 - s), dl: 'ahead', d: 4600 - s, key: 'bridge' }); // height changed too late to turn
-      else A({ i: 5, lv: 'crit', ic: 'bridge-w', title: 'Low clearance', sub: '13 ft 6 in · Turn at 500 S', fsSub: '13 ft 6 in · Turn right at 500 S', dv: to < 30 ? 'Turn' : this.dist(to), dl: to < 30 ? 'right now' : 'to 500 S', d: 4600 - s, key: 'bridge' });
+      else A({ i: 5, lv: 'crit', ic: 'bridge-w', title: 'Low clearance', sub: '13 ft 6 in · Turn at 500 S', fsSub: '13 ft 6 in · Turn left at 500 S', dv: to < 30 ? 'Turn' : this.dist(to), dl: to < 30 ? 'left now' : 'to 500 S', d: 4600 - s, key: 'bridge' });
     } else if (Dt && Dt.tOff != null) {
       A({ i: 5, lv: 'ok', ic: 'check-w', title: 'Overpass avoided', sub: 'Back on State St at 400 S', fsTitle: 'On another route', fsSub: 'Overpass avoided · Back on State St at 400 S', dv: this.dist(Dt.L - Dt.d), dl: 'to State St', d: 9999, fd: S.t - Dt.tOff < 5 ? 0 : 1e9, key: 'bridge-ok' });
     } else if (S.detDone && S.t - S.tBack < 3) A({ i: 5, lv: 'ok', ic: 'check-w', title: 'Back on State St', sub: 'Past the low overpass', dv: '', dl: '', d: 9999, key: 'bridge-back' });
@@ -828,6 +835,38 @@ class Component extends DCLogic {
     const s = this.sim.s, tall = this.tooTall();
     return this.SCENES.reduce((acc, sc, k) => (s >= sc.s - 1 && (sc.veh == null || (sc.veh === 2) === tall) ? k : acc), 0);
   }
+  // timeline: drag anywhere on the drive (by position s). The drive is replayed up to that spot, so a
+  // pedestrian half-way across or a red light counting down is exactly as it would be. Snapshots every
+  // simulated second (made once per vehicle height) keep each drag step short. Alerts already on at the
+  // new spot are not read out again.
+  driveSnaps() {
+    const veh = this.state.sVeh;
+    if (this.snaps && this.snaps.veh === veh) return this.snaps.list;
+    const keep = this.sim, list = [];
+    this.reset(0);
+    for (let i = 0; i < 60 * 400; i++) {
+      if (i % 60 === 0) list.push({ s: this.sim.s, sim: this.cloneSim(this.sim) });
+      if (this.sim.s > this.END - 40 && this.sim.v < 0.5) break;
+      this.step(1 / 60);
+    }
+    this.sim = keep;
+    this.snaps = { veh, list };
+    return list;
+  }
+  cloneSim(o) { return typeof structuredClone === 'function' ? structuredClone(o) : JSON.parse(JSON.stringify(o)); }
+  scrubTo(s) {
+    try { window.speechSynthesis.cancel(); } catch (e) {}
+    this.claim();
+    const target = Math.max(0, Math.min(this.END - 40, s)), list = this.driveSnaps();
+    let k = 0; while (k < list.length - 1 && list[k + 1].s <= target) k++;
+    this.reset(0);
+    this.sim = this.cloneSim(list[k].sim);
+    for (let i = 0; i < 60 * 30 && this.sim.s < target; i++) this.step(1 / 60);
+    for (const a of this.alertList()) this.spoken[a.vk || a.key] = 1;
+    const p = this.prioState(); if (p) this.spoken[p.key] = 1;
+    this.lastSay = '';
+    this.setState({ screen: 'drive', done: false });
+  }
   jump(sc) {
     try { window.speechSynthesis.cancel(); } catch (e) {}
     this.claim();
@@ -857,7 +896,7 @@ class Component extends DCLogic {
     return t.startsWith('pk.') ? t : '';
   }
   // map px -> [lng, lat]. North-south follows the real cross streets; x = 0 is the State St centre line,
-  // x = 902 is the 200 E centre line (the detour).
+  // x = 902 the 200 E centre line, x = -870 northbound Main St (the detour); 1 px = 0.226 m.
   geo(X, Y) {
     const G = this.GEO || (this.GEO = {
       lat: { '800 S': 40.75195, '700 S': 40.754129, '600 S': 40.756303, '500 S': 40.758473, '400 S': 40.760743, '300 S': 40.762886, '200 S': 40.765024, '100 S': 40.76724, 'S Temple': 40.769299 },
@@ -959,6 +998,7 @@ class Component extends DCLogic {
     try {
       map = new mb.Map({
         container: node, style: this.styleUrl(), interactive: true, keyboard: false, // free look: drag, twist, pinch, tilt
+        minZoom: this.LZ[0] - 1.2, maxZoom: this.LZ[1],
         center: this.geo(this.sim.wx, this.sim.wy), zoom: 18.5, pitch: 60, bearing: 0, fadeDuration: 0,
         attributionControl: false, logoPosition: 'bottom-left', projection: 'mercator',
         // full page address as Referer: the demo token is restricted to .../roadsense-demo/
@@ -991,7 +1031,18 @@ class Component extends DCLogic {
     });
     // the driver touches the map: stop following the car until Re-center (or 10 s without touching)
     const touched = (e) => { if (!e || !e.originalEvent || this.map !== map || !this.mapOk) return; this.freeT = performance.now(); if (!this.free) { this.free = true; } this.redraw(); };
-    for (const ev of ['dragstart', 'drag', 'rotatestart', 'rotate', 'pitchstart', 'pitch', 'zoomstart', 'zoom']) map.on(ev, touched);
+    for (const ev of ['dragstart', 'drag', 'rotatestart', 'rotate', 'pitchstart', 'pitch']) map.on(ev, touched);
+    // pinch / scroll zoom keeps following the car (zooms round it); in free look it just zooms the map
+    map.scrollZoom.enable({ around: 'center' });
+    map.touchZoomRotate.enable({ around: 'center' });
+    map.on('zoomstart', (e) => { if (e && e.originalEvent && this.map === map) { this.uz = true; this.freeT = performance.now(); } });
+    map.on('zoom', (e) => { if (e && e.originalEvent && this.map === map) { this.freeT = performance.now(); this.redraw(); } });
+    map.on('zoomend', (e) => {
+      if (!this.uz || this.map !== map) return;
+      this.uz = false;
+      if (!this.free) this.lz = this.clampZoom(map.getZoom() - Math.log2(0.45 + 0.55 * this.tiltNow()));
+      this.redraw();
+    });
     map.on('load', () => {
       clearTimeout(this.mbTimer);
       if (this.map !== map) return;
@@ -1076,6 +1127,22 @@ class Component extends DCLogic {
     return A.from + (A.to - A.from) * e;
   }
   // one redraw on the next frame (free look moves the map while the drive may be paused)
+  // live map zoom: the whole of Salt Lake City (10.5) to as close as Mapbox draws (22); + / − one level.
+  // this.lz is the 2.5D zoom while following; 2D shows ~1.15 levels further out (as the pictures do)
+  get LZ() { return [10.5, 22]; }
+  clampZoom(z) { return Math.max(this.LZ[0], Math.min(this.LZ[1], z)); }
+  zoomOf(zk, lat) { return Math.log2(40075016.7 * Math.cos(lat * Math.PI / 180) / (512 * 0.22614 / zk)); }
+  zkOf(zoom, lat) { return 0.22614 / (40075016.7 * Math.cos(lat * Math.PI / 180) / (512 * Math.pow(2, zoom))); }
+  liveZk(tl) {
+    const lat = this.geo(this.sim.wx, this.sim.wy)[1];
+    // starts where the old zoom steps ended (their widest view, user 2026-11-06); a still board's ",z0..z4" keeps its step
+    if (this.lz == null) this.lz = this.zoomOf(1.45 * this.ZOOMS[/,z\d/.test(this.still) ? this.state.zoom : 0], lat);
+    if (this.lzT != null) { // + / −: glide to the new level (~250 ms)
+      const d = this.lzT - this.lz;
+      if (Math.abs(d) < 0.01 || this.free || this.uz) { this.lz = this.lzT; this.lzT = null; } else { this.lz += d * 0.22; this.redraw(); }
+    }
+    return this.zkOf(this.lz + Math.log2(0.45 + 0.55 * tl), lat);
+  }
   redraw() { if (!this.rdRaf) this.rdRaf = requestAnimationFrame(() => { this.rdRaf = 0; if (this.alive) this.setState({ tick: this.state.tick + 1 }); }); }
   // follow camera: the car stays at (195, 560), heading up, as on the drawn map; pitch 60° (2.5D) or 0° (2D)
   followCam(zk, tl) {
@@ -1092,6 +1159,7 @@ class Component extends DCLogic {
     const now = performance.now();
     if (this.free && now - (this.freeT || 0) > 10000) this.recenter(); // hands off for 10 s: follow again
     if (this.free) return true;
+    if (this.uz) { this.redraw(); return true; } // a pinch / scroll zoom in progress: let Mapbox animate it
     if (this.recT && now < this.recT) { this.redraw(); return true; } // easing back to the car
     map.jumpTo(this.followCam(zk, tl));
     return true;
@@ -1099,7 +1167,7 @@ class Component extends DCLogic {
   recenter() {
     const map = this.map; if (!map) return;
     this.free = false;
-    const tl = this.tiltNow(), zk = 1.45 * this.ZOOMS[this.state.zoom] * (0.45 + 0.55 * tl);
+    const tl = this.tiltNow(), zk = this.liveZk(tl);
     map.easeTo({ ...this.followCam(zk, tl), duration: 600 });
     this.recT = performance.now() + 620;
     this.redraw();
@@ -1174,10 +1242,11 @@ class Component extends DCLogic {
     // map markers, projected from the road plane to the screen
     // 2D shows the road from straight above, so it zooms out (x0.45) to see about as far ahead as 2.5D
     const tl = this.tiltNow(), A = 60 * tl * Math.PI / 180, cA = Math.cos(A), sA = Math.sin(A);
-    const zk = 1.45 * this.ZOOMS[st.zoom] * (0.45 + 0.55 * tl);
+    const live0 = !!(this.map && this.mapOk);
+    const zk = live0 ? this.liveZk(tl) : 1.45 * this.ZOOMS[st.zoom] * (0.45 + 0.55 * tl);
     if (fsA && this.free) this.recenter(); // a full-screen alert: back to following the car
     const live = this.mapCam(zk, tl);
-    const free = live && (this.free || (this.recT && performance.now() < this.recT));
+    const free = live && (this.free || this.uz || (this.recT && performance.now() < this.recT));
     const car = live ? this.map.project(this.geo(S.wx, S.wy)) : { x: 195, y: 560 };
     const proj = live ? (X, Y) => {
       const p = this.map.project(this.geo(X, Y)), p2 = this.map.project(this.geo(X + 8, Y));
@@ -1189,20 +1258,24 @@ class Component extends DCLogic {
       return { x: 195 + kx * f, y: 560 + ky * cA * f, f, ky };
     };
     const has = (i, keys) => list.some(a => a.i === i && (!keys || keys.includes(a.key)));
+    // markers sit on the map like the zone areas: drawn ahead of time (up to ~800 m ahead, so they are
+    // already there when they scroll into view, under the cards) and kept until ~130 m behind
+    const near = (Y) => { const d = Y - S.wy; return d > -3500 && d < 600; };
     const mk = (on, X, Y) => {
       const q = proj(X, Y);
-      const vis = on && q.ky < -30 && q.y > 236;
+      // zoomed out to the city (live map below zoom 14.5) the hazards would all sit on the car: hide them
+      const vis = on && near(Y) && q.y > -80 && q.y < 900 && q.f > 0 && !(live && this.map.getZoom() < 14.5);
       return { cls: vis ? '' : 'off', style: { transform: `translate(${q.x.toFixed(1)}px, ${q.y.toFixed(1)}px) scale(${Math.max(0.6, Math.min(1, q.f * 1.25)).toFixed(3)})` } };
     };
     const pins = {
-      school: mk(has(0, ['school-a', 'school-i']), -26, -1090),   // inside the shaded zone, at its start
-      work: mk(has(3, ['work-a', 'work-i']), 48, -3290),           // on the closed-lane strip
-      ped: mk(has(2), this.pedX(), -2487),
-      stop: mk(has(4), 32, -3700),
-      bridge: mk(has(5), -26, -4600),                               // under the overpass
-      sig: mk(has(1), 32, -1832),                                    // on the stop line
-      rlr: mk(has(6), this.rlrX(), -5160),
-      ev: mk(list.some(a => a.i === 7 && a.dv), -32, -this.evS()),
+      school: mk(true, -26, -1090),                       // inside the shaded zone, at its start
+      work: mk(true, 48, -3290),                          // on the closed-lane strip
+      ped: mk(this.pedX() > -58 || S.s < 2487, this.pedX(), -2487), // on the curb, then crossing
+      stop: mk(true, 32, -3700),                          // the stopped vehicle in the middle lane
+      bridge: mk(this.tooTall(), -26, -4600),              // under the overpass, only if you won't fit
+      sig: mk(has(1), 32, -1832),                          // the signal turning red: only while it is the alert
+      rlr: mk(S.tRlr != null && S.tRlrPass == null, this.rlrX(), -5160), // the runner, while it crosses
+      ev: mk(S.tEv != null && S.tEvPass == null, -32, -this.evS()),      // the emergency vehicle, while it comes
     };
 
     const hdg = (S.hdg + 360) % 360;
@@ -1229,9 +1302,12 @@ class Component extends DCLogic {
       pins, tk, tk2, sigCls: '',
       ...this.setVals(!!fsA), ...this.styleVals(),
       // free look: + / − zoom the map itself; following: the app's zoom steps
-      zoomIn: free ? () => { this.freeT = performance.now(); this.map.zoomIn({ duration: 250 }); } : this.zoomIn,
-      zoomOut: free ? () => { this.freeT = performance.now(); this.map.zoomOut({ duration: 250 }); } : this.zoomOut,
-      zInCls: !free && st.zoom >= this.ZOOMS.length - 1 ? 'dis' : '', zOutCls: !free && st.zoom <= 0 ? 'dis' : '',
+      // live map: + / − one zoom level, from the whole city to as close as Mapbox goes (free look: the map
+      // itself); the map pictures (no live map) keep the app's 5 zoom steps
+      zoomIn: !live ? this.zoomIn : this.free ? () => { this.freeT = performance.now(); this.map.zoomIn({ duration: 250 }); } : () => { this.lzT = this.clampZoom(Math.round((this.lzT ?? this.lz) * 2) / 2 + 1); this.redraw(); },
+      zoomOut: !live ? this.zoomOut : this.free ? () => { this.freeT = performance.now(); this.map.zoomOut({ duration: 250 }); } : () => { this.lzT = this.clampZoom(Math.round((this.lzT ?? this.lz) * 2) / 2 - 1); this.redraw(); },
+      zInCls: live ? (!this.free && (this.lzT ?? this.lz) >= this.LZ[1] ? 'dis' : '') : st.zoom >= this.ZOOMS.length - 1 ? 'dis' : '',
+      zOutCls: live ? (!this.free && (this.lzT ?? this.lz) <= this.LZ[0] ? 'dis' : '') : st.zoom <= 0 ? 'dis' : '',
       cones: this.cones,
       nextDist: dstr[0], nextUnit: dstr[1], nextName: nv.name, nameCls: this.nameFit(nv.name),
       sig, sigLabel, prio,
@@ -1253,6 +1329,8 @@ class Component extends DCLogic {
       nowText: !drive ? 'Splash · tap Get Started' : st.done ? 'Drive complete' : fsA ? `Full screen · ${fsA.title}` : lead ? lead.title : `Driving · next: ${nx.n}`,
       sayText: this.lastSay ? `“${this.lastSay}”` : '',
       progStyle: { width: Math.min(100, (S.s / this.END) * 100).toFixed(1) + '%' },
+      tlMax: this.END, tlVal: Math.round(Math.min(this.END, S.s)), scrub: (e) => this.scrubTo(+e.target.value),
+      tlStyle: { '--tl': Math.min(100, (S.s / this.END) * 100).toFixed(2) + '%' },
       scenes: this.SCENES.map((sc, k) => ({ ...sc, n: String(k + 1).padStart(2, '0'), on: drive && k === scIdx ? 'on' : '', pick: () => this.jump(sc) })),
     };
   }

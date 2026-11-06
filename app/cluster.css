@@ -37,9 +37,9 @@
 .cl-lens { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; color: #0C0E11; background: var(--sc); transition: background-color .3s; }
 .cl-lens svg { width: 44px; height: 44px; }
 /* U-turn mark on the Left lens: allowed (white sign) / No U-turn (red ring + slash), as the map app */
-.cl-ut { position: absolute; top: -4px; left: calc(50% + 20px); width: 28px; height: 28px; display: none; }
+.cl-ut { position: absolute; top: -6px; left: calc(50% + 18px); width: 32px; height: 32px; display: none; }
 .cl-ut.ut-ok, .cl-ut.ut-no { display: block; }
-.cl-ut .ut-i { display: none; width: 28px; height: 28px; border-radius: 50%; box-shadow: 0 0 0 3px #15181D; }
+.cl-ut .ut-i { display: none; width: 32px; height: 32px; border-radius: 50%; box-shadow: 0 0 0 3px #15181D; }
 .cl-ut.ut-ok .ut-ok, .cl-ut.ut-no .ut-no { display: block; }
 .cl-cd { margin-top: 10px; font-size: 36px; font-weight: 800; letter-spacing: -1.4px; line-height: 1; color: var(--sc); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .cl-cd.long { font-size: 30px; letter-spacing: -1px; }

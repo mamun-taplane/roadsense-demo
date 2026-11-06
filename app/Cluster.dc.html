@@ -215,13 +215,16 @@
         <button class="{{ r1 }}" onClick="{{ rate1 }}">1×</button>
         <button class="{{ r2 }}" onClick="{{ rate2 }}">2×</button>
       </div>
-      <button class="cb" onClick="{{ toggleVoice }}">{{ voiceText }}</button>
+      <button class="cb cb-ic" onClick="{{ toggleVoice }}" aria-label="{{ voiceLabel }}">
+        <sc-if value="{{ voiceOn }}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></sc-if>
+        <sc-if value="{{ voiceOff }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9l5 6M21 9l-5 6"/></svg></sc-if>
+      </button>
     </div>
     <div class="now">
       <div class="now-k">On screen</div>
       <div class="now-v">{{ nowText }}</div>
       <div class="now-q">{{ sayText }}</div>
-      <div class="bar"><i style="{{ progStyle }}"></i></div>
+      <input class="tl" type="range" min="0" max="{{ tlMax }}" step="1" value="{{ tlVal }}" onChange="{{ scrub }}" aria-label="Drive timeline: drag to move along the drive" style="{{ tlStyle }}">
     </div>
     <div class="scn-h">Jump to</div>
     <div class="scn">
@@ -263,6 +266,7 @@ class Component extends DCLogic {
       { id: 'nolimit', name: 'No speed limit data', tag: 'base', tagText: 'Normal', s: 5760 },
       { id: 'granted', name: 'Signal priority granted', tag: 'ev', tagText: 'EV mode', s: 6420 },
       { id: 'denied', name: 'Signal priority denied', tag: 'ev', tagText: 'EV mode', s: 7520 },
+      { id: 'uturn', name: 'No U-turn sign at S Temple', tag: 'base', tagText: 'Signal', s: 8470 },
     ];
     this.END = 8800;
     // one announcement per alert, said once when it first appears; the full screen does not repeat it
@@ -272,7 +276,7 @@ class Component extends DCLogic {
       'ped': 'Pedestrian at the crosswalk ahead. Slow down.',
       'work-a': 'Work zone ahead. Right lane closed, limit 25.', 'work-e': 'Work zone ended.',
       'stop': 'Stopped vehicle ahead. Change lanes.',
-      'bridge': 'Low clearance ahead. Your vehicle will not fit. Turn right at 500 South.',
+      'bridge': 'Low clearance ahead. Your vehicle will not fit. Turn left at 500 South.',
       'bridge-ok': 'Overpass avoided. You will rejoin State Street at 400 South.',
       'rlr': 'Stop! Red light runner from the left.',
       'ev': 'Emergency vehicle approaching. Pull over to the right.',
@@ -306,14 +310,17 @@ class Component extends DCLogic {
     // low clearance: the alert only exists when the vehicle is taller than the overpass
     this.CLEAR = 162; // overpass clearance, inches (13 ft 6 in)
     this.VEH = [{ l: '9 ft 6 in', h: 114 }, { l: '11 ft 2 in', h: 134 }, { l: '14 ft 0 in', h: 168 }];
-    // the way round it: right on 500 S, left on 200 E, left on 400 S, right back onto State St (map px; corners carry a radius)
+    // the way round it, with the real one-way streets (Mapbox / OSM; checked with Mapbox Directions):
+    // left on 500 S (one-way westbound), right on Main St (northbound side, x -870), right on 400 S
+    // (eastbound side of the divided street, s 5120), left back onto State St. (500 S can't be driven east:
+    // the first version turned right there, against the one-way arrows.) Map px; corners carry a radius.
     this.DET_END = 5340;
     this.DET = [
-      [40, -3990],
-      [40, -4050, 30, 'State St & 500 S', '500 S', 'right'],
-      [902, -4050, 40, '500 S & 200 E', '200 E', 'left'],
-      [902, -5212, 40, '200 E & 400 S', '400 S', 'left'],
-      [32, -5212, 30, 'State St & 400 S', 'State St', 'right'],
+      [12, -3990],
+      [12, -4068, 30, 'State St & 500 S', '500 S', 'left'],
+      [-870, -4068, 40, '500 S & Main St', 'Main St', 'right'],
+      [-870, -5120, 40, 'Main St & 400 S', '400 S', 'right'],
+      [32, -5120, 30, 'State St & 400 S', 'State St', 'left'],
       [32, -5340],
     ];
     this.REACT = 2.5; // seconds the simulated driver takes to slow down for a lower limit
@@ -639,9 +646,9 @@ class Component extends DCLogic {
     // it points you to the last turn before it, then confirms the way round
     const Dt = S.det, c1 = Dt && Dt.corners[0];
     if (this.tooTall() && !S.detDone && !(Dt && Dt.tOff != null) && s >= 3700 && s < 4600) {
-      const to = Dt ? (c1.d0 + c1.d1) / 2 - Dt.d : 4040 - s; // to the turn
+      const to = Dt ? (c1.d0 + c1.d1) / 2 - Dt.d : 4060 - s; // to the turn
       if (!Dt && s >= 3940) A({ i: 5, lv: 'crit', ic: 'bridge-w', title: 'Low clearance', sub: '13 ft 6 in · Too low for you', dv: this.dist(4600 - s), dl: 'ahead', d: 4600 - s, key: 'bridge' }); // height changed too late to turn
-      else A({ i: 5, lv: 'crit', ic: 'bridge-w', title: 'Low clearance', sub: '13 ft 6 in · Turn at 500 S', fsSub: '13 ft 6 in · Turn right at 500 S', dv: to < 30 ? 'Turn' : this.dist(to), dl: to < 30 ? 'right now' : 'to 500 S', d: 4600 - s, key: 'bridge' });
+      else A({ i: 5, lv: 'crit', ic: 'bridge-w', title: 'Low clearance', sub: '13 ft 6 in · Turn at 500 S', fsSub: '13 ft 6 in · Turn left at 500 S', dv: to < 30 ? 'Turn' : this.dist(to), dl: to < 30 ? 'left now' : 'to 500 S', d: 4600 - s, key: 'bridge' });
     } else if (Dt && Dt.tOff != null) {
       A({ i: 5, lv: 'ok', ic: 'check-w', title: 'Overpass avoided', sub: 'Back on State St at 400 S', fsTitle: 'On another route', fsSub: 'Overpass avoided · Back on State St at 400 S', dv: this.dist(Dt.L - Dt.d), dl: 'to State St', d: 9999, fd: S.t - Dt.tOff < 5 ? 0 : 1e9, key: 'bridge-ok' });
     } else if (S.detDone && S.t - S.tBack < 3) A({ i: 5, lv: 'ok', ic: 'check-w', title: 'Back on State St', sub: 'Past the low overpass', dv: '', dl: '', d: 9999, key: 'bridge-back' });
@@ -773,6 +780,38 @@ class Component extends DCLogic {
     const s = this.sim.s, tall = this.tooTall();
     return this.SCENES.reduce((acc, sc, k) => (s >= sc.s - 1 && (sc.veh == null || (sc.veh === 2) === tall) ? k : acc), 0);
   }
+  // timeline: drag anywhere on the drive (by position s). The drive is replayed up to that spot, so a
+  // pedestrian half-way across or a red light counting down is exactly as it would be. Snapshots every
+  // simulated second (made once per vehicle height) keep each drag step short. Alerts already on at the
+  // new spot are not read out again.
+  driveSnaps() {
+    const veh = this.state.sVeh;
+    if (this.snaps && this.snaps.veh === veh) return this.snaps.list;
+    const keep = this.sim, list = [];
+    this.reset(0);
+    for (let i = 0; i < 60 * 400; i++) {
+      if (i % 60 === 0) list.push({ s: this.sim.s, sim: this.cloneSim(this.sim) });
+      if (this.sim.s > this.END - 40 && this.sim.v < 0.5) break;
+      this.step(1 / 60);
+    }
+    this.sim = keep;
+    this.snaps = { veh, list };
+    return list;
+  }
+  cloneSim(o) { return typeof structuredClone === 'function' ? structuredClone(o) : JSON.parse(JSON.stringify(o)); }
+  scrubTo(s) {
+    try { window.speechSynthesis.cancel(); } catch (e) {}
+    this.claim();
+    const target = Math.max(0, Math.min(this.END - 40, s)), list = this.driveSnaps();
+    let k = 0; while (k < list.length - 1 && list[k + 1].s <= target) k++;
+    this.reset(0);
+    this.sim = this.cloneSim(list[k].sim);
+    for (let i = 0; i < 60 * 30 && this.sim.s < target; i++) this.step(1 / 60);
+    for (const a of this.alertList()) this.spoken[a.vk || a.key] = 1;
+    const p = this.prioState(); if (p) this.spoken[p.key] = 1;
+    this.lastSay = '';
+    this.setState({ screen: 'drive', done: false });
+  }
   jump(sc) {
     try { window.speechSynthesis.cancel(); } catch (e) {}
     this.claim();
@@ -897,6 +936,8 @@ class Component extends DCLogic {
       nowText: !drive ? 'Get started · tap Start driving' : st.done ? 'Drive complete' : fsA ? `Full screen · ${fsTitle}` : slot ? `${sc.kick} · ${sc.title}` : `All clear · next signal ${nv.n}`,
       sayText: this.lastSay ? `“${this.lastSay}”` : '',
       progStyle: { width: Math.min(100, (S.s / this.END) * 100).toFixed(1) + '%' },
+      tlMax: this.END, tlVal: Math.round(Math.min(this.END, S.s)), scrub: (e) => this.scrubTo(+e.target.value),
+      tlStyle: { '--tl': Math.min(100, (S.s / this.END) * 100).toFixed(2) + '%' },
       scenes: this.SCENES.map((sc, k) => ({ ...sc, n: String(k + 1).padStart(2, '0'), on: drive && k === scIdx ? 'on' : '', pick: () => this.jump(sc) })),
     };
   }

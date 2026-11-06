@@ -23,6 +23,9 @@
   .demo-seg a.on { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(16, 24, 40, .14); }
   .demo-seg a:focus-visible { outline: 2px solid #2563EB; outline-offset: 1px; }
   #root { padding-top: calc(var(--bar) + env(safe-area-inset-top, 0px)); }
+  /* computer: the board (phone + side panel) centered under the bar */
+  body:not(.app) #root { display: flex; justify-content: center; }
+  body:not(.app) #root > * { flex: 0 0 auto; }
   body.app { overflow: hidden; background: #EEF0F3; }
   body.app #root { position: absolute; left: 50%; top: calc(var(--bar) + env(safe-area-inset-top, 0px)); padding: 0; width: 390px; height: 844px; transform-origin: 50% 0; }
   body.app .ph { border-radius: 0; }
