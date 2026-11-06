@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Road Sense — live drive</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=ecb9037-1793972356">
+<link rel="stylesheet" href="rs2.css?v=3dc196b-1793973032">
 </head>
 <body>
 <x-dc>
@@ -1360,6 +1360,12 @@ class Component extends DCLogic {
     } catch (e) { this.mbFailed = true; return; }
     map.addControl(new mb.AttributionControl({ compact: true }), 'bottom-left');
     this.map = map;
+    // the map only drew part of the screen on some loads (user, v39.8): Mapbox sizes its canvas when it is created
+    // and on window resize only; the box can still change after that (page fit, phone / tablet, orientation, fonts).
+    // Watch the box itself and re-measure; also once the style has loaded and shortly after.
+    const fit = () => { if (this.map === map) { try { map.resize(); } catch (e) {} } };
+    if (window.ResizeObserver) { this.mbRO = new ResizeObserver(fit); this.mbRO.observe(node); }
+    for (const ms of [0, 250, 1000]) setTimeout(fit, ms);
     const fail = () => {
       if (this.mapOk) return;
       // a saved style that no longer loads: start again on the default style
@@ -1401,11 +1407,13 @@ class Component extends DCLogic {
       clearTimeout(this.mbTimer);
       if (this.map !== map) return;
       this.mapOk = true;
+      fit();
       this.setState({ tick: this.state.tick + 1 });
     });
   }
   mapClose() {
     clearTimeout(this.mbTimer);
+    if (this.mbRO) { this.mbRO.disconnect(); this.mbRO = null; }
     if (this.map) { try { this.map.remove(); } catch (e) {} }
     const had = this.mapOk;
     this.map = null; this.mapOk = false;

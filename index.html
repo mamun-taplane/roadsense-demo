@@ -109,7 +109,7 @@
   <div class="dsh-sec" style="padding-bottom:0"><div class="dsh-k">Jump to</div></div>
   <div class="dsh-list" id="dsh-list"></div>
 </section>
-<script src="_dc.js?v=ecb9037-1793972356"></script>
+<script src="_dc.js?v=3dc196b-1793973032"></script>
 <script>
 // Which app: /cluster/ (demo) or ?cluster (local) = the no-map cluster; else the map app.
 const q = new URLSearchParams(location.search);
@@ -146,7 +146,7 @@ if (app) {
 }
 (async () => {
   try {
-    const Root = await DC.load(cluster ? 'Cluster.dc.html?v=ecb9037-1793972356' : 'LiveDrive.dc.html?v=ecb9037-1793972356');
+    const Root = await DC.load(cluster ? 'Cluster.dc.html?v=3dc196b-1793973032' : 'LiveDrive.dc.html?v=3dc196b-1793973032');
     ReactDOM.createRoot(document.getElementById('root')).render(DC.h(Root, { ...(app ? { app: '1' } : {}), ...(device !== 'phone' ? { device } : {}) }));
   } catch (e) { document.getElementById('root').innerHTML = '<pre style="padding:16px;color:#B91C1C">Could not load the app: ' + e.message + '</pre>'; }
 })();
