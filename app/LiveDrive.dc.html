@@ -90,7 +90,7 @@
   <section class="ahead" aria-label="Next intersection">
     <div class="ah-row">
       <div>
-        <div class="ah-dist">{{ nextDist }}<small>{{ nextUnit }}</small></div>
+        <div class="ah-dist {{ distCls }}">{{ nextDist }}<small>{{ nextUnit }}</small></div>
         <div class="ah-name {{ nameCls }}">
           {{ nextName }}
         </div>
@@ -161,6 +161,8 @@
         <div class="tk2-d"><b class="tk2-dv">{{ tk2.dv }}</b><span class="tk2-dl">{{ tk2.dl }}</span></div>
       </div>
     </div>
+    <!-- three or more at once (phone): the lead stays big on top, the next two as rows, then "+N more" -->
+    <div class="tkr"><sc-for list="{{ tkRows }}" as="r" hint-placeholder-count="0"><div class="tkr-row {{ r.cls }}"><div class="tkr-ic"><span class="icset ic-{{ r.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></div><div class="tkr-txt"><div class="tkr-t">{{ r.title }}</div><div class="tkr-s">{{ r.sub }}</div></div><div class="tkr-d"><div class="tkr-dv">{{ r.dv }}</div><div class="tkr-dl">{{ r.dl }}</div></div></div></sc-for><div class="tkr-more">{{ tkMore }}</div></div>
   </div>
 
   <!-- You: connection, voice, speed, limit, heading -->
@@ -1612,10 +1614,15 @@ class Component extends DCLogic {
     const tc = fsA || this.tkCache || { lv: 'adv', ic: 'info-w', title: '', sub: '', dv: '', dl: '' };
     const dparts = String(tc.dv || '').split(' ');
     const second = fsA ? order.find(a => a.key !== fsA.key) : null;
+    // the others on the full screen; on a phone, 3+ at once: the lead stays big, the next two become rows
+    const others = fsA ? order.filter(a => a.key !== fsA.key && a.key !== 'hold') : [];
+    const many = others.length >= 2 && this.dev().k === 'phone';
+    const tkRows = many ? others.slice(0, 2).map(a => ({ cls: 'lv-' + a.lv, ic: this.icOn(a.lv, a.ic), title: a.title, sub: a.sub, dv: a.dv || '', dl: a.dl || '' })) : [];
+    const tkMore = many && others.length > 2 ? `+${others.length - 2} more · ${others[2].title}` : '';
     if (second) this.tk2Cache = second;
     const t2 = second || this.tk2Cache || { lv: 'adv', ic: 'info-w', title: '', sub: '', dv: '', dl: '' };
     const tk2 = { cls: `lv-${t2.lv}${second ? '' : ' hide'}`, ic: this.icOn(t2.lv, t2.ic), title: t2.title, sub: t2.sub, dv: t2.dv, dl: t2.dl };
-    const tk = { cls: `lv-${tc.lv}${fsA ? ' on' : ''}${second ? ' two' : ''}`, ic: this.icOn(tc.lv, tc.ic), title: tc.fsTitle || tc.title, sub: tc.fsSub || tc.sub, dv: dparts[0], du: dparts[1] || '', dl: tc.dl };
+    const tk = { cls: `lv-${tc.lv}${fsA ? ' on' : ''}${second ? ' two' : ''}${many ? ' many' : ''}`, ic: this.icOn(tc.lv, tc.ic), title: tc.fsTitle || tc.title, sub: tc.fsSub || tc.sub, dv: dparts[0], du: dparts[1] || '', dl: tc.dl };
 
     // map markers, projected from the road plane to the screen
     // 2D shows the road from straight above, so it zooms out (x0.45) to see about as far ahead as 2.5D
@@ -1673,7 +1680,7 @@ class Component extends DCLogic {
       showPanel: full,
       showSplash: !drive, ...this.permVals(), bgb: this.bgBanner(list),
       tiles: this.tileVis(), tsrc: this.tileSrc(),
-      calmCls: !lead && !fsA ? 'on' : '', // tablet landscape panel: "No alerts ahead" when nothing is up
+      calmCls: !lead && !fsA ? 'on' : '', tkRows, tkMore, // tablet landscape panel: "No alerts ahead" when nothing is up
       planeCls: (this.on('school') ? '' : 'no-school ') + (this.on('work') ? '' : 'no-work'), // event zones: driver mode only
       mbxId: this.mbxId || (this.mbxId = 'mbx' + Math.random().toString(36).slice(2, 9)), camCls: (live ? 'mb-on' : '') + (this.liveOnly() ? ' live-only' : ''),
       mbErr: this.liveOnly() && !!this.mbFailed, mbRetry: () => { this.mbFailed = false; const n = document.getElementById(this.mbxId); if (n) this.mapOpen(n); this.setState({ tick: this.state.tick + 1 }); },
@@ -1699,7 +1706,7 @@ class Component extends DCLogic {
       zInCls: live ? (!this.free && (this.lzT ?? this.lz) >= this.LZ[1] ? 'dis' : '') : st.zoom >= this.ZOOMS.length - 1 ? 'dis' : '',
       zOutCls: live ? (!this.free && (this.lzT ?? this.lz) <= this.LZ[0] ? 'dis' : '') : st.zoom <= 0 ? 'dis' : '',
       cones: this.cones,
-      nextDist: dstr[0], nextUnit: dstr[1], nextName: nv.name, nameCls: this.nameFit(nv.name),
+      nextDist: dstr[0], nextUnit: dstr[1], distCls: /^\d/.test(dstr[0]) ? '' : 'word', /* a status word (Crossed, At light) is smaller than a distance */ nextName: nv.name, nameCls: this.nameFit(nv.name),
       sig, sigLabel, prio,
       alerts,
       edgeCls: lead && lead.lv === 'crit' && !fsA ? 'on' : '',

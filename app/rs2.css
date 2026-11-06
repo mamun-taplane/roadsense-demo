@@ -497,6 +497,58 @@
 .ph.tab-l .tk.two.on .tk2.lv-crit::before { animation-duration: 1s; }
 .ph.tab-l .tk.two .tk2.lv-ok::before, .ph.tab-l .tk.two .tk2.hide::before { display: none; }
 
+/* top card: a status word instead of a distance stays small; the pedestrian signal tile never pushes out */
+.ah-row > div:first-child { min-width: 0; flex: 1; }
+.ah-dist.word { font-size: 24px; letter-spacing: -.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pedhead { flex: none; max-width: 190px; padding-right: 12px; }
+.pedhead .ph-lens { width: 50px; height: 50px; } .pedhead .ph-lens svg { width: 32px; height: 32px; }
+.ph-n { font-size: 20px !important; }
+
+/* ---------- phone: several alerts on the full screen (v39.4) ----------
+   Two: a vertical split — the lead in the top half, the second in the bottom half (its own tint), each half
+   with its own pulsing border. Three or more: the lead in a rounded card on top, the next two as rows with a
+   thin border, then "+N more". */
+.tkr { display: none; }
+.ph:not(.tab) .tk.two { padding: 0; }
+.ph:not(.tab) .tk.two .tk-in { position: absolute; left: 0; right: 0; top: 40px; height: 380px; justify-content: center; padding: 0 20px; }
+.ph:not(.tab) .tk.two .tk-ic, .ph:not(.tab) .tk.two .tk-disc { width: 96px; height: 96px; }
+.ph:not(.tab) .tk.two .tk-disc img { width: 50px; height: 50px; }
+.ph:not(.tab) .tk.two .tk-t { margin-top: 44px; font-size: 30px; }
+.ph:not(.tab) .tk.two .tk-d { margin-top: 16px; font-size: 54px; }
+.ph:not(.tab) .tk.two:not(.many)::before { bottom: auto; height: 422px; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.ph:not(.tab) .tk.two:not(.many) .tk2 { left: 0; right: 0; top: 422px; bottom: 0; padding: 0 20px 120px; border-radius: 0 0 44px 44px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; transform: none; }
+.ph:not(.tab) .tk.two:not(.many) .tk2.hide { opacity: 0; }
+.ph:not(.tab) .tk.two:not(.many) .tk2-k { margin: 0 0 12px; }
+.ph:not(.tab) .tk.two:not(.many) .tk2-row { flex-direction: column; gap: 0; }
+.ph:not(.tab) .tk.two:not(.many) .tk2-ic { width: 76px; height: 76px; border-radius: 50%; }
+.ph:not(.tab) .tk.two:not(.many) .tk2-ic img { width: 40px; height: 40px; }
+.ph:not(.tab) .tk.two:not(.many) .tk2-txt { flex: none; margin-top: 16px; }
+.ph:not(.tab) .tk.two:not(.many) .tk2-t { font-size: 26px; letter-spacing: -.6px; white-space: normal; }
+.ph:not(.tab) .tk.two:not(.many) .tk2.lv-ok .tk2-t { color: var(--ok); }
+.ph:not(.tab) .tk.two:not(.many) .tk2-s { font-size: 16px; }
+.ph:not(.tab) .tk.two:not(.many) .tk2-d { text-align: center; margin-top: 12px; }
+.ph:not(.tab) .tk.two:not(.many) .tk2-dv { font-size: 46px; letter-spacing: -1.8px; }
+.ph:not(.tab) .tk.two:not(.many) .tk2::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 7px var(--lv); opacity: 0; }
+.ph:not(.tab) .tk.two.on:not(.many) .tk2::before { animation: fs-edge 1.6s ease-in-out infinite; }
+.ph:not(.tab) .tk.two.on:not(.many) .tk2.lv-crit::before { animation-duration: 1s; }
+.ph:not(.tab) .tk.two:not(.many) .tk2.lv-ok::before { display: none; }
+/* three or more */
+.ph:not(.tab) .tk.many .tk2 { display: none; }
+.ph:not(.tab) .tk.many::before { inset: auto; left: 10px; right: 10px; top: 10px; height: 412px; border-radius: 34px; }
+.ph:not(.tab) .tk.many .tkr { display: block; position: absolute; left: 12px; right: 12px; top: 434px; }
+.tkr-row { display: flex; align-items: center; gap: 12px; height: 74px; padding: 0 16px 0 12px; margin-bottom: 10px; border-radius: 22px; background: var(--tint); box-shadow: inset 0 0 0 2px var(--lv); text-align: left; }
+.tkr-row.lv-adv { --lv: var(--adv); --tint: #EAF1FE; } .tkr-row.lv-warn { --lv: var(--warn); --tint: #FEF3DF; }
+.tkr-row.lv-crit { --lv: var(--crit); --tint: #FDEBEC; } .tkr-row.lv-ok { --lv: var(--ok); --tint: #E7F6EC; }
+.tkr-ic { width: 48px; height: 48px; flex: none; border-radius: 15px; background: var(--lv); display: grid; place-items: center; }
+.tkr-ic img { width: 26px; height: 26px; }
+.tkr-txt { flex: 1; min-width: 0; }
+.tkr-t { font-size: 18px; font-weight: 700; letter-spacing: -.3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tkr-row.lv-crit .tkr-t, .tkr-row.lv-crit .tkr-dv { color: var(--crit); }
+.tkr-s { margin-top: 2px; font-size: 13px; font-weight: 500; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tkr-d { flex: none; text-align: right; } .tkr-dv { font-size: 22px; font-weight: 600; letter-spacing: -.6px; line-height: 1; white-space: nowrap; } /* by class: the viewer wraps values in spans */
+.tkr-dl { margin-top: 3px; font-size: 12px; font-weight: 500; color: var(--ink-3); }
+.tkr-more { text-align: center; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+
 /* ==== get started (from splash.css) ==== */
 /* Get started: shared by every version. Plain white page, the Road Sense mark in a few faint rings,
    the Connected Utah wordmark, one line, one button. */
