@@ -362,6 +362,25 @@
 
 .al.lv-crit.long:not(.small) .al-t { font-size: 17px; }
 
+
+
+/* ---------- Tablet (v36c) ----------
+   Landscape (tab-l, 1194×834, driver / EV): the phone's controls become a 390 px column on the left over the
+   map; the car sits in the middle of the map area (cx 808). Portrait (tab-p, 641×918 drawn, ×1.3 on screen):
+   the phone layout, wider. Get started: the phone's page centered. */
+.ph.tab { border-radius: 30px; }
+.ph.tab .edge { border-radius: 30px; }
+.ph.tab-l .ahead, .ph.tab-l .al, .ph.tab-l .float, .ph.tab-l .dock { left: 16px; right: auto; width: 390px; }
+.ph.tab-l .fog { right: auto; width: 440px; }
+.ph.tab-l .zoom { right: 16px; bottom: 16px; }
+.ph.tab-l .recenter { left: 808px; bottom: 24px; }
+.ph.tab-l .mbx .mapboxgl-ctrl-bottom-left { left: 422px; bottom: 12px; }
+.ph.tab-l .mb-attr { left: 434px; bottom: 16px; }
+.ph.tab-l .mb-err { left: 808px; }
+.ph.tab-l .tk2 { left: 50%; right: auto; width: 600px; margin-left: -300px; }
+.ph.tab-l .set-sheet { left: 16px; right: auto; width: 420px; bottom: 16px; border-radius: 30px; }
+.ph.tab .spm { left: 50%; right: auto; width: 390px; margin-left: -195px; height: 844px; top: 50%; margin-top: -422px; box-shadow: 0 0 0 1400px #F3F4F6; overflow: visible; }
+
 /* ==== get started (from splash.css) ==== */
 /* Get started: shared by every version. Plain white page, the Road Sense mark in a few faint rings,
    the Connected Utah wordmark, one line, one button. */

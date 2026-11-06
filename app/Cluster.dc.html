@@ -15,7 +15,7 @@
 <style>body{margin:0}</style>
 </helmet>
 <div class="dash cl {{ rootCls }} {{ walkCls }}">
-<div class="ph d-ph cl-ph {{ phoneCls }}">
+<div class="ph d-ph cl-ph {{ phoneCls }} {{ devCls }}" style="{{ phStyle }}">
 
   <div class="d-sbar {{ sbarCls }}" aria-hidden="true">
     <span>9:41</span>
@@ -883,6 +883,17 @@ class Component extends DCLogic {
   // "You are": drive (default) · ev (emergency-vehicle driver: signal priority) · bike (cyclist, VRU: broadcasts
   // its position, PSM) · walk (pedestrian, VRU — next step, HANDOFF §2a). Client meeting 2026-11-05.
   mode() { return (this.state && this.state.mode) || 'drive'; }
+  // device: phone (390×844), tablet landscape 'tl' (1194×834: map app = UI column left, map right; cluster =
+  // blocks side by side), tablet portrait 'tp' (834×1194 drawn as 641×918 and scaled ×1.3 by the page).
+  // From the `device` prop (demo page) or a still flag ",tl" / ",tp". cx / cy = where the car sits.
+  dev() {
+    const d = (this.props && this.props.device) || ((this.still || '').match(/,(tl|tp)\b/) || [])[1] || 'phone';
+    return { phone: { k: 'phone', w: 390, h: 844, cx: 195, cy: 560 }, tl: { k: 'tl', w: 1194, h: 834, cx: 808, cy: 560 }, tp: { k: 'tp', w: 641, h: 918, cx: 320, cy: 610 } }[d] || { k: 'phone', w: 390, h: 844, cx: 195, cy: 560 };
+  }
+  devVals() {
+    const D = this.dev();
+    return { phStyle: D.k === 'phone' ? {} : { width: D.w + 'px', height: D.h + 'px' }, devCls: D.k === 'phone' ? '' : 'tab tab-' + D.k.slice(1) };
+  }
   // which events each mode has. Driver: today's drive; EV: signal priority at 700 S, 400 S, 200 S (granted)
   // and 100 S (denied), vehicles ahead pulling over (their BSM), a vehicle not yielding at 400 S;
   // cyclist: car from behind, car turning right across you (600 S), hold speed for the green (500 S),
@@ -1126,7 +1137,7 @@ class Component extends DCLogic {
     const fsOn = drive && !!fsA;
     return {
       also,
-      rootCls: full ? 'board' : '',
+      rootCls: full ? 'board' : '', ...this.devVals(),
       phoneCls: (full ? 'ph-frame ' : '') + (fsOn ? 'fs-on' : ''),
       showPanel: full,
       showSplash: !drive,

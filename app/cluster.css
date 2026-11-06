@@ -176,3 +176,26 @@
 .cl-fs-lim .d-lim-n { font-size: 27px; margin-top: 2px; }
 /* bike icon (VRU alerts), next to the icon rules in dash.css */
 .ic-bike-k .i-bike-k, .ic-bike-w .i-bike-w { display: block; }
+
+/* ---------- Tablet (v36c) ----------
+   Landscape (tab-l, 1194×834): signal head on the left (tall), speed + alert slot on the right; still fixed
+   blocks, no layout shift. Portrait (tab-p, 641×918 drawn, ×1.3 on screen): the phone blocks, wider and
+   taller. The full screen keeps its top block + bottom. */
+.cl-ph.tab-l .cl-sig { left: 16px; right: auto; width: 560px; top: 108px; height: 700px; }
+.cl-ph.tab-l .cl-spd { left: 592px; right: 16px; top: 108px; height: 380px; }
+.cl-ph.tab-l .cl-al { left: 592px; right: 16px; top: 504px; height: 304px; }
+.cl-ph.tab-l .cl-fs-top { height: 470px; }
+.cl-ph.tab-l .cl-fs-bot { top: 470px; }
+.cl-ph.tab-p .cl-sig { top: 108px; height: 356px; }
+.cl-ph.tab-p .cl-spd { top: 478px; height: 248px; }
+.cl-ph.tab-p .cl-al { top: 740px; height: 150px; }
+.cl-ph.tab-p .cl-fs-top { height: 540px; }
+.cl-ph.tab-p .cl-fs-bot { top: 540px; }
+.cl-ph.tab .spm { left: 50%; right: auto; width: 390px; margin-left: -195px; height: 844px; top: 50%; margin-top: -422px; box-shadow: 0 0 0 1400px #F3F4F6; overflow: visible; }
+.cl-ph.tab-l .cl-lamps { align-items: center; }
+.cl-ph.tab-l .cl-lens { width: 136px; height: 136px; }
+.cl-ph.tab-l .cl-lens svg { width: 70px; height: 70px; }
+.cl-ph.tab-l .cl-cd { font-size: 56px; }
+.cl-ph.tab-l .cl-ut { width: 40px; height: 40px; left: calc(50% + 32px); }
+.cl-ph.tab-l .cl-ut .ut-i { width: 40px; height: 40px; }
+.cl-ph.tab-l .cl-wk-lens { width: 200px; height: 200px; } .cl-ph.tab-l .cl-wk-lens svg { width: 130px; height: 130px; } .cl-ph.tab-l .cl-wk-n { font-size: 96px; }

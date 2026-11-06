@@ -14,10 +14,10 @@
 <style>body{margin:0}</style>
 </helmet>
 <div class="v2 {{ rootCls }}">
-<div class="ph {{ phoneCls }}">
+<div class="ph {{ phoneCls }} {{ devCls }}" style="{{ phStyle }}">
 
   <!-- 3D map: the plane moves under a fixed vehicle -->
-  <div class="cam {{ camCls }}" aria-hidden="true">
+  <div class="cam {{ camCls }}" aria-hidden="true" style="{{ camStyle }}">
     <div class="mbx" id="{{ mbxId }}"></div>
     <div class="plane {{ planeCls }}" style="{{ planeStyle }}">
       <img class="tile {{ tiles.m0 }}" src="{{ tsrc.m0 }}" alt="" style="left:-550px;top:-9888px">
@@ -945,6 +945,17 @@ class Component extends DCLogic {
   // "You are": drive (default) · ev (emergency-vehicle driver: signal priority) · bike (cyclist, VRU: broadcasts
   // its position, PSM) · walk (pedestrian, VRU — next step, HANDOFF §2a). Client meeting 2026-11-05.
   mode() { return (this.state && this.state.mode) || 'drive'; }
+  // device: phone (390×844), tablet landscape 'tl' (1194×834: map app = UI column left, map right; cluster =
+  // blocks side by side), tablet portrait 'tp' (834×1194 drawn as 641×918 and scaled ×1.3 by the page).
+  // From the `device` prop (demo page) or a still flag ",tl" / ",tp". cx / cy = where the car sits.
+  dev() {
+    const d = (this.props && this.props.device) || ((this.still || '').match(/,(tl|tp)\b/) || [])[1] || 'phone';
+    return { phone: { k: 'phone', w: 390, h: 844, cx: 195, cy: 560 }, tl: { k: 'tl', w: 1194, h: 834, cx: 808, cy: 560 }, tp: { k: 'tp', w: 641, h: 918, cx: 320, cy: 610 } }[d] || { k: 'phone', w: 390, h: 844, cx: 195, cy: 560 };
+  }
+  devVals() {
+    const D = this.dev();
+    return { phStyle: D.k === 'phone' ? {} : { width: D.w + 'px', height: D.h + 'px' }, devCls: D.k === 'phone' ? '' : 'tab tab-' + D.k.slice(1) };
+  }
   // which events each mode has. Driver: today's drive; EV: signal priority at 700 S, 400 S, 200 S (granted)
   // and 100 S (denied), vehicles ahead pulling over (their BSM), a vehicle not yielding at 400 S;
   // cyclist: car from behind, car turning right across you (600 S), hold speed for the green (500 S),
@@ -1376,7 +1387,8 @@ class Component extends DCLogic {
     const mpp = 0.22614 / zk; // metres per screen px at the car
     const zoom = Math.log2(40075016.7 * Math.cos(lat * Math.PI / 180) / (512 * mpp));
     const h = map.getContainer().clientHeight || 844;
-    return { center: [lng, lat], zoom, pitch: 60 * tl, bearing: S.rot, padding: { top: Math.max(0, 2 * 560 - h), bottom: 0, left: 0, right: 0 } };
+    const D = this.dev(), w = map.getContainer().clientWidth || D.w;
+    return { center: [lng, lat], zoom, pitch: 60 * tl, bearing: S.rot, padding: { top: Math.max(0, 2 * D.cy - h), bottom: 0, left: Math.max(0, 2 * D.cx - w), right: Math.max(0, w - 2 * D.cx) } };
   }
   // event zones on the live map follow the mode (school / work zone: driver mode only)
   zoneVis() {
@@ -1482,7 +1494,8 @@ class Component extends DCLogic {
     if (fsA && this.free) this.recenter(); // a full-screen alert: back to following the car
     const live = this.mapCam(zk, tl);
     const free = live && (this.free || this.uz || (this.recT && performance.now() < this.recT));
-    const car = live ? this.map.project(this.geo(S.wx, S.wy)) : { x: 195, y: 560 };
+    const DV = this.dev();
+    const car = live ? this.map.project(this.geo(S.wx, S.wy)) : { x: DV.cx, y: DV.cy };
     const proj = live ? (X, Y) => {
       const p = this.map.project(this.geo(X, Y)), p2 = this.map.project(this.geo(X + 8, Y));
       const f = Math.hypot(p2.x - p.x, p2.y - p.y) / (8 * zk);
@@ -1490,7 +1503,7 @@ class Component extends DCLogic {
     } : (X, Y) => {
       const r = -S.rot * Math.PI / 180, ux = X - S.wx, uy = Y - S.wy; // map turns with you (heading up)
       const k = zk, kx = k * (ux * Math.cos(r) - uy * Math.sin(r)), ky = k * (ux * Math.sin(r) + uy * Math.cos(r)), z = ky * sA, f = 640 / (640 - z);
-      return { x: 195 + kx * f, y: 560 + ky * cA * f, f, ky };
+      return { x: DV.cx + kx * f, y: DV.cy + ky * cA * f, f, ky };
     };
     const has = (i, keys) => list.some(a => a.i === i && (!keys || keys.includes(a.key)));
     // markers sit on the map like the zone areas: drawn ahead of time (up to ~800 m ahead, so they are
@@ -1500,7 +1513,7 @@ class Component extends DCLogic {
       const q = proj(X, Y);
       // zoomed out to the city (live map below zoom 14.5) the hazards would all sit on the car: hide them
       // above the top card's bottom edge (152 px + the pin's height) a marker is hidden, as the map is (fade)
-      const vis = on && near(Y) && q.y > 205 && q.y < 900 && q.f > 0 && !(live && this.map.getZoom() < 14.5);
+      const vis = on && near(Y) && q.y > (DV.k === 'tl' && q.x > 430 ? 30 : 205) && q.y < DV.h + 60 && q.x > -60 && q.x < DV.w + 60 && q.f > 0 && !(live && this.map.getZoom() < 14.5);
       return { cls: vis ? (act ? 'act' : '') : 'off', style: { transform: `translate(${q.x.toFixed(1)}px, ${q.y.toFixed(1)}px) scale(${Math.max(0.6, Math.min(1, q.f * 1.25)).toFixed(3)})` } };
     };
     const pins = {
@@ -1532,9 +1545,10 @@ class Component extends DCLogic {
       planeCls: (this.on('school') ? '' : 'no-school ') + (this.on('work') ? '' : 'no-work'), // event zones: driver mode only
       mbxId: this.mbxId || (this.mbxId = 'mbx' + Math.random().toString(36).slice(2, 9)), camCls: (live ? 'mb-on' : '') + (this.liveOnly() ? ' live-only' : ''),
       mbErr: this.liveOnly() && !!this.mbFailed, mbRetry: () => { this.mbFailed = false; const n = document.getElementById(this.mbxId); if (n) this.mapOpen(n); this.setState({ tick: this.state.tick + 1 }); },
-      planeStyle: { transform: `rotateX(${(60 * tl).toFixed(2)}deg) scale(${zk.toFixed(3)}) rotate(${(-S.rot).toFixed(2)}deg) translate3d(${(-S.wx).toFixed(2)}px, ${(-S.wy).toFixed(2)}px, 0)` },
+      planeStyle: { left: DV.cx + 'px', top: DV.cy + 'px', transform: `rotateX(${(60 * tl).toFixed(2)}deg) scale(${zk.toFixed(3)}) rotate(${(-S.rot).toFixed(2)}deg) translate3d(${(-S.wx).toFixed(2)}px, ${(-S.wy).toFixed(2)}px, 0)` },
       puckTilt: { transform: `perspective(420px) rotateX(${(free ? Math.min(50, this.map.getPitch() * 0.83) : 50 * tl).toFixed(2)}deg)` },
-      puckPos: free ? { transform: `translate(${(car.x - 195).toFixed(1)}px, ${(car.y - 560).toFixed(1)}px)` } : {},
+      puckPos: { left: DV.cx + 'px', top: DV.cy + 'px', ...(free ? { transform: `translate(${(car.x - DV.cx).toFixed(1)}px, ${(car.y - DV.cy).toFixed(1)}px)` } : {}) },
+      camStyle: { perspectiveOrigin: `${DV.cx}px ${DV.cy}px` }, ...this.devVals(),
       puckCls: free && (car.x < -30 || car.x > 420 || car.y < 0 || car.y > 880) ? 'off' : '',
       freeOn: !!(live && this.free), recenter: () => this.recenter(),
       fogStyle: {}, // the same in 2D and 2.5D: nothing shows above the top card
