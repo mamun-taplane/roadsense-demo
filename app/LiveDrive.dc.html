@@ -231,6 +231,7 @@
       </sc-if>
       <div class="set-sec">Display</div>
       <div class="set-grp">
+        <div class="set-row"><div class="set-rt"><div class="set-l">Background alerts</div><div class="set-d">See how alerts arrive while another app is open</div></div><button class="set-go" onClick="{{ goBg }}">Preview</button></div>
         <div class="set-row"><div class="set-rt"><div class="set-l">Keep screen on</div><div class="set-d">While Road Sense is open</div></div><button class="set-tg {{ tAwake }}" onClick="{{ fAwake }}" aria-label="Keep screen on"><i></i></button></div>
         <sc-if value="{{ mbLive }}" hint-placeholder-val="{{ false }}">
         <div class="set-row set-row-col"><div class="set-rt"><div class="set-l">Map style</div><div class="set-d">Pick one, or paste any Mapbox style link</div></div>
@@ -246,6 +247,29 @@
     </div>
   </div>
 
+  <!-- Launch permissions (first start): one per screen, then the drive -->
+  <sc-if value="{{ permOn }}" hint-placeholder-val="{{ false }}">
+    <div class="pm {{ perm.cls }}" role="dialog" aria-label="{{ perm.t }}">
+      <div class="pm-step">{{ perm.step }}</div>
+      <div class="pm-ic"><svg class="pm-i pm-i-loc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.6"/></svg><svg class="pm-i pm-i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg><svg class="pm-i pm-i-bg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M9 9.5v5l4.5-2.5z" fill="currentColor"/></svg><svg class="pm-i pm-i-over" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="13" height="13" rx="2.5"/><path d="M8 7V5.5A2.5 2.5 0 0 1 10.5 3h8A2.5 2.5 0 0 1 21 5.5v8a2.5 2.5 0 0 1-2.5 2.5H16"/></svg></div>
+      <div class="pm-t">{{ perm.t }}</div>
+      <div class="pm-s">{{ perm.s }}</div>
+      <sc-if value="{{ perm.hasNote }}" hint-placeholder-val="{{ false }}"><div class="pm-note">{{ perm.note }}</div></sc-if>
+      <div class="pm-dots"><sc-for list="{{ dots }}" as="d" hint-placeholder-count="4"><i class="{{ d.cls }}"></i></sc-for></div>
+      <button class="pm-ok" onClick="{{ permAllow }}">{{ perm.ok }}</button>
+      <button class="pm-no" onClick="{{ permSkip }}">Not now</button>
+    </div>
+  </sc-if>
+  <!-- Background preview: another app in front; Road Sense alerts arrive as a banner (+ voice) -->
+  <sc-if value="{{ bgOn }}" hint-placeholder-val="{{ false }}">
+    <div class="bgv" role="region" aria-label="Road Sense in the background">
+      <div class="bgv-app"><div class="bgv-l">Another app is open</div><div class="bgv-s">Road Sense keeps watching the road and speaks every alert</div></div>
+      <sc-if value="{{ bgb.show }}" hint-placeholder-val="{{ false }}">
+        <button class="bgv-ban {{ bgb.cls }}" onClick="{{ openApp }}" aria-label="Open Road Sense"><img class="bgv-logo" src="img/roadsense-icon.svg" alt=""><span class="bgv-tx"><span class="bgv-k">Road Sense · now</span><span class="bgv-t">{{ bgb.title }}</span><span class="bgv-sb">{{ bgb.sub }}</span></span></button>
+      </sc-if>
+      <button class="bgv-open" onClick="{{ openApp }}">Open Road Sense</button>
+    </div>
+  </sc-if>
   <sc-if value="{{ showSplash }}" hint-placeholder-val="{{ true }}">
     <div class="spm">
       <img class="spm-map" src="img/map-start.png" alt="">
@@ -291,6 +315,7 @@
         <button class="{{ r1 }}" onClick="{{ rate1 }}">1×</button>
         <button class="{{ r2 }}" onClick="{{ rate2 }}">2×</button>
       </div>
+      <button class="cb" onClick="{{ goBg }}" title="Show how alerts arrive while another app is open">Background</button>
       <button class="cb cb-ic" onClick="{{ toggleVoice }}" aria-label="{{ voiceLabel }}">
         <sc-if value="{{ voiceOn }}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></sc-if>
         <sc-if value="{{ voiceOff }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9l5 6M21 9l-5 6"/></svg></sc-if>
@@ -914,7 +939,37 @@ class Component extends DCLogic {
   nextInt() { const s = this.sim.s; return this.INTS.find(i => i.s + 70 > s); } // until past the far side
 
   // ---------- actions ----------
-  start() { this.claim(); this.reset(0); this.setState({ screen: 'drive', playing: true, done: false }); };
+  start() {
+    // first start: the launch permissions, one per screen (client meeting: location, notifications,
+    // background operation, draw over other apps); then the drive
+    if (!this.still && !this.permDone) return this.setState({ screen: 'perm', pstep: 0 });
+    this.claim(); this.reset(0); this.setState({ screen: 'drive', playing: true, done: false });
+  };
+  get PERMS() { return [
+    { ic: 'loc', t: 'Use your location', s: 'Road Sense needs your precise location, also while it runs in the background, for the signals and alerts on your way.', ok: 'Allow', note: 'Choose “Precise” and “Always”' },
+    { ic: 'bell', t: 'Allow notifications', s: 'So alerts reach you when the screen is off or another app is open.', ok: 'Allow', note: '' },
+    { ic: 'bg', t: 'Keep running in the background', s: 'Voice alerts keep working while you use navigation or music.', ok: 'Allow', note: 'Turn off battery optimization for Road Sense' },
+    { ic: 'over', t: 'Show over other apps', s: 'Critical alerts appear on top of the app you are using (Android).', ok: 'Allow', note: '' },
+  ]; }
+  permNext() {
+    const n = (this.state.pstep || 0) + 1;
+    if (n >= this.PERMS.length) { this.permDone = true; return this.start(); }
+    this.setState({ pstep: n });
+  }
+  permVals() {
+    const st = this.state, on = st.screen === 'perm', P = this.PERMS[Math.min(this.PERMS.length - 1, st.pstep || 0)];
+    return {
+      permOn: on, perm: { ...P, cls: 'pm-' + P.ic, step: `${(st.pstep || 0) + 1} of ${this.PERMS.length}`, hasNote: !!P.note },
+      permAllow: () => this.permNext(), permSkip: () => this.permNext(),
+      dots: this.PERMS.map((p, k) => ({ cls: k === (st.pstep || 0) ? 'on' : '' })),
+      // background preview: the app is behind another app; alerts come as a banner (and voice)
+      bgOn: !!st.bg && st.screen === 'drive', goBg: () => this.setState({ bg: true, set: false }), openApp: () => this.setState({ bg: false }),
+    };
+  }
+  bgBanner(list) {
+    const rank = { crit: 3, warn: 2, adv: 1, ok: 0 }, a = list.slice().sort((x, y) => rank[y.lv] - rank[x.lv])[0];
+    return a ? { show: true, cls: 'lv-' + a.lv, title: a.fsTitle || a.title, sub: a.fsSub || a.sub, ic: a.ic } : { show: false, cls: '', title: '', sub: '', ic: 'info-w' };
+  }
   togglePlay() {
     if (this.state.screen !== 'drive') return this.start();
     if (this.state.done) { this.claim(); this.reset(0); return this.setState({ playing: true, done: false }); }
@@ -1540,7 +1595,7 @@ class Component extends DCLogic {
       rootCls: full ? 'board' : '',
       phoneCls: full ? 'ph-frame' : '',
       showPanel: full,
-      showSplash: !drive,
+      showSplash: !drive, ...this.permVals(), bgb: this.bgBanner(list),
       tiles: this.tileVis(), tsrc: this.tileSrc(),
       planeCls: (this.on('school') ? '' : 'no-school ') + (this.on('work') ? '' : 'no-work'), // event zones: driver mode only
       mbxId: this.mbxId || (this.mbxId = 'mbx' + Math.random().toString(36).slice(2, 9)), camCls: (live ? 'mb-on' : '') + (this.liveOnly() ? ' live-only' : ''),
