@@ -17,14 +17,18 @@
   :root { --bar: 52px; --ink: #15181D; --ink2: #5B636E; --line: #E3E6EA; }
   html, body { margin: 0; height: 100%; background: #F6F7F9; font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif; }
   /* demo switch: outside the app, so the app keeps its own screen */
-  .demo-bar { position: fixed; z-index: 100; left: 0; right: 0; top: 0; min-height: calc(var(--bar) + env(safe-area-inset-top, 0px)); padding: env(safe-area-inset-top, 0px) 8px 0; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; justify-content: center; background: #fff; border-bottom: 1px solid var(--line); }
-  .demo-bar .demo-seg { margin: 6px 0; }
-  @media (max-width: 760px) { .demo-bar .lg { display: none; } .demo-bar { gap: 6px; padding-left: 4px; padding-right: 4px; } .demo-bar .demo-seg a { height: 32px; padding: 0 7px; font-size: 12.5px; } }
-  #d-tl::after { content: " ▭"; } #d-tp::after { content: " ▯"; }
-  .demo-seg { display: flex; padding: 3px; border-radius: 12px; background: #EEF0F3; }
-  .demo-seg a { height: 36px; padding: 0 14px; cursor: pointer; border-radius: 9px; display: flex; align-items: center; font-size: 14px; font-weight: 600; color: var(--ink2); text-decoration: none; }
+  /* two labeled groups: App (map / no map) and Device (phone / tablet landscape / tablet portrait) */
+  .demo-bar { position: fixed; z-index: 100; left: 0; right: 0; top: 0; min-height: calc(var(--bar) + env(safe-area-inset-top, 0px)); padding: env(safe-area-inset-top, 0px) 12px 0; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 6px 32px; align-items: center; justify-content: center; background: #fff; border-bottom: 1px solid var(--line); }
+  .demo-grp { display: flex; align-items: center; gap: 10px; margin: 6px 0; }
+  .demo-k { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #98A0AA; }
+  .demo-seg { display: flex; gap: 2px; padding: 3px; border-radius: 12px; background: #EEF0F3; }
+  .demo-seg a { height: 34px; padding: 0 12px; cursor: pointer; border-radius: 9px; display: flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 600; color: var(--ink2); text-decoration: none; white-space: nowrap; user-select: none; }
+  .demo-seg a svg { width: 18px; height: 18px; flex: none; }
+  .demo-seg a:hover { color: var(--ink); }
   .demo-seg a.on { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(16, 24, 40, .14); }
   .demo-seg a:focus-visible { outline: 2px solid #2563EB; outline-offset: 1px; }
+  /* phone: no group labels, short names, device icons only */
+  @media (max-width: 760px) { .demo-bar { gap: 6px 14px; padding-left: 6px; padding-right: 6px; } .demo-k, .demo-bar .lg { display: none; } .demo-seg a { height: 32px; padding: 0 9px; font-size: 13px; } .demo-seg a .dv-t { display: none; } }
   #root { padding-top: var(--barh, calc(var(--bar) + env(safe-area-inset-top, 0px))); }
   /* computer: the board (phone + side panel) centered under the bar */
   body:not(.app) #root { display: flex; justify-content: center; }
@@ -43,7 +47,17 @@
 </script>
 </head>
 <body>
-<nav class="demo-bar" aria-label="Choose the app and the device"><div class="demo-seg"><a id="to-map">Map<span class="lg"> app</span></a><a id="to-cluster">No map<span class="lg"> app</span></a></div><div class="demo-seg"><a id="d-phone">Phone</a><a id="d-tl" title="Tablet, landscape" aria-label="Tablet, landscape">Tablet<span class="lg"> landscape</span></a><a id="d-tp" title="Tablet, portrait" aria-label="Tablet, portrait">Tablet<span class="lg"> portrait</span></a></div></nav>
+<nav class="demo-bar" aria-label="Choose the app and the device">
+  <div class="demo-grp"><span class="demo-k">App</span><div class="demo-seg" role="group" aria-label="App">
+    <a id="to-map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5V4l-6 2.5z"/><path d="M9 4v13M15 6.5v13"/></svg><span>Map<span class="lg"> app</span></span></a>
+    <a id="to-cluster"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="8" height="16" rx="2"/><rect x="13" y="4" width="8" height="7" rx="2"/><rect x="13" y="13" width="8" height="7" rx="2"/></svg><span>No map<span class="lg"> app</span></span></a>
+  </div></div>
+  <div class="demo-grp"><span class="demo-k">Device</span><div class="demo-seg" role="group" aria-label="Device">
+    <a id="d-phone" title="Phone" aria-label="Phone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg><span class="dv-t">Phone</span></a>
+    <a id="d-tl" title="Tablet, landscape" aria-label="Tablet, landscape"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M18.5 11v2"/></svg><span class="dv-t">Tablet landscape</span></a>
+    <a id="d-tp" title="Tablet, portrait" aria-label="Tablet, portrait"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M11 18.5h2"/></svg><span class="dv-t">Tablet portrait</span></a>
+  </div></div>
+</nav>
 <div id="root"></div>
 <script src="_dc.js"></script>
 <script>

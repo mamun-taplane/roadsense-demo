@@ -167,7 +167,7 @@
 .icset { display: grid; place-items: center; }
 .icset .i { display: none; }
 /* every icon in both colors; icOn() picks white or dark by alert level */
-.ic-school-w .i-school-w, .ic-school-k .i-school-k, .ic-signal-w .i-signal-w, .ic-signal-k .i-signal-k, .ic-ped-w .i-ped-w, .ic-ped-k .i-ped-k, .ic-bike-w .i-bike-w, .ic-bike-k .i-bike-k, .ic-work-w .i-work-w, .ic-work-k .i-work-k, .ic-stopped-w .i-stopped-w, .ic-stopped-k .i-stopped-k, .ic-bridge-w .i-bridge-w, .ic-bridge-k .i-bridge-k, .ic-rlr-w .i-rlr-w, .ic-rlr-k .i-rlr-k, .ic-siren-w .i-siren-w, .ic-siren-k .i-siren-k, .ic-check-w .i-check-w, .ic-check-k .i-check-k, .ic-info-w .i-info-w, .ic-info-k .i-info-k, .ic-speed-w .i-speed-w, .ic-speed-k .i-speed-k, .ic-tram-w .i-tram-w, .ic-tram-k .i-tram-k { display: block; }
+.ic-school-w .i-school-w, .ic-school-k .i-school-k, .ic-signal-w .i-signal-w, .ic-signal-k .i-signal-k, .ic-ped-w .i-ped-w, .ic-ped-k .i-ped-k, .ic-bike-w .i-bike-w, .ic-bike-k .i-bike-k, .ic-work-w .i-work-w, .ic-work-k .i-work-k, .ic-stopped-w .i-stopped-w, .ic-stopped-k .i-stopped-k, .ic-bridge-w .i-bridge-w, .ic-bridge-k .i-bridge-k, .ic-rlr-w .i-rlr-w, .ic-rlr-k .i-rlr-k, .ic-siren-w .i-siren-w, .ic-siren-k .i-siren-k, .ic-check-w .i-check-w, .ic-check-k .i-check-k, .ic-info-w .i-info-w, .ic-info-k .i-info-k, .ic-speed-w .i-speed-w, .ic-speed-k .i-speed-k, .ic-tram-w .i-tram-w, .ic-tram-k .i-tram-k, .ic-bus-w .i-bus-w, .ic-bus-k .i-bus-k { display: block; }
 
 /* ---------- Full-screen alert ---------- */
 .tk { position: absolute; inset: 0; z-index: 31; background: #fff; display: flex; align-items: center; justify-content: center; padding-bottom: 120px; opacity: 0; pointer-events: none; transition: opacity .35s ease, padding .5s cubic-bezier(.2, .8, .2, 1); }
@@ -366,37 +366,46 @@
 
 
 
-/* ---------- Tablet (v37 redesign) ----------
-   Landscape (tab-l, 1194×834, driver / EV): a solid information panel on the left (430 px: next signal,
-   alerts, your speed) and a big live map on the right with its own controls; the car sits in the middle of
-   the map (cx 808). A full-screen alert takes the panel only: the map stays, framed in the alert's color, so
-   you see where the hazard is. Portrait (tab-p, 641×918 drawn, ×1.3 on screen): the phone layout, wider; a
-   full-screen alert takes the top half and the map stays below it. Get started: the phone's page centered. */
+/* ---------- Tablet (v38) ----------
+   Landscape (tab-l, 1194×834, driver / EV): the whole screen is map. At the bottom, centered side by side:
+   the next-signal card and the speed bar. Small alerts come in as toasts at the top center, under a light
+   fade. A close / critical alert takes the full screen; two at once split it in half, side by side, each with
+   its own icon, title and number. The signal card and speed bar stay on top of the full screen.
+   Portrait (tab-p, 641×918 drawn, ×1.3 on screen): the phone layout, wider; a full-screen alert takes the
+   top half and the map stays below it. Get started: the phone's page centered. */
 .ph.tab { border-radius: 30px; }
 .ph.tab .edge { border-radius: 30px; }
 .tside, .tcalm { display: none; }
-.ph.tab-l .tcalm { position: absolute; left: 20px; width: 390px; top: 172px; z-index: 17; display: flex; align-items: center; gap: 14px; padding: 18px; border-radius: 24px; background: var(--card); box-shadow: var(--shadow); opacity: 0; transition: opacity .3s; }
-.ph.tab-l .tcalm.on { opacity: 1; }
-.tcalm-ic { width: 48px; height: 48px; flex: none; border-radius: 16px; display: grid; place-items: center; background: #E7F6EC; color: var(--ok); }
-.tcalm-ic svg { width: 24px; height: 24px; }
-.tcalm-k { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--ok); }
-.tcalm-t { margin-top: 2px; font-size: 17px; font-weight: 600; }
-.tcalm-s { margin-top: 2px; font-size: 13px; color: var(--ink-3); }
-.ph.tab-l .tside { display: block; position: absolute; left: 0; top: 0; bottom: 0; width: 430px; z-index: 16; background: var(--bg); box-shadow: 1px 0 0 var(--line), 8px 0 24px -12px rgba(16, 24, 40, .18); }
-.ph.tab-l .fog { display: none; }
-.ph.tab-l .ahead, .ph.tab-l .al, .ph.tab-l .dock { left: 20px; right: auto; width: 390px; }
-.ph.tab-l .dock { bottom: 20px; }
-/* map controls live on the map: status chips top left, buttons top right, zoom bottom right */
-.ph.tab-l .float { left: 450px; right: 20px; top: 52px; bottom: auto; }
+.ph.tab-l .fog { height: 130px; background: linear-gradient(rgba(247, 248, 250, .92), rgba(247, 248, 250, .55) 55%, rgba(247, 248, 250, 0)); }
+.ph.tab-l .ahead { top: auto; bottom: 20px; left: calc(50% - 400px); right: auto; width: 390px; z-index: 33; }
+.ph.tab-l .dock { bottom: 20px; left: calc(50% + 10px); right: auto; width: 390px; }
+.ph.tab-l .al { left: calc(50% - 240px); right: auto; width: 480px; }
+.ph.tab-l .float { left: 20px; right: 20px; top: 52px; bottom: auto; }
 .ph.tab-l .zoom { right: 20px; bottom: 20px; }
-.ph.tab-l .recenter { left: 812px; bottom: 24px; }
-.ph.tab-l .edge { left: 430px; border-radius: 0 30px 30px 0; }
-.ph.tab-l .mbx .mapboxgl-ctrl-bottom-left { left: 446px; bottom: 12px; }
-.ph.tab-l .mb-attr { left: 452px; bottom: 16px; }
-.ph.tab-l .mb-err { left: 812px; }
-.ph.tab-l .tk { right: auto; width: 430px; padding-bottom: 140px; }
-.ph.tab-l .tk::after { content: ''; position: absolute; left: 430px; top: 0; width: 764px; height: 100%; pointer-events: none; border-radius: 0 30px 30px 0; box-shadow: inset 0 0 0 6px var(--lv); }
-.ph.tab-l .tk2 { left: 20px; right: 20px; bottom: 136px; }
+.ph.tab-l .recenter { left: 597px; bottom: 140px; }
+.ph.tab-l .mbx .mapboxgl-ctrl-bottom-left { left: 14px; bottom: 12px; }
+.ph.tab-l .mb-attr { left: 20px; bottom: 16px; }
+.ph.tab-l .mb-err { left: 597px; }
+.ph.tab-l .tk { padding-bottom: 150px; border-radius: 30px; }
+.ph.tab-l .tk2 { left: 20px; right: 20px; bottom: 150px; max-width: 640px; margin: 0 auto; }
+/* two alerts at once: left half = the lead alert, right half = the second, same size and parts */
+.ph.tab-l .tk.two { padding-bottom: 150px; padding-right: 50%; }
+.ph.tab-l .tk.two .tk-ic, .ph.tab-l .tk.two .tk-disc { width: 112px; height: 112px; }
+.ph.tab-l .tk.two .tk-disc img { width: 58px; height: 58px; }
+.ph.tab-l .tk.two .tk-t { margin-top: 56px; font-size: 32px; }
+.ph.tab-l .tk.two .tk-d { margin-top: 26px; font-size: 64px; }
+.ph.tab-l .tk.two .tk2 { left: 50%; right: 0; top: 0; bottom: 0; max-width: none; margin: 0; border-radius: 0 30px 30px 0; padding: 0 28px 150px; display: flex; flex-direction: column; justify-content: center; text-align: center; box-shadow: inset 2px 0 0 rgba(16, 24, 40, .06); }
+.ph.tab-l .tk.two .tk2-k { margin: 0 0 18px; }
+.ph.tab-l .tk.two .tk2-row { flex-direction: column; gap: 0; }
+.ph.tab-l .tk.two .tk2-ic { width: 112px; height: 112px; border-radius: 50%; }
+.ph.tab-l .tk.two .tk2-ic img { width: 58px; height: 58px; }
+.ph.tab-l .tk.two .tk2-txt { flex: none; margin-top: 56px; }
+.ph.tab-l .tk.two .tk2-t { font-size: 32px; letter-spacing: -.8px; white-space: normal; }
+.ph.tab-l .tk.two .tk2.lv-ok .tk2-t { color: var(--ok); } /* same title colors as the lead alert: red critical, green clear */
+.ph.tab-l .tk.two .tk2-s { margin-top: 10px; font-size: 18px; }
+.ph.tab-l .tk.two .tk2-d { text-align: center; margin-top: 26px; }
+.ph.tab-l .tk.two .tk2-dv { font-size: 64px; letter-spacing: -2.5px; }
+.ph.tab-l .tk.two .tk2-dl { font-size: 15px; margin-top: 6px; }
 .ph.tab-l .set-sheet { left: 0; right: auto; width: 430px; top: 0; bottom: 0; border-radius: 30px 0 0 30px; }
 .ph.tab-p .tk { bottom: auto; height: 470px; padding-bottom: 0; border-radius: 0 0 32px 32px; box-shadow: 0 12px 30px -14px rgba(16, 24, 40, .3); }
 .ph.tab-p .tk::after { content: ''; position: absolute; left: 0; right: 0; top: 470px; height: 448px; pointer-events: none; box-shadow: inset 0 0 0 6px var(--lv); border-radius: 0 0 30px 30px; }
@@ -404,7 +413,16 @@
 .ph.tab-p .tk .tk-t { margin-top: 44px; }
 .ph.tab-p .tk .tk-d { margin-top: 18px; }
 .ph.tab-p .tk2 { top: 482px; bottom: auto; left: 16px; right: 16px; background: var(--card); box-shadow: inset 0 0 0 2px var(--lv), var(--shadow); }
-.ph.tab .spm { left: 50%; right: auto; width: 390px; margin-left: -195px; height: 844px; top: 50%; margin-top: -422px; box-shadow: 0 0 0 1400px #F3F4F6; overflow: visible; }
+.spm-vis { position: absolute; left: 0; top: 0; width: 390px; height: 844px; }
+.ph.tab-p .spm { left: 50%; right: auto; width: 390px; margin-left: -195px; height: 844px; top: 50%; margin-top: -422px; box-shadow: 0 0 0 1400px #F3F4F6; overflow: visible; }
+/* landscape get started: the moving map as a rounded panel on the right, the words and the button on the left */
+.ph.tab-l .spm-vis { left: auto; right: 64px; top: 110px; height: 614px; border-radius: 36px; overflow: hidden; box-shadow: 0 0 0 1px #E3E6EA, 0 30px 60px -30px rgba(16, 24, 40, .35); }
+.ph.tab-l .spm-vis .spm-tf { height: 200px; background: linear-gradient(#F3F4F6 0, rgba(243, 244, 246, 0) 200px); }
+.ph.tab-l .spm-cu { left: 96px; top: 250px; height: 28px; }
+.ph.tab-l .spm-h { left: 96px; right: auto; width: 540px; top: 300px; font-size: 60px; letter-spacing: -2.4px; line-height: 1.02; }
+.ph.tab-l .spm-btn { left: 96px; right: auto; width: 400px; bottom: 250px; }
+.ph.tab-l .spm-pow { left: 96px; right: auto; bottom: 205px; justify-content: flex-start; }
+.ph.tab .pm-t, .ph.tab .pm-s { max-width: 460px; }
 
 
 
