@@ -178,7 +178,7 @@
     </button>
   </div>
   <sc-if value="{{ freeOn }}" hint-placeholder-val="{{ false }}">
-    <button class="recenter" onClick="{{ recenter }}" aria-label="Re-center the map on your vehicle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3.5 19.5 20 12 15.8 4.5 20Z"/></svg><span class="recenter-t">Re-center</span></button>
+    <button class="recenter" onClick="{{ recenter }}" aria-label="{{ recAria }}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3.5 19.5 20 12 15.8 4.5 20Z"/></svg><span class="recenter-t">{{ recLabel }}</span></button>
   </sc-if>
   <div class="zoom" role="group" aria-label="Map zoom">
     <button class="zb {{ zInCls }}" onClick="{{ zoomIn }}" aria-label="Zoom in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
@@ -1491,7 +1491,7 @@ class Component extends DCLogic {
   liveZk(tl) {
     const lat = this.geo(this.sim.wx, this.sim.wy)[1];
     // starts where the old zoom steps ended (their widest view, user 2026-11-06); a still board's ",z0..z4" keeps its step
-    if (this.lz == null) this.lz = this.zoomOf(1.45 * this.ZOOMS[/,z\d/.test(this.still) ? this.state.zoom : 0], lat) + (this.mode() === 'walk' ? 1.2 : 0); // walking: closer
+    if (this.lz == null) { this.lz = this.zoomOf(1.45 * this.ZOOMS[/,z\d/.test(this.still) ? this.state.zoom : 0], lat) + (this.mode() === 'walk' ? 1.2 : 0); this.lzDef = this.lz; } // walking: closer; lzDef = the default (Reset view)
     if (this.lzT != null) { // + / −: glide to the new level (~250 ms)
       const d = this.lzT - this.lz;
       if (Math.abs(d) < 0.01 || this.free || this.uz) { this.lz = this.lzT; this.lzT = null; } else { this.lz += d * 0.22; this.redraw(); }
@@ -1529,6 +1529,18 @@ class Component extends DCLogic {
     if (this.recT && now < this.recT) { this.redraw(); return true; } // easing back to the car
     map.jumpTo(this.followCam(zk, tl));
     return true;
+  }
+  // the camera differs from the default: moved / rotated / tilted (free look), zoomed, or switched to 2.5D
+  camChanged() {
+    const z = this.lzT ?? this.lz;
+    if (this.viewDef == null) this.viewDef = this.still ? this.state.view : '2d'; // stills: the view they were drawn in
+    return !!this.free || (z != null && this.lzDef != null && Math.abs(z - this.lzDef) > 0.05) || this.state.view !== this.viewDef;
+  }
+  // Reset view: back to the default — following the car, heading up, default zoom, flat 2D (the agreed default)
+  resetView() {
+    if (this.lzDef != null) { this.lz = this.lzDef; this.lzT = null; }
+    if (this.state.view !== (this.viewDef || '2d')) this.toggleView();
+    this.recenter();
   }
   recenter() {
     const map = this.map; if (!map) return;
@@ -1670,7 +1682,9 @@ class Component extends DCLogic {
       puckPos: { left: DV.cx + 'px', top: DV.cy + 'px', ...(free ? { transform: `translate(${(car.x - DV.cx).toFixed(1)}px, ${(car.y - DV.cy).toFixed(1)}px)` } : {}) },
       camStyle: { perspectiveOrigin: `${DV.cx}px ${DV.cy}px` }, ...this.devVals(),
       puckCls: free && (car.x < -30 || car.x > 420 || car.y < 0 || car.y > 880) ? 'off' : '',
-      freeOn: !!(live && this.free), recenter: () => this.recenter(),
+      // any change to the camera (drag, rotate, tilt, zoom, 2D / 2.5D) shows one button that puts it all back
+      freeOn: !!(live && this.camChanged()), recenter: () => this.resetView(),
+      recLabel: this.free ? 'Re-center' : 'Reset view', recAria: this.free ? 'Re-center the map on your vehicle' : 'Reset the map view (zoom, tilt, heading)',
       fogStyle: {}, // the same in 2D and 2.5D: nothing shows above the top card
       toggleView: () => this.toggleView(),
       viewBtn: st.view === '2d' ? '2.5D' : '2D', viewLabel: st.view === '2d' ? 'Tilt the map (2.5D view)' : 'Flat map (2D view)',
