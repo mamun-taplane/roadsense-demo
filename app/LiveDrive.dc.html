@@ -115,7 +115,7 @@
       <sc-if value="{{ walkOn }}" hint-placeholder-val="{{ false }}">
       <div class="pedhead {{ wsig.cls }}" role="img" aria-label="{{ sigLabel }}">
         <div class="ph-lens"><svg class="wk-hand" viewBox="0 0 24 24" fill="currentColor"><path d="M8.2 12.6V5.7a1.4 1.4 0 0 1 2.8 0v5.6h.6V4.4a1.4 1.4 0 0 1 2.8 0v6.9h.6V5.6a1.4 1.4 0 0 1 2.8 0v8.6c0 4.4-2.6 7.3-6.3 7.3-2.6 0-4.1-1.3-5.4-3.4l-2.4-4.1a1.3 1.3 0 0 1 2.2-1.4z"/></svg><svg class="wk-walk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="4" r="2" fill="currentColor" stroke="none"/><path d="M13 7.5 11 14l3 3 1 4.5"/><path d="M11 14l-2.5 3L6 20.5"/><path d="M12.5 8.5 9 10.5 8 13.5"/><path d="M13 8.5l2 3 3 1"/></svg></div>
-        <div class="ph-txt"><div class="ph-n">{{ wsig.n }}</div><div class="ph-l">{{ wsig.lbl }}</div></div>
+        <div class="ph-txt"><div class="ph-n">{{ wsig.word }}</div><div class="ph-l">{{ wsig.sub }}</div></div>
       </div>
       </sc-if>
     </div>
@@ -166,7 +166,7 @@
   <!-- You: connection, voice, speed, limit, heading -->
   <div class="float">
     <sc-if value="{{ notVru }}" hint-placeholder-val="{{ true }}"><div class="chip"><i class="dot"></i>Connected</div></sc-if>
-    <sc-if value="{{ vruOn }}" hint-placeholder-val="{{ false }}"><div class="chip chip-bc" title="Your phone shares your position with nearby vehicles (PSM)"><i class="bc-dot"></i>Broadcasting</div></sc-if>
+    <sc-if value="{{ bikeOn }}" hint-placeholder-val="{{ false }}"><div class="chip chip-bc" title="Your phone shares your position with nearby vehicles (PSM)"><i class="bc-dot"></i>Broadcasting</div></sc-if>
     <sc-if value="{{ evMode }}" hint-placeholder-val="{{ false }}">
       <div class="chip chip-ev"><i style="background:#EF4444"></i><i style="background:#3B82F6"></i>EV mode</div>
     </sc-if>
@@ -185,8 +185,13 @@
     <i class="zsep"></i>
     <button class="zb {{ zOutCls }}" onClick="{{ zoomOut }}" aria-label="Zoom out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
   </div>
-  <section class="dock {{ dockCls }}" aria-label="Your vehicle">
-    <div class="dk">
+  <section class="dock {{ dockCls }}" aria-label="You">
+    <!-- walking: drivers can see you (your phone broadcasts PSM) + a car coming; riding: a car behind you -->
+    <div class="dk dk-vis"><div class="dk-vis-t"><i class="bc-dot"></i>{{ vru.vis.t }}</div><div class="dk-lbl">{{ vru.vis.l }}</div></div>
+    <div class="dk-sep dk-vis-sep"></div>
+    <div class="dk dk-near {{ vru.near.cls }}"><div class="dk-num dk-word">{{ vru.near.t }}</div><div class="dk-lbl">{{ vru.near.l }}</div></div>
+    <div class="dk dk-rear {{ vru.rear.cls }}"><div class="dk-num dk-word">{{ vru.rear.t }}</div><div class="dk-lbl">{{ vru.rear.l }}</div></div>
+    <div class="dk dk-spd">
       <div class="dk-num {{ spdCls }}">{{ mph }}</div>
       <div class="dk-lbl">mph</div>
     </div>
@@ -286,6 +291,7 @@
       <div class="spm-card spm-c2" aria-hidden="true"><div class="spm-ci" style="background:#F5A524"><img src="v2/ic/school-k.svg" alt=""></div><div><div class="spm-ct">School zone</div><div class="spm-cs">20 mph · 650 ft</div></div></div>
       <div class="spm-puck" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 20 20 12 16 4 20z"/></svg></div>
       </div>
+      <div class="spm-sheet" aria-hidden="true"></div><!-- the white sheet the words sit on; the map above it is the hero -->
       <div class="sbar" aria-hidden="true">
         <span>9:41</span>
         <span class="sbar-r">
@@ -421,7 +427,7 @@ class Component extends DCLogic {
       'bk-bus': 'Bus pulling out ahead. Slow down.',
       'bk-green': 'Hold 13 miles per hour to make the green at 500 South.',
       'bk-det': 'You have been detected at 400 South.',
-      'ev': 'Emergency vehicle approaching. Pull over to the right.',
+      'ev': 'Emergency vehicle heading to 300 South. Pull over to the right.',
       'speed-20': 'Slow down. School zone, 20.', 'speed-25': 'Slow down. Work zone, 25.', 'speed-35': 'Slow down. Limit 35.', 'speed-30': 'Slow down. Limit 30.',
       'p2-ok': 'Priority granted. Green light held.',
       'p1-no': 'Priority denied. Stop at the red light.',
@@ -676,16 +682,32 @@ class Component extends DCLogic {
   // next signal for the top card: State St, or the corners of the detour
   walkLabel() { const g = this.walkSig(); return 'Pedestrian signal: ' + (g.c === 'w' ? 'walk' : g.c === 'fdw' ? 'finish crossing' : "don't walk") + (g.n != null ? ', ' + g.n + ' seconds' : ''); }
   // the pedestrian signal for the views: hand (don't walk) or walking person, the countdown under it
+  // plain words instead of the signal's own symbols (the hand / walking person alone confused reviewers, and
+  // UDOT's PedApp speaks the state + time the same way): word = what to do, sub = when / how long
   walkSigView() {
-    const g = this.walkSig(), lbl = g.c === 'w' ? 'Walk' : g.c === 'fdw' ? 'Finish crossing' : g.n != null ? 'Walk in' : 'Don\'t walk';
-    return { c: g.c, n: g.n != null ? String(g.n) : '', lbl, cls: 'ws-' + g.c };
+    const g = this.walkSig(), n = g.n, crossing = this.sim.wph === 'cross';
+    const word = g.c === 'w' ? 'Walk' : g.c === 'fdw' ? (crossing ? 'Keep going' : 'Don\'t start') : 'Wait';
+    const sub = g.c === 'w' ? (n != null ? n + ' s to cross' : 'Cross now') : g.c === 'fdw' ? (n != null ? n + ' s left' : 'Signal ending')
+      : n != null ? 'Walk in ' + n + ' s' : 'Not requested yet';
+    return { c: g.c, n: n != null ? String(n) : '', lbl: sub, word, sub, cls: 'ws-' + g.c };
+  }
+  // what a walker / rider needs instead of a speed-limit sign (research: UDOT PedApp; cyclist field studies —
+  // audio first, glanceable icons, rear traffic like a bike radar). Walker: are drivers seeing me, is a car
+  // coming. Rider: is a car coming up behind me.
+  vruVals() {
+    const S = this.sim, m = this.mode();
+    let near = { t: 'None', l: 'cars approaching', cls: '' };
+    if (m === 'walk') { const c = this.carSW(); if (c != null && c < this.WK.xw + 20) { const ft = Math.max(0, (this.WK.xw - c) * this.FT); near = { t: ft > 30 ? Math.round(ft / 10) * 10 + ' ft' : 'Here', l: 'car approaching', cls: 'warn' }; } }
+    let rear = { t: 'Clear', l: 'behind you', cls: '' };
+    if (m === 'bike' && S.s >= 560 && S.s < 980) { const ft = Math.max(0, (980 - S.s) / 420 * 260); rear = { t: ft > 15 ? Math.round(ft / 10) * 10 + ' ft' : 'Passing', l: 'car behind', cls: 'warn' }; }
+    return { near, rear, vis: { t: 'Visible', l: 'to nearby drivers' } };
   }
   nextView() {
     const S = this.sim, D = S.det, c = Math.ceil;
     if (this.mode() === 'walk') {
       const K = this.WK, ph = S.wph, g = this.L('g', null);
       const dstr = ph === 'to' ? this.dist(K.xw - S.s).split(' ') : ph === 'curb' ? ['At crosswalk', ''] : ph === 'cross' ? ['Crossing', ''] : ['Crossed', ''];
-      return { name: ph === 'west' || ph === 'end' ? 'West sidewalk · State St' : 'Mid-block crosswalk · State St', n: 'xwalk', dstr, sig: { L: g, S: { ...g }, R: { ...g } } };
+      return { name: ph === 'west' || ph === 'end' ? 'West sidewalk · State St' : ph === 'cross' ? 'Crossing State St' : 'State St crosswalk', n: 'xwalk', dstr, sig: { L: g, S: { ...g }, R: { ...g } } };
     }
     if (this.onDetour()) {
       const k = D.corners.findIndex(q => q.d1 > D.d), cn = D.corners[k < 0 ? D.corners.length - 1 : k];
@@ -847,7 +869,7 @@ class Component extends DCLogic {
     // 7 emergency vehicle
     if (S.tEv != null && (S.tEvPass == null || t < S.tEvPass + 2)) {
       const gone = S.tEvPass != null;
-      A({ i: 7, lv: gone ? 'ok' : 'crit', ic: gone ? 'check-w' : 'siren-w', title: gone ? 'Emergency vehicle passed' : 'Emergency vehicle', sub: gone ? 'Merge back when clear' : 'Oncoming · Pull over right', dv: gone ? '' : (this.evS() - s < 70 ? 'Passing' : this.dist(this.evS() - s)), dl: gone || this.evS() - s < 70 ? '' : 'away', d: 0, fd: gone ? 1e9 : this.evS() - s, key: 'ev' });
+      A({ i: 7, lv: gone ? 'ok' : 'crit', ic: gone ? 'check-w' : 'siren-w', title: gone ? 'Emergency vehicle passed' : 'Emergency vehicle', sub: gone ? 'Merge back when clear' : 'Heading to 300 S · pull over right', fsSub: gone ? undefined : 'Coming south to 300 S · its signal turns red for everyone', dv: gone ? '' : (this.evS() - s < 70 ? 'Passing' : this.dist(this.evS() - s)), dl: gone || this.evS() - s < 70 ? '' : 'away', d: 0, fd: gone ? 1e9 : this.evS() - s, key: 'ev' });
     }
     // 9 EV signal priority result: granted holds until you reach the green; denied holds until you have stopped at the red
     const pr = this.prioState();
@@ -1135,7 +1157,7 @@ class Component extends DCLogic {
       mdDrive: on('drive'), mdEv: on('ev'), mdBike: on('bike'), mdWalk: on('walk'),
       pickDrive: pick('drive'), pickEv: pick('ev'), pickBike: pick('bike'), pickWalk: pick('walk'),
       walkOn: m === 'walk', notWalk: m !== 'walk', walkCls: m === 'walk' ? 'walk' : '', sigK: m === 'walk' ? 'Crosswalk' : 'Next signal', wsig: m === 'walk' ? this.walkSigView() : { c: 'dw', n: '', lbl: '' },
-      evMode: m === 'ev', vruOn: this.vru(), notVru: !this.vru(),
+      evMode: m === 'ev', vruOn: this.vru(), notVru: !this.vru(), bikeOn: m === 'bike', bikeCls: m === 'bike' ? 'bike' : '',
       modeName: { drive: 'Driver', ev: 'Emergency vehicle', bike: 'Cyclist', walk: 'Pedestrian' }[m],
       scenes: list.map(({ sc, k }, j) => ({ ...sc, n: String(j + 1).padStart(2, '0'), on: drive && k === scIdx ? 'on' : '', pick: () => this.jump(sc) })),
     };
@@ -1669,7 +1691,7 @@ class Component extends DCLogic {
       ...this.modeVals(drive, scIdx),
       voiceOn: st.voice, voiceOff: !st.voice, voiceLabel: st.voice ? 'Mute voice alerts' : 'Unmute voice alerts',
       toggleVoice: this.toggleVoice,
-      mph, spdCls: over ? 'over' : '', dockCls: (over ? 'over' : '') + (this.mode() === 'walk' ? ' walk' : ''), // over the limit: the bottom bar pulses; walking: no limit sign
+      mph, spdCls: over ? 'over' : '', dockCls: (over ? 'over' : '') + (this.mode() === 'walk' ? ' walk' : this.mode() === 'bike' ? ' bike' : ''), vru: this.vruVals(), // over the limit: the bottom bar pulses; walking: no limit sign
       limitText: limit == null ? '--' : String(limit), limLabel: limit == null ? 'No speed limit data' : `Speed limit ${limit}`,
       limCls: limit == null ? 'none' : over ? 'over' : '', // standard white sign in every zone (as v4)
       hdgLetter, hdgDeg: (Math.round(hdg) % 360) + '°', dialStyle: { transform: `rotate(${-hdg}deg)` },

@@ -85,3 +85,14 @@
 .spm-btn { position: absolute; left: 24px; right: 24px; bottom: 84px; height: 58px; border: 0; border-radius: 16px; background: #15181D; color: #fff; font: 700 17px/1 'Inter', system-ui, sans-serif; letter-spacing: -.2px; cursor: pointer; z-index: 5; }
 .spm-pow { position: absolute; left: 0; right: 0; bottom: 40px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; font-weight: 600; color: #98A0AA; letter-spacing: .2px; z-index: 5; }
 .spm-pow img { height: 17px; width: auto; display: block; }
+/* v39 get started: the map and its alerts are the hero (was hidden under fades). The words sit on a white
+   sheet at the bottom; only a light fade under the status bar. The picture is lifted so the car shows. */
+.spm-vis { translate: 0 -96px; }
+.spm-tf { height: 150px; background: linear-gradient(#F3F4F6 0, rgba(243, 244, 246, .85) 96px, rgba(243, 244, 246, 0) 150px); }
+.spm-bf { display: none; }
+.spm-sheet { position: absolute; left: 0; right: 0; bottom: 0; height: 300px; z-index: 4; background: #fff; border-radius: 28px 28px 0 0; box-shadow: 0 -10px 30px -16px rgba(16, 24, 40, .25); }
+.spm-cu { top: auto; bottom: 246px; height: 20px; }
+.spm-h { top: auto; bottom: 166px; font-size: 30px; letter-spacing: -1.1px; }
+.spm-btn { bottom: 76px; }
+.spm-pow { bottom: 34px; }
+

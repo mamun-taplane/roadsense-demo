@@ -236,7 +236,18 @@
 .dk-num { font-size: 44px; font-weight: 600; letter-spacing: -1.5px; line-height: 1; transition: color .25s; }
 .dk-num.over { color: var(--crit); }
 /* over the limit: the bottom bar pulses (client meeting 2026-11-05); v4 pulses its speed block the same way */
-.dock.walk .dk-lim, .dock.walk .dk-lim-sep { display: none; } /* walking: speed + heading only */
+/* walker: visible to drivers | car approaching | facing (no speed); rider: speed | car behind | heading */
+.dk-vis, .dk-vis-sep, .dk-near, .dk-rear { display: none; }
+.dock.walk .dk-spd, .dock.walk .dk-lim, .dock.walk .dk-lim-sep { display: none; }
+.dock.walk .dk-vis, .dock.walk .dk-near { display: flex; } .dock.walk .dk-vis-sep { display: block; }
+.dock.bike .dk-lim { display: none; } .dock.bike .dk-rear { display: flex; }
+.dock.bike .dk-spd { order: 1; } .dock.bike .dk-lim-sep { order: 2; } .dock.bike .dk-rear { order: 3; } .dock.bike > .dk-sep:not(.dk-lim-sep):not(.dk-vis-sep) { order: 4; } .dock.bike > .dk:last-child { order: 5; } /* speed | car behind | heading */
+.dk-vis-t { display: flex; align-items: center; gap: 7px; font-size: 19px; font-weight: 700; letter-spacing: -.3px; color: var(--ink); white-space: nowrap; }
+.dk-vis-t .bc-dot { flex: none; }
+.dk-word { font-size: 26px; letter-spacing: -.6px; white-space: nowrap; }
+.dk-near.warn .dk-word, .dk-rear.warn .dk-word { color: var(--warn-ink, #B26B00); }
+.ph-n { font-size: 24px !important; letter-spacing: -.5px !important; white-space: nowrap; }
+.ph-l { text-transform: none !important; letter-spacing: 0 !important; font-size: 12px !important; font-weight: 600 !important; }
 .dock.over { animation: rs-over 1.2s ease-in-out infinite; }
 @keyframes rs-over { 0%, 100% { box-shadow: var(--shadow), 0 0 0 0 rgba(229, 56, 59, 0); } 50% { box-shadow: var(--shadow), 0 0 0 6px rgba(229, 56, 59, .28); } }
 /* an alert still far away: its map marker pulses softly (close = full screen with the strong pulse) */
@@ -414,14 +425,23 @@
 .ph.tab-p .tk .tk-d { margin-top: 18px; }
 .ph.tab-p .tk2 { top: 482px; bottom: auto; left: 16px; right: 16px; background: var(--card); box-shadow: inset 0 0 0 2px var(--lv), var(--shadow); }
 .spm-vis { position: absolute; left: 0; top: 0; width: 390px; height: 844px; }
-.ph.tab-p .spm { left: 50%; right: auto; width: 390px; margin-left: -195px; height: 844px; top: 50%; margin-top: -422px; box-shadow: 0 0 0 1400px #F3F4F6; overflow: visible; }
-/* landscape get started: the moving map as a rounded panel on the right, the words and the button on the left */
-.ph.tab-l .spm-vis { left: auto; right: 64px; top: 110px; height: 614px; border-radius: 36px; overflow: hidden; box-shadow: 0 0 0 1px #E3E6EA, 0 30px 60px -30px rgba(16, 24, 40, .35); }
-.ph.tab-l .spm-vis .spm-tf { height: 200px; background: linear-gradient(#F3F4F6 0, rgba(243, 244, 246, 0) 200px); }
-.ph.tab-l .spm-cu { left: 96px; top: 250px; height: 28px; }
-.ph.tab-l .spm-h { left: 96px; right: auto; width: 540px; top: 300px; font-size: 60px; letter-spacing: -2.4px; line-height: 1.02; }
+/* tablet get started (v39): the map as a big rounded card (1.25x, so the alerts read), the words beside it
+   (landscape) or under it (portrait); no phone-sized box. */
+.ph.tab-l .spm-vis, .ph.tab-p .spm-vis { width: 390px; height: 610px; border-radius: 30px; overflow: hidden; transform: scale(1.25); box-shadow: 0 0 0 1px #E3E6EA, 0 30px 60px -30px rgba(16, 24, 40, .35); translate: none; }
+.ph.tab-l .spm-vis > *, .ph.tab-p .spm-vis > * { translate: 0 -150px; }
+.ph.tab-l .spm-vis { left: auto; right: 64px; top: 36px; transform-origin: top right; }
+.ph.tab-l .spm-vis .spm-tf, .ph.tab-p .spm-vis .spm-tf { translate: none; height: 90px; background: linear-gradient(#F3F4F6, rgba(243, 244, 246, 0)); }
+.ph.tab .spm-sheet { display: none; }
+.ph.tab-l .spm-cu { left: 96px; top: 250px; bottom: auto; height: 28px; }
+.ph.tab-l .spm-h { left: 96px; right: auto; width: 520px; top: 300px; bottom: auto; font-size: 60px; letter-spacing: -2.4px; line-height: 1.02; }
 .ph.tab-l .spm-btn { left: 96px; right: auto; width: 400px; bottom: 250px; }
 .ph.tab-l .spm-pow { left: 96px; right: auto; bottom: 205px; justify-content: flex-start; }
+.ph.tab-p .spm { left: 0; right: 0; width: auto; margin: 0; top: 0; bottom: 0; height: auto; box-shadow: none; overflow: hidden; }
+.ph.tab-p .spm-vis { left: 50%; top: 60px; margin-left: -244px; transform-origin: top left; height: 400px; }
+.ph.tab-p .spm-cu { left: 76px; top: 610px; bottom: auto; height: 24px; }
+.ph.tab-p .spm-h { left: 76px; right: 76px; top: 650px; bottom: auto; font-size: 44px; letter-spacing: -1.6px; }
+.ph.tab-p .spm-btn { left: 76px; right: 76px; bottom: 96px; }
+.ph.tab-p .spm-pow { bottom: 54px; }
 .ph.tab .pm-t, .ph.tab .pm-s { max-width: 460px; }
 
 
@@ -457,6 +477,17 @@
 .bgv-open { position: absolute; bottom: 40px; height: 48px; padding: 0 22px; border: 0; border-radius: 24px; background: #15181D; color: #fff; font: 600 15px/1 Inter, sans-serif; cursor: pointer; }
 .set-go { height: 36px; padding: 0 14px; border: 0; border-radius: 18px; background: #EEF0F3; color: #15181D; font: 600 14px/1 Inter, sans-serif; cursor: pointer; flex: none; }
 @media (prefers-reduced-motion: reduce) { .bgv-ban { animation: none; } }
+
+
+/* full-screen alert: a thick border in the alert color that pulses (user, v39), like the alert slot / edge */
+.tk::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 7px var(--lv); opacity: 0; }
+.ph:not(.tab-p) .tk { border-radius: inherit; } /* follows the screen corners (square in the demo's app view) */
+.tk.on::before { animation: fs-edge 1.6s ease-in-out infinite; }
+.tk.lv-crit.on::before { animation-duration: 1s; }
+@keyframes fs-edge { 0%, 100% { opacity: .35; box-shadow: inset 0 0 0 4px var(--lv); } 50% { opacity: 1; box-shadow: inset 0 0 0 9px var(--lv); } }
+@media (prefers-reduced-motion: reduce) { .tk.on::before { animation: none; opacity: 1; } }
+
+.ph.tab-p .spm-vis > * { translate: 0 -230px; } .ph.tab-p .spm-vis .spm-tf { translate: none; } /* portrait card is shorter: lift so the car shows */
 
 /* ==== get started (from splash.css) ==== */
 /* Get started: shared by every version. Plain white page, the Road Sense mark in a few faint rings,
@@ -546,5 +577,16 @@
 .spm-btn { position: absolute; left: 24px; right: 24px; bottom: 84px; height: 58px; border: 0; border-radius: 16px; background: #15181D; color: #fff; font: 700 17px/1 'Inter', system-ui, sans-serif; letter-spacing: -.2px; cursor: pointer; z-index: 5; }
 .spm-pow { position: absolute; left: 0; right: 0; bottom: 40px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; font-weight: 600; color: #98A0AA; letter-spacing: .2px; z-index: 5; }
 .spm-pow img { height: 17px; width: auto; display: block; }
+/* v39 get started: the map and its alerts are the hero (was hidden under fades). The words sit on a white
+   sheet at the bottom; only a light fade under the status bar. The picture is lifted so the car shows. */
+.spm-vis { translate: 0 -96px; }
+.spm-tf { height: 150px; background: linear-gradient(#F3F4F6 0, rgba(243, 244, 246, .85) 96px, rgba(243, 244, 246, 0) 150px); }
+.spm-bf { display: none; }
+.spm-sheet { position: absolute; left: 0; right: 0; bottom: 0; height: 300px; z-index: 4; background: #fff; border-radius: 28px 28px 0 0; box-shadow: 0 -10px 30px -16px rgba(16, 24, 40, .25); }
+.spm-cu { top: auto; bottom: 246px; height: 20px; }
+.spm-h { top: auto; bottom: 166px; font-size: 30px; letter-spacing: -1.1px; }
+.spm-btn { bottom: 76px; }
+.spm-pow { bottom: 34px; }
+
 .v2 .sp3, .v2 .spm { z-index: 40; }
 /* ==== end get started ==== */
