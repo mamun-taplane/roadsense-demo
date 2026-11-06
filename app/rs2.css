@@ -89,7 +89,7 @@
 .ah-name { margin-top: 7px; font-size: 15px; font-weight: 600; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 172px; }
 .ah-name svg { width: 15px; height: 15px; }
 /* long names wrap (2 or 3 lines) instead of being cut off */
-.ah-name.n2, .ah-name.n3 { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-height: 1.25; }
+.ah-name.n2, .ah-name.n3 { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-height: 1.22; text-wrap: balance; } /* max two lines */
 .ah-name.n3 { font-size: 14px; margin-top: 6px; }
 /* pedestrian mode: the crosswalk's signal (US: orange raised hand = don't walk, white person = walk) */
 .pedhead { display: flex; align-items: center; gap: 10px; background: #1C2026; border-radius: 18px; padding: 7px 14px 7px 7px; height: 72px; color: #fff; }
@@ -116,6 +116,8 @@
 .lens.y { background: var(--sig-y); color: #1C2026; }
 .lens.r { background: var(--sig-r); }
 .lens.fy { background: var(--sig-y); color: #1C2026; animation: blink 1s steps(1) infinite; }
+.lens.x { background: transparent; color: #5B636E; box-shadow: inset 0 0 0 2px #3A3F47; } /* movement not allowed (one-way cross street) */
+.mv-n.w-x { color: #8B939E; font-size: 8px; letter-spacing: .3px; }
 .mv-n { height: 14px; font-size: 12px; font-weight: 600; color: #fff; line-height: 14px; white-space: nowrap; letter-spacing: -.2px; }
 .mv-n.word { font-size: 10px; font-weight: 700; letter-spacing: .6px; }
 .mv-n.w-g { color: #4ADE80; } .mv-n.w-r { color: #FF7A7C; } .mv-n.w-y, .mv-n.w-fy { color: #FBBF24; }
@@ -164,9 +166,8 @@
 /* icons are all in the markup; the class picks which one shows */
 .icset { display: grid; place-items: center; }
 .icset .i { display: none; }
-.ic-rlr-k .i-rlr-k, .ic-bike-k .i-bike-k, .ic-bike-w .i-bike-w { display: block; } /* car (dark) and bike icons */
-.ic-school-w .i-school-w, .ic-signal-k .i-signal-k, .ic-ped-k .i-ped-k, .ic-work-k .i-work-k, .ic-stopped-w .i-stopped-w,
-.ic-bridge-w .i-bridge-w, .ic-rlr-w .i-rlr-w, .ic-siren-k .i-siren-k, .ic-siren-w .i-siren-w, .ic-signal-w .i-signal-w, .ic-check-w .i-check-w, .ic-info-w .i-info-w, .ic-speed-k .i-speed-k { display: block; }
+/* every icon in both colors; icOn() picks white or dark by alert level */
+.ic-school-w .i-school-w, .ic-school-k .i-school-k, .ic-signal-w .i-signal-w, .ic-signal-k .i-signal-k, .ic-ped-w .i-ped-w, .ic-ped-k .i-ped-k, .ic-bike-w .i-bike-w, .ic-bike-k .i-bike-k, .ic-work-w .i-work-w, .ic-work-k .i-work-k, .ic-stopped-w .i-stopped-w, .ic-stopped-k .i-stopped-k, .ic-bridge-w .i-bridge-w, .ic-bridge-k .i-bridge-k, .ic-rlr-w .i-rlr-w, .ic-rlr-k .i-rlr-k, .ic-siren-w .i-siren-w, .ic-siren-k .i-siren-k, .ic-check-w .i-check-w, .ic-check-k .i-check-k, .ic-info-w .i-info-w, .ic-info-k .i-info-k, .ic-speed-w .i-speed-w, .ic-speed-k .i-speed-k, .ic-tram-w .i-tram-w, .ic-tram-k .i-tram-k { display: block; }
 
 /* ---------- Full-screen alert ---------- */
 .tk { position: absolute; inset: 0; z-index: 31; background: #fff; display: flex; align-items: center; justify-content: center; padding-bottom: 120px; opacity: 0; pointer-events: none; transition: opacity .35s ease, padding .5s cubic-bezier(.2, .8, .2, 1); }
@@ -365,21 +366,44 @@
 
 
 
-/* ---------- Tablet (v36c) ----------
-   Landscape (tab-l, 1194×834, driver / EV): the phone's controls become a 390 px column on the left over the
-   map; the car sits in the middle of the map area (cx 808). Portrait (tab-p, 641×918 drawn, ×1.3 on screen):
-   the phone layout, wider. Get started: the phone's page centered. */
+/* ---------- Tablet (v37 redesign) ----------
+   Landscape (tab-l, 1194×834, driver / EV): a solid information panel on the left (430 px: next signal,
+   alerts, your speed) and a big live map on the right with its own controls; the car sits in the middle of
+   the map (cx 808). A full-screen alert takes the panel only: the map stays, framed in the alert's color, so
+   you see where the hazard is. Portrait (tab-p, 641×918 drawn, ×1.3 on screen): the phone layout, wider; a
+   full-screen alert takes the top half and the map stays below it. Get started: the phone's page centered. */
 .ph.tab { border-radius: 30px; }
 .ph.tab .edge { border-radius: 30px; }
-.ph.tab-l .ahead, .ph.tab-l .al, .ph.tab-l .float, .ph.tab-l .dock { left: 16px; right: auto; width: 390px; }
-.ph.tab-l .fog { right: auto; width: 440px; }
-.ph.tab-l .zoom { right: 16px; bottom: 16px; }
-.ph.tab-l .recenter { left: 808px; bottom: 24px; }
-.ph.tab-l .mbx .mapboxgl-ctrl-bottom-left { left: 422px; bottom: 12px; }
-.ph.tab-l .mb-attr { left: 434px; bottom: 16px; }
-.ph.tab-l .mb-err { left: 808px; }
-.ph.tab-l .tk2 { left: 50%; right: auto; width: 600px; margin-left: -300px; }
-.ph.tab-l .set-sheet { left: 16px; right: auto; width: 420px; bottom: 16px; border-radius: 30px; }
+.tside, .tcalm { display: none; }
+.ph.tab-l .tcalm { position: absolute; left: 20px; width: 390px; top: 172px; z-index: 17; display: flex; align-items: center; gap: 14px; padding: 18px; border-radius: 24px; background: var(--card); box-shadow: var(--shadow); opacity: 0; transition: opacity .3s; }
+.ph.tab-l .tcalm.on { opacity: 1; }
+.tcalm-ic { width: 48px; height: 48px; flex: none; border-radius: 16px; display: grid; place-items: center; background: #E7F6EC; color: var(--ok); }
+.tcalm-ic svg { width: 24px; height: 24px; }
+.tcalm-k { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--ok); }
+.tcalm-t { margin-top: 2px; font-size: 17px; font-weight: 600; }
+.tcalm-s { margin-top: 2px; font-size: 13px; color: var(--ink-3); }
+.ph.tab-l .tside { display: block; position: absolute; left: 0; top: 0; bottom: 0; width: 430px; z-index: 16; background: var(--bg); box-shadow: 1px 0 0 var(--line), 8px 0 24px -12px rgba(16, 24, 40, .18); }
+.ph.tab-l .fog { display: none; }
+.ph.tab-l .ahead, .ph.tab-l .al, .ph.tab-l .dock { left: 20px; right: auto; width: 390px; }
+.ph.tab-l .dock { bottom: 20px; }
+/* map controls live on the map: status chips top left, buttons top right, zoom bottom right */
+.ph.tab-l .float { left: 450px; right: 20px; top: 52px; bottom: auto; }
+.ph.tab-l .zoom { right: 20px; bottom: 20px; }
+.ph.tab-l .recenter { left: 812px; bottom: 24px; }
+.ph.tab-l .edge { left: 430px; border-radius: 0 30px 30px 0; }
+.ph.tab-l .mbx .mapboxgl-ctrl-bottom-left { left: 446px; bottom: 12px; }
+.ph.tab-l .mb-attr { left: 452px; bottom: 16px; }
+.ph.tab-l .mb-err { left: 812px; }
+.ph.tab-l .tk { right: auto; width: 430px; padding-bottom: 140px; }
+.ph.tab-l .tk::after { content: ''; position: absolute; left: 430px; top: 0; width: 764px; height: 100%; pointer-events: none; border-radius: 0 30px 30px 0; box-shadow: inset 0 0 0 6px var(--lv); }
+.ph.tab-l .tk2 { left: 20px; right: 20px; bottom: 136px; }
+.ph.tab-l .set-sheet { left: 0; right: auto; width: 430px; top: 0; bottom: 0; border-radius: 30px 0 0 30px; }
+.ph.tab-p .tk { bottom: auto; height: 470px; padding-bottom: 0; border-radius: 0 0 32px 32px; box-shadow: 0 12px 30px -14px rgba(16, 24, 40, .3); }
+.ph.tab-p .tk::after { content: ''; position: absolute; left: 0; right: 0; top: 470px; height: 448px; pointer-events: none; box-shadow: inset 0 0 0 6px var(--lv); border-radius: 0 0 30px 30px; }
+.ph.tab-p .tk .tk-ic, .ph.tab-p .tk .tk-disc { width: 96px; height: 96px; }
+.ph.tab-p .tk .tk-t { margin-top: 44px; }
+.ph.tab-p .tk .tk-d { margin-top: 18px; }
+.ph.tab-p .tk2 { top: 482px; bottom: auto; left: 16px; right: 16px; background: var(--card); box-shadow: inset 0 0 0 2px var(--lv), var(--shadow); }
 .ph.tab .spm { left: 50%; right: auto; width: 390px; margin-left: -195px; height: 844px; top: 50%; margin-top: -422px; box-shadow: 0 0 0 1400px #F3F4F6; overflow: visible; }
 
 
@@ -397,8 +421,10 @@
 .pm-dots i { width: 7px; height: 7px; border-radius: 50%; background: #D5D9DF; display: block; }
 .pm-dots i.on { width: 20px; border-radius: 4px; background: #15181D; }
 .pm-ok { position: absolute; left: 24px; right: 24px; bottom: 96px; height: 56px; border: 0; border-radius: 16px; background: #15181D; color: #fff; font: 700 17px/1 Inter, sans-serif; cursor: pointer; max-width: 420px; margin: 0 auto; }
-.pm-no { position: absolute; left: 24px; right: 24px; bottom: 40px; height: 44px; border: 0; background: transparent; color: #5B636E; font: 600 15px/1 Inter, sans-serif; cursor: pointer; }
-.pm-ok:focus-visible, .pm-no:focus-visible, .bgv-ban:focus-visible, .bgv-open:focus-visible { outline: 2px solid #2563EB; outline-offset: 2px; }
+/* every permission is required: one button; the skip link is demo-only (not in the Flutter app) */
+.pm-req { position: absolute; left: 24px; right: 24px; bottom: 70px; font-size: 13px; font-weight: 600; color: #98A0AA; }
+.pm-demo { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); height: 32px; padding: 0 14px; border: 1px dashed #C5CAD2; border-radius: 16px; background: transparent; color: #98A0AA; font: 600 12px/1 Inter, sans-serif; cursor: pointer; white-space: nowrap; }
+.pm-ok:focus-visible, .pm-demo:focus-visible, .bgv-ban:focus-visible, .bgv-open:focus-visible { outline: 2px solid #2563EB; outline-offset: 2px; }
 .bgv { position: absolute; inset: 0; z-index: 46; background: #E9ECF0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 32px; font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; }
 .bgv-l { font-size: 20px; font-weight: 700; color: #5B636E; }
 .bgv-s { margin-top: 6px; max-width: 280px; font-size: 14px; line-height: 1.4; color: #98A0AA; }

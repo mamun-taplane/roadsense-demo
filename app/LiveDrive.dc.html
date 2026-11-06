@@ -76,6 +76,8 @@
     </div>
   </div>
 
+  <div class="tside" aria-hidden="true"></div><!-- tablet landscape: the solid information panel behind the cards -->
+  <div class="tcalm {{ calmCls }}" aria-hidden="true"><div class="tcalm-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><div><div class="tcalm-k">All clear</div><div class="tcalm-t">No alerts ahead</div><div class="tcalm-s">Alerts appear here when in range</div></div></div>
   <div class="sbar" aria-hidden="true">
     <span>9:41</span>
     <span class="sbar-r">
@@ -133,7 +135,7 @@
   <!-- Alerts slide out from under the road-ahead card; the most critical leads -->
   <sc-for list="{{ alerts }}" as="a" hint-placeholder-count="0">
     <div class="al {{ a.cls }}" style="{{ a.style }}" role="status">
-      <div class="al-ic"><span class="icset ic-{{ a.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""></span></div>
+      <div class="al-ic"><span class="icset ic-{{ a.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""></span></div>
       <div class="al-txt"><div class="al-t">{{ a.title }}</div><div class="al-s">{{ a.sub }}</div></div>
       <div class="al-d"><b class="al-dv">{{ a.dv }}</b><span class="al-dl">{{ a.dl }}</span></div>
     </div>
@@ -144,7 +146,7 @@
   <!-- Full-screen alert: when a hazard is close, or at once when something happens suddenly -->
   <div class="tk {{ tk.cls }}" role="alert">
     <div class="tk-in">
-      <div class="tk-ic"><i class="rp"></i><i class="rp"></i><i class="rp"></i><div class="tk-disc"><span class="icset ic-{{ tk.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""></span></div></div>
+      <div class="tk-ic"><i class="rp"></i><i class="rp"></i><i class="rp"></i><div class="tk-disc"><span class="icset ic-{{ tk.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""></span></div></div>
       <div class="tk-t">{{ tk.title }}</div>
       <div class="tk-s">{{ tk.sub }}</div>
       <div class="tk-d">{{ tk.dv }}<small>{{ tk.du }}</small></div>
@@ -154,7 +156,7 @@
     <div class="tk2 {{ tk2.cls }}" role="status">
       <div class="tk2-k">Also</div>
       <div class="tk2-row">
-        <div class="tk2-ic"><span class="icset ic-{{ tk2.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""></span></div>
+        <div class="tk2-ic"><span class="icset ic-{{ tk2.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""></span></div>
         <div class="tk2-txt"><div class="tk2-t">{{ tk2.title }}</div><div class="tk2-s">{{ tk2.sub }}</div></div>
         <div class="tk2-d"><b class="tk2-dv">{{ tk2.dv }}</b><span class="tk2-dl">{{ tk2.dl }}</span></div>
       </div>
@@ -208,7 +210,7 @@
       <div class="set-body">
       <div class="set-sec">You are</div>
       <div class="set-grp"><div class="set-row set-row-col"><div class="set-rt"><div class="set-l">{{ modeName }}</div><div class="set-d">Cyclists and pedestrians share their position with nearby vehicles</div></div>
-        <div class="set-seg"><button class="{{ mdDrive }}" onClick="{{ pickDrive }}">Driver</button><button class="{{ mdEv }}" onClick="{{ pickEv }}">Emergency</button><button class="{{ mdBike }}" onClick="{{ pickBike }}">Cyclist</button><button class="{{ mdWalk }}" onClick="{{ pickWalk }}" disabled>Pedestrian</button></div>
+        <div class="set-seg"><button class="{{ mdDrive }}" onClick="{{ pickDrive }}">Driver</button><button class="{{ mdEv }}" onClick="{{ pickEv }}">Emergency</button><button class="{{ mdBike }}" onClick="{{ pickBike }}">Cyclist</button><button class="{{ mdWalk }}" onClick="{{ pickWalk }}">Pedestrian</button></div>
       </div></div>
       <div class="set-sec">Alerts</div>
       <div class="set-grp">
@@ -257,7 +259,8 @@
       <sc-if value="{{ perm.hasNote }}" hint-placeholder-val="{{ false }}"><div class="pm-note">{{ perm.note }}</div></sc-if>
       <div class="pm-dots"><sc-for list="{{ dots }}" as="d" hint-placeholder-count="4"><i class="{{ d.cls }}"></i></sc-for></div>
       <button class="pm-ok" onClick="{{ permAllow }}">{{ perm.ok }}</button>
-      <button class="pm-no" onClick="{{ permSkip }}">Not now</button>
+      <div class="pm-req">Required to use Road Sense</div>
+      <button class="pm-demo" onClick="{{ permSkip }}">Skip setup · demo only</button>
     </div>
   </sc-if>
   <!-- Background preview: another app in front; Road Sense alerts arrive as a banner (+ voice) -->
@@ -303,19 +306,18 @@
       <div><div class="pnl-t">Live drive</div><div class="pnl-st">S State St, Salt Lake City · northbound</div></div>
     </div>
     <div class="md-k">You are</div>
-    <div class="seg seg-md" role="group" aria-label="You are"><button class="{{ mdDrive }}" onClick="{{ pickDrive }}">Driver</button><button class="{{ mdEv }}" onClick="{{ pickEv }}">Emergency</button><button class="{{ mdBike }}" onClick="{{ pickBike }}">Cyclist</button><button class="{{ mdWalk }}" onClick="{{ pickWalk }}" disabled>Pedestrian</button></div>
+    <div class="seg seg-md" role="group" aria-label="You are"><button class="{{ mdDrive }}" onClick="{{ pickDrive }}">Driver</button><button class="{{ mdEv }}" onClick="{{ pickEv }}">Emergency</button><button class="{{ mdBike }}" onClick="{{ pickBike }}">Cyclist</button><button class="{{ mdWalk }}" onClick="{{ pickWalk }}">Pedestrian</button></div>
     <div class="ctl">
-      <button class="cb pri" onClick="{{ togglePlay }}">
+      <button class="cb cb-ic pri" onClick="{{ togglePlay }}" aria-label="{{ playLabel }}" title="{{ playLabel }} (Space)">
         <sc-if value="{{ playing }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="2" width="3.5" height="12" rx="1"/><rect x="9.5" y="2" width="3.5" height="12" rx="1"/></svg></sc-if>
         <sc-if value="{{ paused }}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5v11a1 1 0 0 0 1.5.9l9-5.5a1 1 0 0 0 0-1.8l-9-5.5A1 1 0 0 0 4 2.5z"/></svg></sc-if>
-        {{ playLabel }}
       </button>
-      <button class="cb" onClick="{{ restart }}"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8a5.5 5.5 0 1 0 1.6-3.9"/><path d="M2.5 2.5v3.2h3.2"/></svg>Restart</button>
+      <button class="cb cb-ic" onClick="{{ restart }}" aria-label="Restart" title="Restart"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8a5.5 5.5 0 1 0 1.6-3.9"/><path d="M2.5 2.5v3.2h3.2"/></svg></button>
       <div class="seg">
-        <button class="{{ r1 }}" onClick="{{ rate1 }}">1×</button>
-        <button class="{{ r2 }}" onClick="{{ rate2 }}">2×</button>
+        <button class="{{ r1 }}" onClick="{{ rate1 }}" aria-label="Normal speed">1×</button>
+        <button class="{{ r2 }}" onClick="{{ rate2 }}" aria-label="Double speed">2×</button>
       </div>
-      <button class="cb" onClick="{{ goBg }}" title="Show how alerts arrive while another app is open">Background</button>
+      <button class="cb cb-ic" onClick="{{ goBg }}" aria-label="Background alerts preview" title="Background: how alerts arrive while another app is open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="3"/><rect x="8.5" y="5.5" width="7" height="3.5" rx="1.2" fill="currentColor" stroke="none"/></svg></button>
       <button class="cb cb-ic" onClick="{{ toggleVoice }}" aria-label="{{ voiceLabel }}">
         <sc-if value="{{ voiceOn }}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></sc-if>
         <sc-if value="{{ voiceOff }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9l5 6M21 9l-5 6"/></svg></sc-if>
@@ -364,11 +366,12 @@ class Component extends DCLogic {
       { id: 'stopped', name: 'Stopped vehicle in work zone', tag: 'two', tagText: 'Two at once', s: 3150, modes: DR },
       { id: 'bridge', name: 'Low clearance · too tall', tag: 'crit', tagText: 'Critical', s: 3720, veh: 2, modes: DR },
       { id: 'bridgeok', name: 'Low clearance · fits under', tag: 'base', tagText: 'No alert', s: 3720, veh: 1, modes: DR },
+      { id: 'trax', name: 'Light rail crossing · TRAX at 400 S', tag: 'adv', tagText: 'Advisory', s: 4240, modes: DR },
       { id: 'rlr', name: 'Red light runner', tag: 'crit', tagText: 'Critical', s: 4680, modes: DR },
       { id: 'ev', name: 'Emergency vehicle', tag: 'crit', tagText: 'Critical', s: 5290, modes: DR },
-      { id: 'nolimit', name: 'No speed limit data', tag: 'base', tagText: 'Normal', s: 5760, modes: DR },
       { id: 'pred', name: 'Pedestrian crossing on red · camera', tag: 'crit', tagText: 'Critical', s: 5900, modes: DR },
       { id: 'bkr', name: 'Cyclist on your right', tag: 'warn', tagText: 'Warning', s: 6420, modes: DR },
+      { id: 'nolimit', name: 'No speed limit data', tag: 'base', tagText: 'Normal', s: 7400, modes: DR },
       { id: 'uturn', name: 'No U-turn sign at S Temple', tag: 'base', tagText: 'Signal', s: 8470, modes: DR },
       { id: 'ev700', name: 'Priority granted at 700 S', tag: 'ev', tagText: 'EV mode', s: 1180, mode: 'ev', modes: EV },
       { id: 'yield', name: 'Vehicles ahead pulling over', tag: 'ev', tagText: 'EV mode', s: 2620, mode: 'ev', modes: EV },
@@ -402,6 +405,7 @@ class Component extends DCLogic {
       'w-end': 'You have arrived at 600 South.',
       'bridge': 'Low clearance ahead. Your vehicle will not fit. Turn left at 500 South.',
       'bridge-ok': 'Overpass avoided. You will rejoin State Street at 400 South.',
+      'trax': 'Light rail crossing at 400 South. Do not stop on the tracks.',
       'rlr': 'Stop! Red light runner from the left.',
       'rlr-ev': 'Vehicle not yielding at 400 South. Slow down.',
       'pred': 'Pedestrian crossing against the light at 300 South. Stop.',
@@ -459,13 +463,16 @@ class Component extends DCLogic {
       [32, -5340],
     ];
     this.REACT = 2.5; // seconds the simulated driver takes to slow down for a lower limit
-    this.WORD = { g: 'GO', r: 'STOP', y: 'SLOW', fy: 'YIELD' }; // shown under a lens that has no countdown
+    this.WORD = { g: 'GO', r: 'STOP', y: 'SLOW', fy: 'YIELD', x: 'NO TURN' }; // shown under a lens that has no countdown
+    // movements that don't exist (one-way cross streets, checked with Mapbox Directions): 600 S (MLK Jr Blvd) is
+    // one-way eastbound, so no left from northbound State St; 500 S is one-way westbound, so no right
+    this.NO_TURN = { '600 S': 'L', '500 S': 'R' };
     // seconds until the left-turn red changes, per intersection (some are long, to show how big numbers fit)
     // left-turn red, from the signal's phase order (SPaT time-to-change is always under 2:30):
     // lagging left = rest of the through green + yellow 4 s + all-red 2 s + the cross street's phase (s)
     this.CROSS = { '800 S': 48, '500 S': 52, '400 S': 50, '200 S': 44, '100 S': 46 };
     // U-turns on northbound State St (Utah: allowed unless signed): No U-turn at the big crossings
-    this.UTURN = { '800 S': true, '700 S': true, '600 S': true, '500 S': false, '400 S': false, '300 S': true, '200 S': false, '100 S': true, 'S Temple': false };
+    this.UTURN = { '800 S': true, '700 S': true, '600 S': null, '500 S': false, '400 S': false, '300 S': true, '200 S': false, '100 S': true, 'S Temple': false };
     this.THRU_G = 25; // through green after a red (s), before the lagging left
     this.SPAT_MAX = 149; // 2:29
     this.spoken = {};
@@ -482,7 +489,9 @@ class Component extends DCLogic {
     else if (!this.still) { this.state.view = '2d'; try { if (localStorage.getItem('rs-map-view') === '3d') this.state.view = '3d'; } catch (e) {} }
     { const zm = this.still.match(/,z(\d)/); if (zm) this.state.zoom = +zm[1]; }
     // some intersections have long names; ",long2" / ",long3" shows one that needs 2 or 3 lines
-    { const ln = this.still.match(/,long(\d)/); if (ln) this.LONGNAME = ln[1] === '3' ? 'South State Street & Martin Luther King Jr Blvd & Highland Drive' : 'State St & Martin Luther King Jr Blvd'; }
+    // long-name tests, real Utah intersections: ,long2 = 600 S on this route (MLK Jr Blvd); ,long3 = Sugar House
+    // five-way junction; ,long4 = the longest we found (Midvale / Cottonwood Heights)
+    { const ln = this.still.match(/,long(\d)/); if (ln) this.LONGNAME = { 2: 'South State Street & Martin Luther King Jr Boulevard', 3: 'Highland Drive & 2100 South & 1100 East', 4: 'East Fort Union Boulevard & South Union Park Avenue' }[ln[1]] || null; }
     this.reset(0);
     if (this.still && this.still !== 'splash') {
       const [id, secs] = this.still.split('@');
@@ -524,7 +533,7 @@ class Component extends DCLogic {
     this.tkCache = null; this.tk2Cache = null;
   }
   // null = no speed limit data for this stretch
-  limitAt(s) { return s >= 1050 && s < 1550 ? 20 : s >= 3250 && s < 3900 ? 25 : s >= 5760 && s < 6380 ? null : 35; }
+  limitAt(s) { return s >= 1050 && s < 1550 ? 20 : s >= 3250 && s < 3900 ? 25 : s >= 7440 && s < 8000 ? null : 35; } // no limit data: the quiet block between 200 S and 100 S (was over the camera / cyclist events)
   // pedestrian: waits on the east curb at the crosswalk (the road is x -58..58), steps off after 7 s,
   // walks across at ~1.6 m/s (7 map px/s) and stops on the far curb
   pedWaiting() { const S = this.sim; return S.tPed != null && S.t - S.tPed < 7; }
@@ -670,8 +679,8 @@ class Component extends DCLogic {
     const S = this.sim, D = S.det, c = Math.ceil;
     if (this.mode() === 'walk') {
       const K = this.WK, ph = S.wph, g = this.L('g', null);
-      const dstr = ph === 'to' ? this.dist(K.xw - S.s).split(' ') : ph === 'curb' ? ['At crosswalk', ''] : ph === 'cross' ? ['Crossing', ''] : ['West side', ''];
-      return { name: ph === 'west' || ph === 'end' ? 'State St · west sidewalk' : 'State St · mid-block crosswalk', n: 'xwalk', dstr, sig: { L: g, S: { ...g }, R: { ...g } } };
+      const dstr = ph === 'to' ? this.dist(K.xw - S.s).split(' ') : ph === 'curb' ? ['At crosswalk', ''] : ph === 'cross' ? ['Crossing', ''] : ['Crossed', ''];
+      return { name: ph === 'west' || ph === 'end' ? 'West sidewalk · State St' : 'Mid-block crosswalk · State St', n: 'xwalk', dstr, sig: { L: g, S: { ...g }, R: { ...g } } };
     }
     if (this.onDetour()) {
       const k = D.corners.findIndex(q => q.d1 > D.d), cn = D.corners[k < 0 ? D.corners.length - 1 : k];
@@ -686,9 +695,10 @@ class Component extends DCLogic {
     const atLine = !crossing && nx.s - 108 - S.s < 15; // waiting at the stop line
     const dstr = crossing ? [D ? 'Turning' : 'Crossing', ''] : atLine ? ['At light', ''] : this.dist(nx.s - 90 - S.s - 18).split(' ');
     // U-turn from the left lane at this intersection (signed "No U-turn" where it isn't allowed)
-    const sig = this.sigFor(nx.n), u = this.UTURN[nx.n];
-    sig.L = { ...sig.L, ut: u == null ? '' : u ? 'ok' : 'no' };
-    return { name: this.LONGNAME || 'State St & ' + nx.n, n: nx.n, dstr, sig };
+    const sig = this.sigFor(nx.n), u = this.UTURN[nx.n], nt = this.NO_TURN[nx.n];
+    if (nt && this.mode() !== 'walk') sig[nt] = this.L('x', null); // cyclists too
+    sig.L = { ...sig.L, ut: u == null || nt === 'L' ? '' : u ? 'ok' : 'no' };
+    return { name: this.shortName(this.LONGNAME || 'State St & ' + nx.n), n: nx.n, dstr, sig };
   }
   // Full screen: an alert takes the screen once it is close (or at once if sudden) and keeps it for its whole area,
   // approach, inside and ended, showing what is happening there. When the area is left, a short "clear" screen,
@@ -760,7 +770,7 @@ class Component extends DCLogic {
       const n = Math.max(1, c((1600 - S.s) / Math.max(S.v, 25)) + 4);
       return { L: this.L('r', null), S: this.L('g', n), R: this.L('g', n) };
     }
-    if (name === '600 S') { const g = green(); return { L: this.L('fy', null), S: g, R: { ...g } }; }
+    if (name === '600 S') { const g = green(); return { L: this.L('x', null), S: g, R: { ...g } }; }
     if (name === '300 S' && S.tEv != null) {
       const tt = S.t - S.tEv;
       if (tt < 1) { const g = green(); return { L: this.L('r', null), S: g, R: { ...g } }; }
@@ -809,7 +819,7 @@ class Component extends DCLogic {
     }
     // 2 pedestrian in the mid-block crosswalk
     const px = this.pedX();
-    if (S.tPed != null && px > -58 && s < 2497) A({ i: 2, lv: 'warn', ic: 'ped-k', title: this.pedWaiting() ? 'Pedestrian ahead' : 'Pedestrian crossing', sub: this.pedWaiting() ? 'At the curb · their phone' : S.v < 0.5 ? 'Wait for them to cross' : 'Crossing · their phone', dv: this.dist(2487 - s), dl: 'ahead', d: 2487 - s, key: 'ped' });
+    if (S.tPed != null && px > -58 && s < 2497) A({ i: 2, lv: 'warn', ic: 'ped-k', title: this.pedWaiting() ? 'Pedestrian ahead' : 'Pedestrian crossing', sub: this.pedWaiting() ? 'At the curb · from their phone' : S.v < 0.5 ? 'Wait for them to cross' : 'In the crosswalk · from their phone', dv: this.dist(2487 - s), dl: 'ahead', d: 2487 - s, key: 'ped' });
     else if (S.tPed != null && s < 2497) A({ i: 2, lv: 'ok', ic: 'check-w', title: 'Crosswalk clear', sub: 'Go ahead', dv: this.dist(Math.max(0, 2487 - s)), dl: 'to crosswalk', d: 2487 - s, key: 'ped' });
     // 3 work zone
     if (s >= 2750 && s < 3250) A({ i: 3, lv: 'warn', ic: 'work-k', title: 'Work zone ahead', sub: 'Right lane closed', dv: this.dist(3250 - s), dl: 'ahead', d: 3250 - s, key: 'work-a' });
@@ -852,9 +862,12 @@ class Component extends DCLogic {
       const zone = this.onDetour() ? '' : s >= 1050 && s < 1550 ? 'School zone · ' : s >= 3250 && s < 3900 ? 'Work zone · ' : '';
       A({ i: 8, lv: 'warn', ic: 'speed-k', title: 'Slow down', sub: zone + 'Limit ' + lim + ' mph', dv: mph + ' mph', dl: 'your speed', d: -1, key: 'speed', vk: 'speed-' + lim });
     }
+    // driver: the TRAX light-rail level crossing at 400 S (real: Mapbox Streets shows the rail crossing State St
+    // there). A calm advisory before the intersection; gone before the red-light-runner event takes over.
+    if (this.on('trax') && !this.onDetour() && s >= 4260 && s < 4790) A({ i: 11, lv: 'adv', ic: 'tram-w', title: 'Light rail crossing', sub: 'TRAX · keep the tracks clear', dv: this.dist(5100 - s), dl: 'ahead', d: 5100 - s, key: 'trax' });
     // driver: a pedestrian crossing on red (intersection camera) and a cyclist on your right (their phone)
-    if (S.tPr != null && this.prX() < 62 && s < 6160) A({ i: 9, lv: 'crit', ic: 'ped-k', title: 'Pedestrian crossing on red', sub: 'Camera · 300 S', fsSub: 'Seen by the intersection camera at 300 S', dv: s < 6100 ? this.dist(6137 - s) : 'Stop', dl: s < 6100 ? 'to stop line' : 'wait', d: 0, key: 'pred' });
-    { const b = this.bkS(); if (b != null && b - s > -40 && s < 7150) A({ i: 5, lv: 'warn', ic: 'bike-k', title: 'Cyclist on your right', sub: 'Their phone · give 3 ft', dv: b - s < 50 ? 'Passing' : this.dist(b - s), dl: b - s < 50 ? '' : 'ahead', d: b - s, key: 'bkr' }); }
+    if (S.tPr != null && this.prX() < 62 && s < 6160) A({ i: 9, lv: 'crit', ic: 'ped-k', title: 'Pedestrian crossing on red', sub: 'Camera · 300 S', fsSub: 'Intersection camera · 300 S', dv: s < 6100 ? this.dist(6137 - s) : 'Stop', dl: s < 6100 ? 'to stop line' : 'wait', d: 0, key: 'pred' });
+    { const b = this.bkS(); if (b != null && b - s > -40 && s < 7150) A({ i: 5, lv: 'warn', ic: 'bike-k', title: 'Cyclist on your right', sub: 'From their phone · give 3 ft', dv: b - s < 50 ? 'Passing' : this.dist(b - s), dl: b - s < 50 ? '' : 'ahead', d: b - s, key: 'bkr' }); }
     // EV: vehicles ahead pulling over (they broadcast BSM; their apps told them you're coming)
     if (this.mode() === 'ev' && s >= 2700 && s < 3150) A({ i: 3, lv: 'ok', ic: 'siren-w', title: 'Vehicles ahead yielding', sub: '3 vehicles pulling over right', dv: '', dl: '', d: 0, key: 'ev-yield' });
     // cyclist (VRU): your phone broadcasts PSM; vehicles' BSM warn you
@@ -960,7 +973,8 @@ class Component extends DCLogic {
     const st = this.state, on = st.screen === 'perm', P = this.PERMS[Math.min(this.PERMS.length - 1, st.pstep || 0)];
     return {
       permOn: on, perm: { ...P, cls: 'pm-' + P.ic, step: `${(st.pstep || 0) + 1} of ${this.PERMS.length}`, hasNote: !!P.note },
-      permAllow: () => this.permNext(), permSkip: () => this.permNext(),
+      // every permission is required (no "Not now"); the skip link is for the demo only and is not in the app
+      permAllow: () => this.permNext(), permSkip: () => { this.permDone = true; this.start(); },
       dots: this.PERMS.map((p, k) => ({ cls: k === (st.pstep || 0) ? 'on' : '' })),
       // background preview: the app is behind another app; alerts come as a banner (and voice)
       bgOn: !!st.bg && st.screen === 'drive', goBg: () => this.setState({ bg: true, set: false }), openApp: () => this.setState({ bg: false }),
@@ -1016,7 +1030,7 @@ class Component extends DCLogic {
   // cyclist: car from behind, car turning right across you (600 S), hold speed for the green (500 S),
   // detected at the signal (400 S); pedestrian: its own sim (walkAlerts).
   on(evt) {
-    const E = { drive: ['school', 'red', 'ped', 'work', 'stop', 'bridge', 'rlr', 'evp', 'speed', 'bkr', 'pred'], ev: ['prio', 'yield', 'rlr'], bike: ['bk'], walk: [] };
+    const E = { drive: ['school', 'red', 'ped', 'work', 'stop', 'bridge', 'trax', 'rlr', 'evp', 'speed', 'bkr', 'pred'], ev: ['prio', 'yield', 'rlr'], bike: ['bk'], walk: [] };
     return (E[this.mode()] || E.drive).includes(evt);
   }
   allowAlert(key) {
@@ -1094,7 +1108,7 @@ class Component extends DCLogic {
     if (S.wph === 'to') A({ i: 2, lv: 'adv', ic: 'ped-k', title: 'Crosswalk ahead', sub: 'Mid-block · State St', dv: this.dist(K.xw - S.s), dl: 'ahead', d: K.xw - S.s, key: 'w-near' });
     if (S.wph === 'curb') {
       const carNear = cs != null && cs < K.xw + 20;
-      if (sg.c !== 'dw' && carNear) A({ i: 6, lv: 'crit', ic: 'rlr-w', title: 'Wait · car not stopping', sub: 'From the left · northbound', fsTitle: 'Wait', fsSub: 'A car is coming and not slowing down', dv: 'Wait', dl: 'stay on the curb', d: 0, key: 'w-car' });
+      if (sg.c !== 'dw' && carNear) A({ i: 6, lv: 'crit', ic: 'rlr-w', title: 'Wait · car not stopping', sub: 'From the left · northbound', fsTitle: 'Car not stopping', fsSub: 'Coming from the left · northbound', dv: 'Wait', dl: 'stay on the curb', d: 0, key: 'w-car' });
       else A({ i: 2, lv: 'warn', ic: 'ped-k', title: 'Wait to cross', sub: 'Crossing requested', fsTitle: 'Wait', fsSub: 'Crossing requested · State St', dv: sg.n != null ? sg.n + ' s' : '', dl: 'to walk', d: 0, key: 'w-wait' });
     }
     if (S.wph === 'cross') A({ i: 2, lv: 'ok', ic: 'ped-k', title: 'Walk', sub: 'Cross State St', fsTitle: 'Walk', fsSub: 'Cross State Street to the west side', dv: sg.n != null ? sg.n + ' s' : '', dl: 'to cross', d: 0, key: 'w-walk', vk: 'w-walk' });
@@ -1166,13 +1180,30 @@ class Component extends DCLogic {
   }
 
   // how many lines an intersection name needs (the app would measure the text; this is close enough here)
-  nameFit(name) { const n = String(name).length; return n > 40 ? 'n3' : n > 19 ? 'n2' : ''; }
+  // icon color by alert level: dark only on amber (warning); white on blue, red and green (and on the map's
+  // colored discs). Turn / go arrows have no color variant.
+  icOn(lv, ic) { const m = String(ic).match(/^(.*)-[kw]$/); return m ? m[1] + (lv === 'warn' ? '-k' : '-w') : ic; }
+  // intersection names as drivers read them on signs: USPS abbreviations, no leading direction on named streets
+  // ("South State Street" → "State St"; numbered grid streets keep theirs: "2100 S"). Max two lines on screen.
+  shortName(name) {
+    const A = [[/\bMartin Luther King,? Jr\.?/g, 'MLK Jr'], [/\bStreet\b/g, 'St'], [/\bAvenue\b/g, 'Ave'], [/\bBoulevard\b/g, 'Blvd'],
+      [/\bDrive\b/g, 'Dr'], [/\bHighway\b/g, 'Hwy'], [/\bParkway\b/g, 'Pkwy'], [/\bRoad\b/g, 'Rd'], [/\bLane\b/g, 'Ln'],
+      [/\bCircle\b/g, 'Cir'], [/\bCourt\b/g, 'Ct'], [/\bPlace\b/g, 'Pl'], [/\bTemple\b/g, 'Temple']];
+    return String(name).split(/\s*&\s*/).map((p) => {
+      let t = p.trim();
+      const g = t.match(/^(\d+) (North|South|East|West)$/); if (g) return g[1] + ' ' + g[2][0];
+      t = t.replace(/^(North|South|East|West) (?=\D)(?!Temple)/, '');
+      for (const [re, v] of A) t = t.replace(re, v);
+      return t;
+    }).join(' & ');
+  }
+  nameFit(name) { const n = String(name).length; return n > 30 ? 'n3' : n > 19 ? 'n2' : ''; }
 
   // the second alert, as a row under the lead one (no-map and cluster full screens)
   alsoView(a, mph, limit) {
     if (!a) return null;
-    if (a.key === 'speed' && limit != null) return { lv: a.lv, ic: a.ic, title: 'Slow down', sub: `${Math.max(1, mph - limit)} mph over`, dv: limit + ' mph', dl: 'limit' };
-    return { lv: a.lv, ic: a.ic, title: a.title, sub: a.sub, dv: a.dv || '', dl: a.dl || '' };
+    if (a.key === 'speed' && limit != null) return { lv: a.lv, ic: this.icOn(a.lv, a.ic), title: 'Slow down', sub: `${Math.max(1, mph - limit)} mph over`, dv: limit + ' mph', dl: 'limit' };
+    return { lv: a.lv, ic: this.icOn(a.lv, a.ic), title: a.title, sub: a.sub, dv: a.dv || '', dl: a.dl || '' };
   }
 
   // ---------- view ----------
@@ -1289,7 +1320,7 @@ class Component extends DCLogic {
       map = new mb.Map({
         container: node, style: this.styleUrl(), interactive: true, keyboard: false, // free look: drag, twist, pinch, tilt
         minZoom: this.LZ[0] - 1.2, maxZoom: this.LZ[1],
-        center: this.geo(this.sim.wx, this.sim.wy), zoom: 18.5, pitch: 60, bearing: 0, fadeDuration: 0,
+        center: this.geo(this.sim.wx, this.sim.wy), zoom: 18.5, pitch: this.PITCH, bearing: 0, fadeDuration: 0,
         attributionControl: false, logoPosition: 'bottom-left', projection: 'mercator',
         // full page address as Referer: the demo token is restricted to .../roadsense-demo/
         transformRequest: (url) => ({ url, referrerPolicy: 'no-referrer-when-downgrade' }),
@@ -1399,10 +1430,13 @@ class Component extends DCLogic {
           'text-pitch-alignment': 'map', 'text-rotation-alignment': 'map', 'text-allow-overlap': true, 'text-ignore-placement': true });
     }
   }
-  // 2D / 2.5D toggle (map app only). tilt 1 = 2.5D (60° pitch), 0 = flat 2D; eased over 300 ms on a switch
+  // 2.5D pitch. Phone: steep enough that the road runs up to just behind the top card (user, 2026-11-06; was
+  // 60°). Tablet landscape stays 60° (user: looks fine); tablet portrait a little steeper (64°), same top card.
+  get PITCH() { const k = this.dev().k; return k === 'phone' ? 68 : k === 'tp' ? 64 : 60; }
+  // 2D / 2.5D toggle (map app only). tilt 1 = 2.5D (68° pitch), 0 = flat 2D; eased over 300 ms on a switch
   toggleView() {
     const v = this.state.view === '2d' ? '3d' : '2d';
-    if (this.free && this.map) { this.freeT = performance.now(); this.map.easeTo({ pitch: v === '3d' ? 60 : 0, duration: 300 }); }
+    if (this.free && this.map) { this.freeT = performance.now(); this.map.easeTo({ pitch: v === '3d' ? this.PITCH : 0, duration: 300 }); }
     this.tiltA = { from: this.tiltNow(), to: v === '3d' ? 1 : 0, t0: performance.now() };
     if (!this.still) { try { localStorage.setItem('rs-map-view', v); } catch (e) {} }
     this.setState({ view: v });
@@ -1443,7 +1477,7 @@ class Component extends DCLogic {
     const zoom = Math.log2(40075016.7 * Math.cos(lat * Math.PI / 180) / (512 * mpp));
     const h = map.getContainer().clientHeight || 844;
     const D = this.dev(), w = map.getContainer().clientWidth || D.w;
-    return { center: [lng, lat], zoom, pitch: 60 * tl, bearing: S.rot, padding: { top: Math.max(0, 2 * D.cy - h), bottom: 0, left: Math.max(0, 2 * D.cx - w), right: Math.max(0, w - 2 * D.cx) } };
+    return { center: [lng, lat], zoom, pitch: this.PITCH * tl, bearing: S.rot, padding: { top: Math.max(0, 2 * D.cy - h), bottom: 0, left: Math.max(0, 2 * D.cx - w), right: Math.max(0, w - 2 * D.cx) } };
   }
   // event zones on the live map follow the mode (school / work zone: driver mode only)
   zoneVis() {
@@ -1499,7 +1533,7 @@ class Component extends DCLogic {
 
     // next intersection + its per-movement signals
     const nv = this.nextView(), dstr = nv.dstr, sig = nv.sig, nx = { n: nv.n };
-    const word = { g: 'green', y: 'yellow', r: 'red', fy: 'flashing yellow' };
+    const word = { g: 'green', y: 'yellow', r: 'red', fy: 'flashing yellow', x: 'no turn' };
     const sigLabel = this.mode() === 'walk' ? this.walkLabel() : `Left ${word[sig.L.c]}${sig.L.ut === 'ok' ? ' (U-turn allowed)' : sig.L.ut === 'no' ? ' (no U-turn)' : ''}, straight ${word[sig.S.c]}, right ${word[sig.R.c]}`;
     const p = this.prioState();
     const prio = p ? {
@@ -1517,7 +1551,7 @@ class Component extends DCLogic {
     let y = top0;
     const pos = {};
     order.forEach((a, k) => { pos[a.i] = { y, small: k > 0, z: 30 - k }; y += (k === 0 ? (a.lv === 'crit' ? 92 : 76) : 54) + 8; });
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 12; i++) { // slots 0–11 (10: clear / arrived, 11: light rail)
       const a = list.find(x => x.i === i);
       if (a) this.alCache[i] = a;
       const c = a || this.alCache[i] || { lv: 'adv', ic: 'info-w', title: '', sub: '', dv: '', dl: '' };
@@ -1525,7 +1559,7 @@ class Component extends DCLogic {
       alerts.push({
         cls: `lv-${c.lv}${ps && ps.small ? ' small' : ''}${a ? '' : ' hide'}${String(c.title).length > 15 ? ' long' : ''}`,
         style: ps ? { transform: `translateY(${ps.y}px)`, zIndex: ps.z } : { transform: `translateY(${top0 - 34}px) scale(.96)`, zIndex: 10 },
-        ic: c.ic, title: c.title, sub: c.sub, dv: c.dv, dl: c.dl,
+        ic: this.icOn(c.lv, c.ic), title: c.title, sub: c.sub, dv: c.dv, dl: c.dl,
       });
     }
     const lead = order[0];
@@ -1538,8 +1572,8 @@ class Component extends DCLogic {
     const second = fsA ? order.find(a => a.key !== fsA.key) : null;
     if (second) this.tk2Cache = second;
     const t2 = second || this.tk2Cache || { lv: 'adv', ic: 'info-w', title: '', sub: '', dv: '', dl: '' };
-    const tk2 = { cls: `lv-${t2.lv}${second ? '' : ' hide'}`, ic: t2.ic, title: t2.title, sub: t2.sub, dv: t2.dv, dl: t2.dl };
-    const tk = { cls: `lv-${tc.lv}${fsA ? ' on' : ''}${second ? ' two' : ''}`, ic: tc.ic, title: tc.fsTitle || tc.title, sub: tc.fsSub || tc.sub, dv: dparts[0], du: dparts[1] || '', dl: tc.dl };
+    const tk2 = { cls: `lv-${t2.lv}${second ? '' : ' hide'}`, ic: this.icOn(t2.lv, t2.ic), title: t2.title, sub: t2.sub, dv: t2.dv, dl: t2.dl };
+    const tk = { cls: `lv-${tc.lv}${fsA ? ' on' : ''}${second ? ' two' : ''}`, ic: this.icOn(tc.lv, tc.ic), title: tc.fsTitle || tc.title, sub: tc.fsSub || tc.sub, dv: dparts[0], du: dparts[1] || '', dl: tc.dl };
 
     // map markers, projected from the road plane to the screen
     // 2D shows the road from straight above, so it zooms out (x0.45) to see about as far ahead as 2.5D
@@ -1597,6 +1631,7 @@ class Component extends DCLogic {
       showPanel: full,
       showSplash: !drive, ...this.permVals(), bgb: this.bgBanner(list),
       tiles: this.tileVis(), tsrc: this.tileSrc(),
+      calmCls: !lead && !fsA ? 'on' : '', // tablet landscape panel: "No alerts ahead" when nothing is up
       planeCls: (this.on('school') ? '' : 'no-school ') + (this.on('work') ? '' : 'no-work'), // event zones: driver mode only
       mbxId: this.mbxId || (this.mbxId = 'mbx' + Math.random().toString(36).slice(2, 9)), camCls: (live ? 'mb-on' : '') + (this.liveOnly() ? ' live-only' : ''),
       mbErr: this.liveOnly() && !!this.mbFailed, mbRetry: () => { this.mbFailed = false; const n = document.getElementById(this.mbxId); if (n) this.mapOpen(n); this.setState({ tick: this.state.tick + 1 }); },

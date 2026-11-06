@@ -22,7 +22,7 @@
 .cl-sig-n { margin-top: 5px; font-size: 22px; font-weight: 700; letter-spacing: -.5px; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 /* long names: 2 or 3 lines; the card keeps its size, the direction words under the lights give way */
 .cl-sig.n2 .cl-sig-h, .cl-sig.n3 .cl-sig-h { height: auto; min-height: 50px; }
-.cl-sig.n2 .cl-sig-n, .cl-sig.n3 .cl-sig-n { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; font-size: 19px; line-height: 1.15; letter-spacing: -.3px; }
+.cl-sig.n2 .cl-sig-n, .cl-sig.n3 .cl-sig-n { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; font-size: 19px; line-height: 1.15; letter-spacing: -.3px; text-wrap: balance; } /* max two lines */
 .cl-sig.n2 .cl-lk, .cl-sig.n3 .cl-lk { display: none; }
 .cl-sig.n3 .cl-lens { width: 76px; height: 76px; }
 .cl-sig.n3 .cl-lens svg { width: 40px; height: 40px; }
@@ -43,6 +43,9 @@
 .cl-lamps { margin-top: 14px; flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding: 14px 6px 10px; border-radius: 22px; background: #0C0E11; }
 .cl-lamp { position: relative; min-width: 0; display: flex; flex-direction: column; align-items: center; --sc: #22C55E; --sg: rgba(34, 197, 94, .26); }
 .cl-lamp.t-y, .cl-lamp.t-fy { --sc: #FACC15; --sg: rgba(250, 204, 21, .24); }
+.cl-lamp.t-x { --sc: #6B7380; --sg: transparent; } /* movement not allowed (one-way cross street) */
+.cl-lamp.t-x .cl-lens { background: transparent !important; box-shadow: inset 0 0 0 3px #3A3F47 !important; color: #6B7380 !important; }
+.cl-cd.word.w-x { font-size: 15px; letter-spacing: .4px; }
 .cl-lamp.t-r { --sc: #EF4444; --sg: rgba(239, 68, 68, .28); }
 .cl-lens { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; color: #0C0E11; background: var(--sc); transition: background-color .3s; }
 .cl-lens svg { width: 44px; height: 44px; }
@@ -174,28 +177,62 @@
 .cl-fs-lim .d-lim-sign { width: 56px; height: 68px; border-width: 2px; border-radius: 8px; }
 .cl-fs-lim .d-lim-w { font-size: 7.5px; }
 .cl-fs-lim .d-lim-n { font-size: 27px; margin-top: 2px; }
-/* bike icon (VRU alerts), next to the icon rules in dash.css */
-.ic-bike-k .i-bike-k, .ic-bike-w .i-bike-w { display: block; }
+/* every icon in both colors (icOn() picks one by alert level). !important: dash.css (frozen v3) hides any
+   icon it doesn't list, which left the cyclist icon empty */
+.ic-school-w .i-school-w, .ic-school-k .i-school-k, .ic-signal-w .i-signal-w, .ic-signal-k .i-signal-k, .ic-ped-w .i-ped-w, .ic-ped-k .i-ped-k, .ic-bike-w .i-bike-w, .ic-bike-k .i-bike-k, .ic-work-w .i-work-w, .ic-work-k .i-work-k, .ic-stopped-w .i-stopped-w, .ic-stopped-k .i-stopped-k, .ic-bridge-w .i-bridge-w, .ic-bridge-k .i-bridge-k, .ic-rlr-w .i-rlr-w, .ic-rlr-k .i-rlr-k, .ic-siren-w .i-siren-w, .ic-siren-k .i-siren-k, .ic-check-w .i-check-w, .ic-check-k .i-check-k, .ic-info-w .i-info-w, .ic-info-k .i-info-k, .ic-speed-w .i-speed-w, .ic-speed-k .i-speed-k, .ic-tram-w .i-tram-w, .ic-tram-k .i-tram-k { display: block !important; }
 
-/* ---------- Tablet (v36c) ----------
-   Landscape (tab-l, 1194×834): signal head on the left (tall), speed + alert slot on the right; still fixed
-   blocks, no layout shift. Portrait (tab-p, 641×918 drawn, ×1.3 on screen): the phone blocks, wider and
-   taller. The full screen keeps its top block + bottom. */
-.cl-ph.tab-l .cl-sig { left: 16px; right: auto; width: 560px; top: 108px; height: 700px; }
-.cl-ph.tab-l .cl-spd { left: 592px; right: 16px; top: 108px; height: 380px; }
-.cl-ph.tab-l .cl-al { left: 592px; right: 16px; top: 504px; height: 304px; }
-.cl-ph.tab-l .cl-fs-top { height: 470px; }
-.cl-ph.tab-l .cl-fs-bot { top: 470px; }
-.cl-ph.tab-p .cl-sig { top: 108px; height: 356px; }
-.cl-ph.tab-p .cl-spd { top: 478px; height: 248px; }
-.cl-ph.tab-p .cl-al { top: 740px; height: 150px; }
-.cl-ph.tab-p .cl-fs-top { height: 540px; }
-.cl-ph.tab-p .cl-fs-bot { top: 540px; }
+/* ---------- Tablet (v37 redesign) ----------
+   Landscape (tab-l, 1194×834): a three-column dashboard, like a car cluster: signal head | your speed |
+   alerts, equal height, fixed (no layout shift). A full-screen alert covers the speed and alert columns as one
+   wide card (alert left, distance + also + your speed right); the signal head stays in view.
+   Portrait (tab-p, 641×918 drawn, ×1.3 on screen): signal head, then speed, then a taller alert slot; the full
+   screen keeps its top block + bottom. */
+.cl-ph.tab-l .cl-sig { left: 16px; right: auto; width: 380px; top: 108px; height: 700px; }
+.cl-ph.tab-l .cl-spd { left: 412px; right: auto; width: 370px; top: 108px; height: 700px; flex-direction: column; justify-content: center; gap: 44px; padding: 0; }
+.cl-ph.tab-l .cl-spd .cl-gauge { width: 260px; height: 260px; }
+.cl-ph.tab-l .cl-spd .cl-g-n { font-size: 96px; letter-spacing: -4px; }
+.cl-ph.tab-l .cl-spd .cl-g-u { font-size: 18px; }
+.cl-ph.tab-l .cl-spd-r { flex: none; flex-direction: row; gap: 40px; }
+.cl-ph.tab-l .cl-al { left: 798px; right: 16px; top: 108px; height: 700px; }
+.cl-ph.tab-l .cl-al-c, .cl-ph.tab-l .cl-al-a { flex-direction: column; justify-content: center; text-align: center; gap: 18px; padding: 0 28px; }
+.cl-ph.tab-l .cl-al-ic, .cl-ph.tab-l .cl-al-ok { width: 96px; height: 96px; border-radius: 30px; }
+.cl-ph.tab-l .cl-al-ic img, .cl-ph.tab-l .cl-al-ic svg { width: 52px; height: 52px; }
+.cl-ph.tab-l .cl-al-ok { border-radius: 50%; }
+.cl-ph.tab-l .cl-al-m { flex: none; width: 100%; }
+.cl-ph.tab-l .cl-al-t, .cl-ph.tab-l .cl-al-ct { font-size: 28px; letter-spacing: -.8px; }
+.cl-ph.tab-l .cl-al-s, .cl-ph.tab-l .cl-al-cs { font-size: 17px; white-space: normal; }
+.cl-ph.tab-l .cl-al-d { max-width: none; text-align: center; }
+.cl-ph.tab-l .cl-al-dv { font-size: 48px; letter-spacing: -2px; }
+.cl-ph.tab-l .cl-al-dl { font-size: 14px; }
+.cl-ph.tab-l .cl-fs { left: 412px; top: 108px; right: 16px; bottom: 26px; border-radius: 28px; overflow: hidden; box-shadow: var(--cl-shadow); }
+.cl-ph.tab-l .cl-fs-top { right: auto; width: 50%; bottom: 0; height: auto; border-radius: 0; justify-content: center; padding: 0 0 20px; }
+.cl-ph.tab-l .cl-fs-bot { left: 50%; top: 0; }
+.cl-ph.tab-l .cl-fs-d { top: 150px; }
+.cl-ph.tab-l .cl-fs-dl { top: 245px; }
+.cl-ph.tab-l .cl-fs-also { top: 300px; }
+.cl-ph.tab-l .d-sbar.inv { color: var(--d-ink); } /* landscape: the alert card sits below the status bar, so it stays dark */
+.cl-ph.tab-p .cl-sig { top: 108px; height: 380px; }
+.cl-ph.tab-p .cl-spd { top: 502px; height: 230px; }
+.cl-ph.tab-p .cl-al { top: 746px; height: 146px; }
+.cl-ph.tab-p .cl-fs-top { height: 520px; }
+.cl-ph.tab-p .cl-fs-bot { top: 520px; }
+.cl-ph.tab-p .cl-lens { width: 112px; height: 112px; }
+.cl-ph.tab-p .cl-lens svg { width: 58px; height: 58px; }
+.cl-ph.tab-p .cl-cd { font-size: 46px; }
 .cl-ph.tab .spm { left: 50%; right: auto; width: 390px; margin-left: -195px; height: 844px; top: 50%; margin-top: -422px; box-shadow: 0 0 0 1400px #F3F4F6; overflow: visible; }
-.cl-ph.tab-l .cl-lamps { align-items: center; }
-.cl-ph.tab-l .cl-lens { width: 136px; height: 136px; }
-.cl-ph.tab-l .cl-lens svg { width: 70px; height: 70px; }
-.cl-ph.tab-l .cl-cd { font-size: 56px; }
-.cl-ph.tab-l .cl-ut { width: 40px; height: 40px; left: calc(50% + 32px); }
-.cl-ph.tab-l .cl-ut .ut-i { width: 40px; height: 40px; }
-.cl-ph.tab-l .cl-wk-lens { width: 200px; height: 200px; } .cl-ph.tab-l .cl-wk-lens svg { width: 130px; height: 130px; } .cl-ph.tab-l .cl-wk-n { font-size: 96px; }
+/* landscape signal head: vertical, like a real one; each movement's countdown beside its lens */
+.cl-ph.tab-l .cl-lamps { grid-template-columns: minmax(0, 1fr); grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 14px 22px; align-items: center; }
+.cl-ph.tab-l .cl-lamp { display: grid; grid-template-columns: 104px minmax(0, 1fr); grid-template-rows: auto auto; column-gap: 22px; align-items: center; justify-items: start; }
+.cl-ph.tab-l .cl-lens { width: 104px; height: 104px; grid-row: 1 / 3; }
+.cl-ph.tab-l .cl-lens svg { width: 56px; height: 56px; }
+.cl-ph.tab-l .cl-cd { margin-top: 0; font-size: 54px; align-self: end; }
+.cl-ph.tab-l .cl-cd.word { font-size: 26px; line-height: 1.1; height: auto; }
+.cl-ph.tab-l .cl-lk { margin-top: 4px; font-size: 15px; align-self: start; }
+.cl-ph.tab-l .cl-ut { width: 34px; height: 34px; top: -4px; left: 80px; }
+.cl-ph.tab-l .cl-ut .ut-i { width: 34px; height: 34px; }
+.cl-ph.tab-l .cl-fs { left: 404px; top: 100px; right: 8px; bottom: 18px; border-radius: 34px; } /* also hides the speed block's over-the-limit ring */
+.cl-ph .cl-cd.word.w-x { font-size: 14px; letter-spacing: .4px; white-space: normal; line-height: 1.1; text-align: center; max-width: 84px; height: auto; }
+.cl-ph.tab-l .cl-cd.word.w-x { font-size: 22px; text-align: left; max-width: none; }
+.cl-ph.tab-l .cl-wk-lens { width: 180px; height: 180px; } .cl-ph.tab-l .cl-wk-lens svg { width: 116px; height: 116px; } .cl-ph.tab-l .cl-wk-n { font-size: 88px; }
+.cl-ph.tab-l .cl-lamps[class*="ws-"] { grid-template-rows: minmax(0, 1fr); } /* pedestrian signal: one head, centered in the tall column */
+.cl-ph.tab-l .cl-lamps[class*="ws-"] .cl-wk { flex-direction: column; text-align: center; gap: 22px; justify-self: center; }
