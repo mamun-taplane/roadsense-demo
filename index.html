@@ -36,13 +36,19 @@
   body:not(.app) #root > * { flex: 0 0 auto; }
   body.app { overflow: hidden; background: #EEF0F3; }
   body.app #root { position: absolute; left: 0; right: 0; margin: 0 auto; top: var(--barh, calc(var(--bar) + env(safe-area-inset-top, 0px))); padding: 0; width: var(--aw, 390px); height: var(--ah, 844px); transform-origin: 50% 0; }
-  body.app .ph { border-radius: 0; }
+  body.app:not(.wide) .ph { border-radius: 0; } /* on a phone: edge to edge */
+  /* computer (v39.10, user): the device as a framed device: rounded, space around, shadow */
+  body.app.wide #root { top: calc(var(--barh, var(--bar)) + var(--gap)); border-radius: var(--rad, 44px); box-shadow: 0 0 0 1px rgba(16, 24, 40, .08), 0 30px 60px -20px rgba(16, 24, 40, .35); }
+  body.app.wide .ph { border-radius: inherit; }
+  body.app.wide.actual #root { margin-top: calc(var(--barh, var(--bar)) + var(--gap)); top: auto; }
+  body.app.wide.actual::after { content: ""; display: block; height: var(--gap); }
   body.app #root { overflow: hidden; } /* the get-started picture zooms in from 1.18x: keep it from widening the page */
   .demo-bar { max-width: 100vw; }
   /* demo controls: a right pane (user, v39.9). Wide screens: docked, open by default, hide / show; the app
      fits the space left of it. Narrow screens: slides over from the right. Fit = scale the device to the
      window; 100% = real size, scroll to see all of it. */
-  :root { --pane: 340px; }
+  :root { --pane: 340px; --gap: 0px; }
+  body.app.wide { --gap: 28px; }
   #demo-open { display: none; height: 34px; padding: 0 12px; border: 0; border-radius: 10px; background: var(--ink); color: #fff; font: 600 13px/1 Inter, sans-serif; align-items: center; gap: 6px; cursor: pointer; margin: 6px 0; }
   #demo-open svg { width: 16px; height: 16px; }
   body.app:not(.dsh-on) #demo-open { display: flex; }
@@ -124,7 +130,7 @@
   <div class="dsh-sec" style="padding-bottom:0"><div class="dsh-k">Jump to</div></div>
   <div class="dsh-list" id="dsh-list"></div>
 </aside>
-<script src="_dc.js?v=16ea4f7-1793973416"></script>
+<script src="_dc.js?v=085aaa9-1793974839"></script>
 <script>
 // Which app: /cluster/ (demo) or ?cluster (local) = the no-map cluster; else the map app.
 const q = new URLSearchParams(location.search);
@@ -160,11 +166,13 @@ if (app) {
     const bar = document.querySelector('.demo-bar').getBoundingClientRect().height;
     const pane = wide && B.classList.contains('dsh-on') ? document.getElementById('dsh').getBoundingClientRect().width : 0;
     const vw = document.documentElement.clientWidth - pane, vh = (window.visualViewport && visualViewport.height) || innerHeight;
-    const k = actual ? 1 : Math.min(vw / SIZE[0], (vh - bar) / SIZE[1]);
+    const G = wide ? 28 : 0; // space around the framed device on a computer
+    const k = actual ? 1 : Math.min((vw - 2 * G) / SIZE[0], (vh - bar - 2 * G) / SIZE[1]);
+    document.documentElement.style.setProperty('--rad', (device === 'phone' ? 44 : 30) + 'px');
     const r = document.getElementById('root');
     r.style.transform = `scale(${k})`; // centered by margins: never widens the page
     // 100%: the page scrolls to show the whole device (and centres it when it fits one way)
-    r.style.marginLeft = actual ? Math.max(0, (vw - SIZE[0]) / 2) + 'px' : '';
+    r.style.marginLeft = actual ? Math.max(G, (vw - SIZE[0]) / 2) + 'px' : '';
     document.documentElement.classList.toggle('actual', actual);
     for (const b of document.querySelectorAll('#dsh-fit button')) b.className = (b.dataset.f === 'actual') === actual ? 'on' : '';
   };
@@ -172,7 +180,7 @@ if (app) {
 }
 (async () => {
   try {
-    const Root = await DC.load(cluster ? 'Cluster.dc.html?v=16ea4f7-1793973416' : 'LiveDrive.dc.html?v=16ea4f7-1793973416');
+    const Root = await DC.load(cluster ? 'Cluster.dc.html?v=085aaa9-1793974839' : 'LiveDrive.dc.html?v=085aaa9-1793974839');
     ReactDOM.createRoot(document.getElementById('root')).render(DC.h(Root, { ...(app ? { app: '1' } : {}), ...(device !== 'phone' ? { device } : {}) }));
   } catch (e) { document.getElementById('root').innerHTML = '<pre style="padding:16px;color:#B91C1C">Could not load the app: ' + e.message + '</pre>'; }
 })();
