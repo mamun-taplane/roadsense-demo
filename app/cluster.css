@@ -174,3 +174,5 @@
 .cl-fs-lim .d-lim-sign { width: 56px; height: 68px; border-width: 2px; border-radius: 8px; }
 .cl-fs-lim .d-lim-w { font-size: 7.5px; }
 .cl-fs-lim .d-lim-n { font-size: 27px; margin-top: 2px; }
+/* bike icon (VRU alerts), next to the icon rules in dash.css */
+.ic-bike-k .i-bike-k, .ic-bike-w .i-bike-w { display: block; }

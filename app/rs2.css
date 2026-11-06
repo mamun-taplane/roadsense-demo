@@ -164,6 +164,7 @@
 /* icons are all in the markup; the class picks which one shows */
 .icset { display: grid; place-items: center; }
 .icset .i { display: none; }
+.ic-rlr-k .i-rlr-k, .ic-bike-k .i-bike-k, .ic-bike-w .i-bike-w { display: block; } /* car (dark) and bike icons */
 .ic-school-w .i-school-w, .ic-signal-k .i-signal-k, .ic-ped-k .i-ped-k, .ic-work-k .i-work-k, .ic-stopped-w .i-stopped-w,
 .ic-bridge-w .i-bridge-w, .ic-rlr-w .i-rlr-w, .ic-siren-k .i-siren-k, .ic-siren-w .i-siren-w, .ic-signal-w .i-signal-w, .ic-check-w .i-check-w, .ic-info-w .i-info-w, .ic-speed-k .i-speed-k { display: block; }
 
