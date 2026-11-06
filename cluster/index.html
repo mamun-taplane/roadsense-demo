@@ -39,13 +39,27 @@
   body.app .ph { border-radius: 0; }
   body.app #root { overflow: hidden; } /* the get-started picture zooms in from 1.18x: keep it from widening the page */
   .demo-bar { max-width: 100vw; }
-  /* phone / app view: the desktop side panel doesn't fit, so its controls live in a "Demo" sheet */
+  /* demo controls: a right pane (user, v39.9). Wide screens: docked, open by default, hide / show; the app
+     fits the space left of it. Narrow screens: slides over from the right. Fit = scale the device to the
+     window; 100% = real size, scroll to see all of it. */
+  :root { --pane: 340px; }
   #demo-open { display: none; height: 34px; padding: 0 12px; border: 0; border-radius: 10px; background: var(--ink); color: #fff; font: 600 13px/1 Inter, sans-serif; align-items: center; gap: 6px; cursor: pointer; margin: 6px 0; }
   #demo-open svg { width: 16px; height: 16px; }
-  body.app #demo-open { display: flex; }
+  body.app:not(.dsh-on) #demo-open { display: flex; }
+  body.app.wide.dsh-on #root { right: var(--pane); }
+  html.actual, html.actual body { overflow: auto; height: auto; }
+  body.app.actual #root { position: relative; top: auto; left: auto; right: auto; margin: var(--barh, var(--bar)) 0 0; overflow: visible; }
+  body.app.actual.wide.dsh-on { padding-right: var(--pane); }
+  body.app.actual.wide.dsh-on #root { right: auto; }
+  body.app.actual .demo-bar { position: fixed; }
   .dsh-back { position: fixed; inset: 0; z-index: 200; background: rgba(16, 24, 40, .28); opacity: 0; pointer-events: none; transition: opacity .25s; }
-  .dsh { position: fixed; left: 0; right: 0; bottom: 0; z-index: 201; height: min(74vh, 640px); box-sizing: border-box; display: flex; flex-direction: column; background: #fff; border-radius: 22px 22px 0 0; box-shadow: 0 -12px 40px -14px rgba(16, 24, 40, .35); transform: translateY(105%); transition: transform .32s cubic-bezier(.2, .8, .2, 1); padding-bottom: env(safe-area-inset-bottom, 0px); max-width: 560px; margin: 0 auto; }
-  body.dsh-on .dsh { transform: none; } body.dsh-on .dsh-back { opacity: 1; pointer-events: auto; }
+  .dsh { position: fixed; right: 0; top: var(--barh, var(--bar)); bottom: 0; z-index: 201; width: min(var(--pane), 92vw); box-sizing: border-box; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; background: #fff; border-left: 1px solid var(--line); transform: translateX(105%); transition: transform .28s cubic-bezier(.2, .8, .2, 1); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  body.dsh-on .dsh { transform: none; }
+  body:not(.wide).dsh-on .dsh-back { opacity: 1; pointer-events: auto; }
+  body:not(.wide) .dsh { top: 0; box-shadow: -12px 0 40px -14px rgba(16, 24, 40, .35); }
+  .dsh-fit { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 3px; border-radius: 12px; background: #EEF0F3; }
+  .dsh-fit button { height: 36px; border: 0; border-radius: 9px; background: transparent; font: 600 13px/1 Inter, sans-serif; color: var(--ink2); cursor: pointer; }
+  .dsh-fit button.on { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(16, 24, 40, .14); }
   .dsh-h { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 6px; }
   .dsh-t { font-size: 17px; font-weight: 700; color: var(--ink); }
   .dsh-x { width: 36px; height: 36px; border: 0; border-radius: 18px; background: #EEF0F3; font-size: 18px; cursor: pointer; color: var(--ink); }
@@ -63,7 +77,7 @@
   .dsh-rate button.on { background: #fff; color: var(--ink); }
   .dsh-now { margin-left: auto; min-width: 0; font-size: 13px; font-weight: 600; color: var(--ink2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .dsh-tl { width: 100%; margin: 4px 0 0; accent-color: #2563EB; height: 28px; }
-  .dsh-list { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 0 8px 12px; -webkit-overflow-scrolling: touch; }
+  .dsh-list { padding: 0 8px 16px; }
   .dsh-sc { width: 100%; display: flex; align-items: center; gap: 10px; padding: 11px 8px; border: 0; border-radius: 12px; background: transparent; text-align: left; cursor: pointer; font: 500 15px/1.25 Inter, sans-serif; color: var(--ink); }
   .dsh-sc.on { background: #EEF2FF; }
   .dsh-sc i { font-style: normal; font-size: 12px; font-weight: 600; color: #98A0AA; width: 20px; flex: none; }
@@ -91,13 +105,14 @@
     <a id="d-tl" title="Tablet, landscape" aria-label="Tablet, landscape"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M18.5 11v2"/></svg><span class="dv-t">Tablet landscape</span></a>
     <a id="d-tp" title="Tablet, portrait" aria-label="Tablet, portrait"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M11 18.5h2"/></svg><span class="dv-t">Tablet portrait</span></a>
   </div></div>
-  <button id="demo-open" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5z"/></svg>Demo</button>
+  <button id="demo-open" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5z"/></svg>Controls</button>
 </nav>
 <div id="root"></div>
-<!-- phone / app view: the demo controls (perspective, play, timeline, jump to) in a bottom sheet -->
+<!-- demo controls (screen size, who you are, play, timeline, jump to): right pane -->
 <div class="dsh-back" id="dsh-back"></div>
-<section class="dsh" id="dsh" role="dialog" aria-label="Demo controls">
-  <div class="dsh-h"><div class="dsh-t">Demo controls</div><button class="dsh-x" id="dsh-x" type="button" aria-label="Close">✕</button></div>
+<aside class="dsh" id="dsh" aria-label="Demo controls">
+  <div class="dsh-h"><div class="dsh-t">Demo controls</div><button class="dsh-x" id="dsh-x" type="button" aria-label="Hide the controls" title="Hide">✕</button></div>
+  <div class="dsh-sec"><div class="dsh-k">Screen size</div><div class="dsh-fit" id="dsh-fit"><button data-f="fit" type="button">Fit to window</button><button data-f="actual" type="button">100% (scroll)</button></div></div>
   <div class="dsh-sec"><div class="dsh-k">You are</div><div class="dsh-seg" id="dsh-mode"><button data-m="drive" type="button">Driver</button><button data-m="ev" type="button">Emergency</button><button data-m="bike" type="button">Cyclist</button><button data-m="walk" type="button">Pedestrian</button></div></div>
   <div class="dsh-sec"><div class="dsh-ctl">
     <button class="dsh-btn pri" id="dsh-play" type="button" aria-label="Play"></button>
@@ -108,8 +123,8 @@
   <input class="dsh-tl" id="dsh-tl" type="range" min="0" max="100" step="1" value="0" aria-label="Timeline: drag to move along the drive"></div>
   <div class="dsh-sec" style="padding-bottom:0"><div class="dsh-k">Jump to</div></div>
   <div class="dsh-list" id="dsh-list"></div>
-</section>
-<script src="_dc.js?v=3dc196b-1793973032"></script>
+</aside>
+<script src="_dc.js?v=16ea4f7-1793973416"></script>
 <script>
 // Which app: /cluster/ (demo) or ?cluster (local) = the no-map cluster; else the map app.
 const q = new URLSearchParams(location.search);
@@ -129,24 +144,35 @@ for (const d of ['phone', 'tl', 'tp']) {
   if (d === 'phone') u.searchParams.delete('device'); else u.searchParams.set('device', d);
   a.href = u.toString(); if (d === device) { a.className = 'on'; a.setAttribute('aria-current', 'true'); }
 }
-// Phone (narrow screen) or ?app: just the app, scaled to fit under the bar. Computer: the board with the side panel.
-const app = q.has('app') || (!q.has('board') && matchMedia(device === 'tl' ? '(max-width: 1700px)' : '(max-width: 900px)').matches);
+// Always just the app, scaled to the space next to the controls pane (?board: the old board with the in-app side panel)
+const app = !q.has('board');
+const WIDE = matchMedia('(min-width: 900px)');
+const store = (k, v) => { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } };
 const setBar = () => document.documentElement.style.setProperty('--barh', document.querySelector('.demo-bar').getBoundingClientRect().height + 'px');
 setBar(); addEventListener('resize', setBar);
+let fit = () => {};
 if (app) {
-  document.body.className = 'app';
+  document.body.classList.add('app');
   document.documentElement.style.setProperty('--aw', SIZE[0] + 'px'); document.documentElement.style.setProperty('--ah', SIZE[1] + 'px');
-  const fit = () => {
+  fit = () => {
+    const B = document.body, wide = WIDE.matches; B.classList.toggle('wide', wide);
+    const actual = store('rs-demo-size') === 'actual'; B.classList.toggle('actual', actual);
     const bar = document.querySelector('.demo-bar').getBoundingClientRect().height;
-    const vw = document.documentElement.clientWidth, vh = (window.visualViewport && visualViewport.height) || innerHeight;
-    const k = Math.min(vw / SIZE[0], (vh - bar) / SIZE[1]);
-    document.getElementById('root').style.transform = `scale(${k})`; // centered by margins: never widens the page
+    const pane = wide && B.classList.contains('dsh-on') ? document.getElementById('dsh').getBoundingClientRect().width : 0;
+    const vw = document.documentElement.clientWidth - pane, vh = (window.visualViewport && visualViewport.height) || innerHeight;
+    const k = actual ? 1 : Math.min(vw / SIZE[0], (vh - bar) / SIZE[1]);
+    const r = document.getElementById('root');
+    r.style.transform = `scale(${k})`; // centered by margins: never widens the page
+    // 100%: the page scrolls to show the whole device (and centres it when it fits one way)
+    r.style.marginLeft = actual ? Math.max(0, (vw - SIZE[0]) / 2) + 'px' : '';
+    document.documentElement.classList.toggle('actual', actual);
+    for (const b of document.querySelectorAll('#dsh-fit button')) b.className = (b.dataset.f === 'actual') === actual ? 'on' : '';
   };
-  fit(); addEventListener('resize', fit);
+  addEventListener('resize', fit); WIDE.addEventListener && WIDE.addEventListener('change', fit);
 }
 (async () => {
   try {
-    const Root = await DC.load(cluster ? 'Cluster.dc.html?v=3dc196b-1793973032' : 'LiveDrive.dc.html?v=3dc196b-1793973032');
+    const Root = await DC.load(cluster ? 'Cluster.dc.html?v=16ea4f7-1793973416' : 'LiveDrive.dc.html?v=16ea4f7-1793973416');
     ReactDOM.createRoot(document.getElementById('root')).render(DC.h(Root, { ...(app ? { app: '1' } : {}), ...(device !== 'phone' ? { device } : {}) }));
   } catch (e) { document.getElementById('root').innerHTML = '<pre style="padding:16px;color:#B91C1C">Could not load the app: ' + e.message + '</pre>'; }
 })();
@@ -157,8 +183,16 @@ if (app) {
   const PAUSE = '<svg viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="2" width="3.5" height="12" rx="1"/><rect x="9.5" y="2" width="3.5" height="12" rx="1"/></svg>';
   let listKey = '', timer = null, dragging = false;
   const app = () => window.__rsApp;
-  const open = (on) => { body.classList.toggle('dsh-on', on); if (on) { refresh(true); timer = setInterval(refresh, 300); } else clearInterval(timer); };
+  const open = (on, keep) => {
+    body.classList.toggle('dsh-on', on); clearInterval(timer); if (on) { refresh(true); timer = setInterval(refresh, 300); }
+    if (!keep && WIDE.matches) store('rs-demo-pane', on ? 'open' : 'hidden'); // wide screens remember open / hidden
+    fit();
+  };
   $('demo-open').onclick = () => open(true); $('dsh-x').onclick = () => open(false); $('dsh-back').onclick = () => open(false);
+  $('dsh-fit').onclick = (e) => { const f = e.target.dataset && e.target.dataset.f; if (f) { store('rs-demo-size', f); fit(); } };
+  // open by default on a computer; on a phone the app gets the whole screen until "Controls"
+  if (body.classList.contains('app')) open(WIDE.matches && store('rs-demo-pane') !== 'hidden', true);
+  WIDE.addEventListener && WIDE.addEventListener('change', () => open(WIDE.matches && store('rs-demo-pane') !== 'hidden', true));
   const sceneList = (a) => a.SCENES.map((sc, k) => ({ sc, k })).filter(o => a.sceneFits(o.sc));
   function refresh(force) {
     const a = app(); if (!a || !a.state) return;
@@ -181,7 +215,7 @@ if (app) {
   $('dsh-restart').onclick = () => { const a = app(); if (!a) return; const first = sceneList(a)[0]; if (first) a.jump(first.sc); };
   const tl = $('dsh-tl');
   tl.oninput = () => { dragging = true; }; tl.onchange = () => { dragging = false; const a = app(); if (a) { if (a.state.screen !== 'drive') { a.permDone = true; a.start(); } a.scrubTo(+tl.value); } };
-  $('dsh-list').onclick = (e) => { const b = e.target.closest('.dsh-sc'); const a = app(); if (!b || !a) return; a.jump(a.SCENES[+b.dataset.k]); open(false); };
+  $('dsh-list').onclick = (e) => { const b = e.target.closest('.dsh-sc'); const a = app(); if (!b || !a) return; a.jump(a.SCENES[+b.dataset.k]); if (!WIDE.matches) open(false); };
 })();
 </script>
 </body>
