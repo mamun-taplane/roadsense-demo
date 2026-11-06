@@ -130,7 +130,7 @@
   <div class="dsh-sec" style="padding-bottom:0"><div class="dsh-k">Jump to</div></div>
   <div class="dsh-list" id="dsh-list"></div>
 </aside>
-<script src="_dc.js?v=085aaa9-1793974839"></script>
+<script src="_dc.js?v=ec73f33-1793974881"></script>
 <script>
 // Which app: /cluster/ (demo) or ?cluster (local) = the no-map cluster; else the map app.
 const q = new URLSearchParams(location.search);
@@ -162,7 +162,8 @@ if (app) {
   document.documentElement.style.setProperty('--aw', SIZE[0] + 'px'); document.documentElement.style.setProperty('--ah', SIZE[1] + 'px');
   fit = () => {
     const B = document.body, wide = WIDE.matches; B.classList.toggle('wide', wide);
-    const actual = store('rs-demo-size') === 'actual'; B.classList.toggle('actual', actual);
+    // 100% is the default on a computer (user, v39.11); on a phone the app fits the screen unless 100% is picked
+    const pick = store('rs-demo-size'), actual = pick ? pick === 'actual' : wide; B.classList.toggle('actual', actual);
     const bar = document.querySelector('.demo-bar').getBoundingClientRect().height;
     const pane = wide && B.classList.contains('dsh-on') ? document.getElementById('dsh').getBoundingClientRect().width : 0;
     const vw = document.documentElement.clientWidth - pane, vh = (window.visualViewport && visualViewport.height) || innerHeight;
@@ -180,7 +181,7 @@ if (app) {
 }
 (async () => {
   try {
-    const Root = await DC.load(cluster ? 'Cluster.dc.html?v=085aaa9-1793974839' : 'LiveDrive.dc.html?v=085aaa9-1793974839');
+    const Root = await DC.load(cluster ? 'Cluster.dc.html?v=ec73f33-1793974881' : 'LiveDrive.dc.html?v=ec73f33-1793974881');
     ReactDOM.createRoot(document.getElementById('root')).render(DC.h(Root, { ...(app ? { app: '1' } : {}), ...(device !== 'phone' ? { device } : {}) }));
   } catch (e) { document.getElementById('root').innerHTML = '<pre style="padding:16px;color:#B91C1C">Could not load the app: ' + e.message + '</pre>'; }
 })();
