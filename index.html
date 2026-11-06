@@ -39,7 +39,8 @@
   body.app:not(.wide) .ph { border-radius: 0; } /* on a phone: edge to edge */
   /* computer (v39.10, user): the device as a framed device: rounded, space around, shadow */
   body.app.wide #root { top: calc(var(--barh, var(--bar)) + var(--gap)); border-radius: var(--rad, 44px); box-shadow: 0 0 0 1px rgba(16, 24, 40, .08), 0 30px 60px -20px rgba(16, 24, 40, .35); }
-  body.app.wide .ph { border-radius: inherit; }
+  body.app.wide .ph { border-radius: var(--rad, 44px); }
+  body.app.wide #root, body.app.wide.actual #root { overflow: hidden; } /* clips the rounded corners, also at 100% */
   body.app.wide.actual #root { margin-top: calc(var(--barh, var(--bar)) + var(--gap)); top: auto; }
   body.app.wide.actual::after { content: ""; display: block; height: var(--gap); }
   body.app #root { overflow: hidden; } /* the get-started picture zooms in from 1.18x: keep it from widening the page */
@@ -130,7 +131,7 @@
   <div class="dsh-sec" style="padding-bottom:0"><div class="dsh-k">Jump to</div></div>
   <div class="dsh-list" id="dsh-list"></div>
 </aside>
-<script src="_dc.js?v=ec73f33-1793974881"></script>
+<script src="_dc.js?v=dba9151-1793975525"></script>
 <script>
 // Which app: /cluster/ (demo) or ?cluster (local) = the no-map cluster; else the map app.
 const q = new URLSearchParams(location.search);
@@ -181,7 +182,7 @@ if (app) {
 }
 (async () => {
   try {
-    const Root = await DC.load(cluster ? 'Cluster.dc.html?v=ec73f33-1793974881' : 'LiveDrive.dc.html?v=ec73f33-1793974881');
+    const Root = await DC.load(cluster ? 'Cluster.dc.html?v=dba9151-1793975525' : 'LiveDrive.dc.html?v=dba9151-1793975525');
     ReactDOM.createRoot(document.getElementById('root')).render(DC.h(Root, { ...(app ? { app: '1' } : {}), ...(device !== 'phone' ? { device } : {}) }));
   } catch (e) { document.getElementById('root').innerHTML = '<pre style="padding:16px;color:#B91C1C">Could not load the app: ' + e.message + '</pre>'; }
 })();
