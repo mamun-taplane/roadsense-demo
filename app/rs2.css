@@ -250,7 +250,8 @@
 .lim.none .lim-n { letter-spacing: 1px; font-weight: 600; }
 .lim.over { box-shadow: 0 0 0 4px rgba(229, 56, 59, .25), 0 0 0 5.5px var(--crit); } /* as v4: the sign stays the standard white sign; a red ring when over */
 .hdg { display: flex; align-items: center; gap: 8px; }
-.hdg-dial { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--line); position: relative; }
+.dk-lbl.dk-deg { font-size: 16px; font-weight: 700; color: var(--ink-2); font-variant-numeric: tabular-nums; } /* heading degrees: readable at a glance */
+.hdg-dial { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--line); position: relative; }
 .hdg-dial i { position: absolute; left: 50%; top: 2px; width: 0; height: 0; margin-left: -4px; border-left: 4px solid transparent; border-right: 4px solid transparent; border-bottom: 9px solid var(--crit); }
 
 /* ---------- Splash ---------- */

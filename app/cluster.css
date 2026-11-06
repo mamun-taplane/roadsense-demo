@@ -101,8 +101,8 @@
 .cl-hdg-dial i::before { content: ''; position: absolute; left: 50%; top: 9px; margin-left: -6px; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 15px solid var(--d-adv); }
 .cl-hdg-dial i::after { content: ''; position: absolute; left: 50%; bottom: 9px; margin-left: -6px; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 15px solid #C9CED6; }
 .cl-hdg-t { display: flex; flex-direction: column; line-height: 1; }
-.cl-hdg-l { font-size: 20px; font-weight: 800; letter-spacing: -.4px; }
-.cl-hdg-g { margin-top: 4px; font-size: 13px; font-weight: 600; color: var(--d-ink2); font-variant-numeric: tabular-nums; }
+.cl-hdg-l { font-size: 26px; font-weight: 800; letter-spacing: -.4px; } /* bigger heading (to-do 9) */
+.cl-hdg-g { margin-top: 4px; font-size: 16px; font-weight: 700; color: var(--d-ink2); font-variant-numeric: tabular-nums; }
 
 /* 3 · alert slot */
 .cl-al { position: absolute; left: 12px; right: 12px; top: 660px; height: 128px; border-radius: 28px; background: var(--d-card); box-shadow: var(--cl-shadow); overflow: hidden; transition: background-color .3s, box-shadow .3s; }
