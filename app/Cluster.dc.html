@@ -214,25 +214,19 @@
   </sc-if>
 
   <sc-if value="{{ showSplash }}" hint-placeholder-val="{{ true }}">
-    <div class="spb">
-      <img class="spb-cu" src="img/connected-utah.svg" alt="Connected Utah">
-      <div class="spb-sig" aria-hidden="true">
-        <div class="spb-k">Next signal</div>
-        <div class="spb-row"><div class="spb-n">State St &amp; 800 S</div><div class="spb-d">410<small>ft</small></div></div>
-        <div class="spb-lamps">
-          <div class="spb-lp"><div class="spb-ln r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-6.5a4.5 4.5 0 0 0-4.5-4.5H6"/><path d="M10 5 6 9l4 4"/></svg></div><div class="spb-cd r">31</div></div>
-          <div class="spb-lp"><div class="spb-ln g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5"/><path d="M7 10l5-5 5 5"/></svg></div><div class="spb-cd g">18</div></div>
-          <div class="spb-lp"><div class="spb-ln g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20v-6.5A4.5 4.5 0 0 1 12.5 9H18"/><path d="M14 5l4 4-4 4"/></svg></div><div class="spb-cd g">18</div></div>
-        </div>
+    <div class="spb spd">
+      <div class="spd-art" aria-hidden="true">
+        <i class="spd-r r1"></i><i class="spd-r r2"></i><i class="spd-r r3"></i>
+        <div class="spd-mk"><img src="img/roadsense-icon.svg" alt=""></div>
+        <div class="spd-o o1"><img src="v2/ic/signal-k.svg" alt=""></div>
+        <div class="spd-o o2"><img src="v2/ic/school-w.svg" alt=""></div>
+        <div class="spd-o o3"><img src="v2/ic/siren-w.svg" alt=""></div>
+        <div class="spd-o o4"><img src="v2/ic/ped-k.svg" alt=""></div>
       </div>
-      <div class="spb-al" aria-hidden="true">
-        <div class="spb-ai"><img src="v2/ic/school-w.svg" alt=""></div>
-        <div class="spb-am"><div class="spb-at">School zone ahead</div><div class="spb-as">Limit drops to 20 mph</div></div>
-        <div class="spb-ad">650 ft</div>
-      </div>
-      <div class="spb-body">
-        <div class="spb-h">See the light before you reach it.</div>
-        <div class="spb-p">Live signal timing and road alerts from Utah's connected roads.</div>
+      <div class="spb-body spd-body">
+        <img class="spd-cu" src="img/connected-utah.svg" alt="Connected Utah">
+        <div class="spb-h">Connected to Utah's roads.</div>
+        <div class="spb-p">Signals, work zones and emergency vehicles, before you see them.</div>
         <button class="spb-btn" onClick="{{ start }}">Start driving</button>
         <div class="spb-pow">Powered by <img src="img/roadsense.svg" alt="Road Sense"></div>
       </div>

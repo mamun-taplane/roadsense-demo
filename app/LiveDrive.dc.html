@@ -1468,7 +1468,9 @@ class Component extends DCLogic {
   // 2D / 2.5D toggle (map app only). tilt 1 = 2.5D (68° pitch), 0 = flat 2D; eased over 300 ms on a switch
   toggleView() {
     const v = this.state.view === '2d' ? '3d' : '2d';
-    if (this.free && this.map) { this.freeT = performance.now(); this.map.easeTo({ pitch: v === '3d' ? this.PITCH : 0, duration: 300 }); }
+    // each view has its own default camera: switching view goes to that default (no Reset view button)
+    if (this.lzDef != null) { this.lz = this.lzDef; this.lzT = null; }
+    if (this.free) { this.free = false; this.recT = performance.now() + 320; }
     this.tiltA = { from: this.tiltNow(), to: v === '3d' ? 1 : 0, t0: performance.now() };
     if (!this.still) { try { localStorage.setItem('rs-map-view', v); } catch (e) {} }
     this.setState({ view: v });
@@ -1534,14 +1536,12 @@ class Component extends DCLogic {
   }
   // the camera differs from the default: moved / rotated / tilted (free look), zoomed, or switched to 2.5D
   camChanged() {
-    const z = this.lzT ?? this.lz;
-    if (this.viewDef == null) this.viewDef = this.still ? this.state.view : '2d'; // stills: the view they were drawn in
-    return !!this.free || (z != null && this.lzDef != null && Math.abs(z - this.lzDef) > 0.05) || this.state.view !== this.viewDef;
+    const z = this.lzT ?? this.lz; // 2D and 2.5D each have their own default; switching view is not a change
+    return !!this.free || (z != null && this.lzDef != null && Math.abs(z - this.lzDef) > 0.05);
   }
-  // Reset view: back to the default — following the car, heading up, default zoom, flat 2D (the agreed default)
+  // Reset view: back to the current view's default (follow the car, heading up, default zoom); stays in 2D / 2.5D
   resetView() {
     if (this.lzDef != null) { this.lz = this.lzDef; this.lzT = null; }
-    if (this.state.view !== (this.viewDef || '2d')) this.toggleView();
     this.recenter();
   }
   recenter() {

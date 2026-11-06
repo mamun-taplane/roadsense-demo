@@ -295,3 +295,45 @@
 .cl-ph.tab-l .cl-fs.two .cl-fs-also::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: 0 30px 30px 0; opacity: 0; animation: cl-fs-edge 1.6s ease-in-out infinite; }
 .cl-ph.tab-l .cl-fs.two .cl-fs-also.lv-crit::after { animation-duration: 1s; }
 .cl-ph.tab-l .cl-fs.two .cl-fs-also.lv-ok::after { display: none; }
+/* v39.5 signal block like the map app's top card: a white card, only the signal head itself is a dark tile
+   (user: "too much black"). Text on white; the lamps keep their dark tile so the lights still read. */
+.cl-sig { background: var(--d-card); color: var(--d-ink); box-shadow: var(--cl-shadow); }
+.cl-sig .cl-sig-du { color: var(--d-ink3); }
+.cl-sig-d.word .cl-sig-dv { background: #EEF0F3; }
+.cl-lamps { background: #1C2026; }
+.cl-sig-f { color: var(--d-ink3); }
+.cl-pr-t { color: var(--d-ink); }
+.cl-spin { border-color: rgba(21, 24, 29, .15); border-top-color: var(--d-ink); }
+.cl-bc { background: rgba(37, 99, 235, .1); color: #1D4ED8; }
+.cl-bc i { background: #2563EB; } .cl-bc i::after { border-color: #2563EB; }
+/* v39.5 full screen: no border around the screen (it fought the rounded colored band). Instead the band
+   itself pulses: a soft edge in the alert color breathes out from its rounded bottom. None for "clear". */
+.cl-fs::after, .cl-ph.tab-l .cl-fs.two .cl-fs-also::after { display: none !important; }
+.cl-fs.on:not(.lv-ok) .cl-fs-top { animation: cl-band 1.6s ease-in-out infinite; }
+.cl-fs.on.lv-crit .cl-fs-top { animation-duration: 1s; }
+@keyframes cl-band { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--lv) 0%, transparent); } 50% { box-shadow: 0 12px 0 0 color-mix(in srgb, var(--lv) 28%, transparent); } }
+@media (prefers-reduced-motion: reduce) { .cl-fs.on .cl-fs-top { animation: none; } }
+.cl-ev { background: #1C2026 !important; color: #fff !important; } /* on the white signal card */
+/* v39.5 get started, option D (user pick): mark + broadcast rings + four message kinds; no UI shown */
+.spd-art { position: absolute; left: 0; right: 0; top: 70px; height: 470px; }
+.spd-r { position: absolute; left: 50%; top: 50%; border-radius: 50%; border: 1.5px solid rgba(37, 99, 235, .18); transform: translate(-50%, -50%); }
+.spd-r.r1 { width: 180px; height: 180px; } .spd-r.r2 { width: 300px; height: 300px; } .spd-r.r3 { width: 430px; height: 430px; }
+.spd-mk { position: absolute; left: 50%; top: 50%; width: 96px; height: 96px; margin: -48px 0 0 -48px; border-radius: 28px; background: #fff; box-shadow: 0 14px 30px -14px rgba(16, 24, 40, .35); display: grid; place-items: center; }
+.spd-mk img { width: 62px; height: 62px; display: block; }
+.spd-o { position: absolute; left: 50%; top: 50%; width: 52px; height: 52px; margin: -26px 0 0 -26px; border-radius: 50%; display: grid; place-items: center; box-shadow: 0 0 0 6px #F3F4F6; }
+.spd-o img { width: 28px; height: 28px; display: block; }
+.spd-o.o1 { background: #22C55E; transform: translate(-90px, -80px); } .spd-o.o2 { background: #2563EB; transform: translate(105px, -60px); }
+.spd-o.o3 { background: #E5383B; transform: translate(-115px, 100px); } .spd-o.o4 { background: #F5A524; transform: translate(95px, 90px); }
+.spd-body { top: auto; height: 330px; }
+.spd-cu { height: 20px; width: auto; display: block; align-self: flex-start; margin-bottom: 16px; }
+.spd .spb-h { font-size: 34px; letter-spacing: -1.3px; line-height: 1.06; }
+@media (prefers-reduced-motion: no-preference) { .spd-r { animation: spd-ring 3.2s ease-out infinite; } .spd-r.r2 { animation-delay: .5s; } .spd-r.r3 { animation-delay: 1s; } }
+@keyframes spd-ring { 0%, 100% { border-color: rgba(37, 99, 235, .1); } 30% { border-color: rgba(37, 99, 235, .32); } }
+.cl-ph.tab-l .spd-art { left: auto; right: 0; width: 56%; top: 0; bottom: 0; height: auto; }
+.cl-ph.tab-l .spd-r.r1 { width: 220px; height: 220px; } .cl-ph.tab-l .spd-r.r2 { width: 380px; height: 380px; } .cl-ph.tab-l .spd-r.r3 { width: 560px; height: 560px; }
+.cl-ph.tab-l .spd-body { left: 96px; width: 480px; top: 50%; bottom: auto; height: 420px; transform: translateY(-50%); }
+.cl-ph.tab-l .spd-cu { height: 28px; margin-bottom: 24px; }
+.cl-ph.tab-l .spd .spb-h, .cl-ph.tab-l .spd-body .spb-h { font-size: 52px; letter-spacing: -2px; }
+.cl-ph.tab-p .spd-art { top: 120px; height: 520px; }
+.cl-ph.tab-p .spd-r.r3 { width: 500px; height: 500px; }
+.cl-ph.tab-p .spd-body { left: 48px; right: 48px; height: 300px; }
