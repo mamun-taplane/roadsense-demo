@@ -36,7 +36,8 @@
 .mbx .mapboxgl-ctrl-bottom-left .mapboxgl-ctrl { margin: 0 0 0 10px; }
 .mb-attr { position: absolute; z-index: 4; pointer-events: none; left: 16px; bottom: 172px; font: 500 9px/1 Inter, sans-serif; color: rgba(16, 24, 40, .45); }
 .mb-attr.mb-on { display: none; }
-.cam.live-only .plane, .mb-attr.live-only { display: none; } /* live page: the real map only, no pictures */
+.cam.live-only .plane, .mb-attr.live-only { display: none; }
+.plane.no-school .zone-school, .plane.no-school .zone-txt, .plane.no-work .zone-work, .plane.no-work .cone { display: none; } /* event zones: driver mode only */ /* live page: the real map only, no pictures */
 .tile { -webkit-user-drag: none; user-select: none; }
 .mb-err { position: absolute; z-index: 6; left: 50%; top: 380px; transform: translateX(-50%); width: 270px; padding: 18px; border-radius: 20px; background: var(--card); box-shadow: var(--shadow); display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
 .mb-err-t { font-size: 17px; font-weight: 700; }
