@@ -60,6 +60,10 @@
 
 /* 2 · speed */
 .cl-spd { position: absolute; left: 12px; right: 12px; top: 432px; height: 216px; border-radius: 28px; background: var(--d-card); box-shadow: var(--cl-shadow); display: flex; align-items: center; padding: 0 18px; }
+/* over the limit: the speed block pulses (client meeting 2026-11-05) */
+.cl-spd.over { animation: rs-over 1.2s ease-in-out infinite; }
+@keyframes rs-over { 0%, 100% { box-shadow: var(--cl-shadow), 0 0 0 0 rgba(229, 56, 59, 0); } 50% { box-shadow: var(--cl-shadow), 0 0 0 6px rgba(229, 56, 59, .28); } }
+@media (prefers-reduced-motion: reduce) { .cl-spd.over { animation: none; box-shadow: var(--cl-shadow), 0 0 0 3px rgba(229, 56, 59, .35); } }
 .cl-gauge { position: relative; width: 180px; height: 180px; flex: none; --gc: #98A0AA; }
 .cl-gauge.ok { --gc: var(--d-ok); } .cl-gauge.over { --gc: var(--d-crit); }
 .cl-arc { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(135deg); }
