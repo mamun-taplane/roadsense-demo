@@ -20,21 +20,21 @@
   <div class="cam {{ camCls }}" aria-hidden="true">
     <div class="mbx" id="{{ mbxId }}"></div>
     <div class="plane" style="{{ planeStyle }}">
-      <img class="tile {{ tiles.m0 }}" src="v2/map/mb/m0.jpg" alt="" style="left:-550px;top:-9888px">
-      <img class="tile {{ tiles.m1 }}" src="v2/map/mb/m1.jpg" alt="" style="left:-550px;top:-8888px">
-      <img class="tile {{ tiles.m2 }}" src="v2/map/mb/m2.jpg" alt="" style="left:-550px;top:-7888px">
-      <img class="tile {{ tiles.m3 }}" src="v2/map/mb/m3.jpg" alt="" style="left:-550px;top:-6888px">
-      <img class="tile {{ tiles.m4 }}" src="v2/map/mb/m4.jpg" alt="" style="left:-550px;top:-5888px">
-      <img class="tile {{ tiles.m5 }}" src="v2/map/mb/m5.jpg" alt="" style="left:-550px;top:-4888px">
-      <img class="tile {{ tiles.m6 }}" src="v2/map/mb/m6.jpg" alt="" style="left:-550px;top:-3888px">
-      <img class="tile {{ tiles.m7 }}" src="v2/map/mb/m7.jpg" alt="" style="left:-550px;top:-2888px">
-      <img class="tile {{ tiles.m8 }}" src="v2/map/mb/m8.jpg" alt="" style="left:-550px;top:-1888px">
-      <img class="tile {{ tiles.m9 }}" src="v2/map/mb/m9.jpg" alt="" style="left:-550px;top:-888px">
-      <img class="tile {{ tiles.m10 }}" src="v2/map/mb/m10.jpg" alt="" style="left:-550px;top:112px">
-      <img class="tile {{ tiles.e0 }}" src="v2/map/mb/e0.jpg" alt="" style="left:550px;top:-7300px">
-      <img class="tile {{ tiles.e1 }}" src="v2/map/mb/e1.jpg" alt="" style="left:550px;top:-6300px">
-      <img class="tile {{ tiles.e2 }}" src="v2/map/mb/e2.jpg" alt="" style="left:550px;top:-5300px">
-      <img class="tile {{ tiles.e3 }}" src="v2/map/mb/e3.jpg" alt="" style="left:550px;top:-4300px">
+      <img class="tile {{ tiles.m0 }}" src="{{ tsrc.m0 }}" alt="" style="left:-550px;top:-9888px">
+      <img class="tile {{ tiles.m1 }}" src="{{ tsrc.m1 }}" alt="" style="left:-550px;top:-8888px">
+      <img class="tile {{ tiles.m2 }}" src="{{ tsrc.m2 }}" alt="" style="left:-550px;top:-7888px">
+      <img class="tile {{ tiles.m3 }}" src="{{ tsrc.m3 }}" alt="" style="left:-550px;top:-6888px">
+      <img class="tile {{ tiles.m4 }}" src="{{ tsrc.m4 }}" alt="" style="left:-550px;top:-5888px">
+      <img class="tile {{ tiles.m5 }}" src="{{ tsrc.m5 }}" alt="" style="left:-550px;top:-4888px">
+      <img class="tile {{ tiles.m6 }}" src="{{ tsrc.m6 }}" alt="" style="left:-550px;top:-3888px">
+      <img class="tile {{ tiles.m7 }}" src="{{ tsrc.m7 }}" alt="" style="left:-550px;top:-2888px">
+      <img class="tile {{ tiles.m8 }}" src="{{ tsrc.m8 }}" alt="" style="left:-550px;top:-1888px">
+      <img class="tile {{ tiles.m9 }}" src="{{ tsrc.m9 }}" alt="" style="left:-550px;top:-888px">
+      <img class="tile {{ tiles.m10 }}" src="{{ tsrc.m10 }}" alt="" style="left:-550px;top:112px">
+      <img class="tile {{ tiles.e0 }}" src="{{ tsrc.e0 }}" alt="" style="left:550px;top:-7300px">
+      <img class="tile {{ tiles.e1 }}" src="{{ tsrc.e1 }}" alt="" style="left:550px;top:-6300px">
+      <img class="tile {{ tiles.e2 }}" src="{{ tsrc.e2 }}" alt="" style="left:550px;top:-5300px">
+      <img class="tile {{ tiles.e3 }}" src="{{ tsrc.e3 }}" alt="" style="left:550px;top:-4300px">
 
       <div class="zone zone-school" style="left:-58px;top:-1550px;width:116px;height:500px"></div>
       <div class="zone-txt" style="left:4px;top:-1100px">SCHOOL</div>
@@ -51,6 +51,9 @@
   </div>
 
   <div class="mb-attr {{ camCls }}" aria-hidden="true">© Mapbox © OpenStreetMap</div>
+  <sc-if value="{{ mbErr }}" hint-placeholder-val="{{ false }}">
+    <div class="mb-err" role="status"><div class="mb-err-t">Map didn't load</div><div class="mb-err-s">Check the connection, then try again.</div><button class="mb-err-b" onClick="{{ mbRetry }}">Try again</button></div>
+  </sc-if>
   <!-- Map markers: drawn flat on screen at their road position, so circles stay round -->
   <div class="pins" aria-hidden="true">
     <div class="mp lv-adv {{ pins.school.cls }}" style="{{ pins.school.style }}"><div class="mp-g"></div><div class="mp-s"></div><div class="mp-b"><img src="v2/ic/school-w.svg" alt=""></div></div>
@@ -64,7 +67,7 @@
   </div>
 
   <!-- Your vehicle: a disc lying on the road, the arrow shows heading -->
-  <div class="puck" aria-hidden="true">
+  <div class="puck {{ puckCls }}" aria-hidden="true" style="{{ puckPos }}">
     <div class="puck-tilt" style="{{ puckTilt }}">
       <div class="puck-glow"></div>
       <div class="puck-disc"><svg viewBox="0 0 24 24" style="{{ puckStyle }}"><path d="M12 3.5 19.5 20 12 15.8 4.5 20Z" fill="#fff" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
@@ -160,6 +163,9 @@
       <sc-if value="{{ voiceOff }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9l5 6M21 9l-5 6"/></svg></sc-if>
     </button>
   </div>
+  <sc-if value="{{ freeOn }}" hint-placeholder-val="{{ false }}">
+    <button class="recenter" onClick="{{ recenter }}" aria-label="Re-center the map on your vehicle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3.5 19.5 20 12 15.8 4.5 20Z"/></svg><span class="recenter-t">Re-center</span></button>
+  </sc-if>
   <div class="zoom" role="group" aria-label="Map zoom">
     <button class="zb {{ zInCls }}" onClick="{{ zoomIn }}" aria-label="Zoom in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
     <i class="zsep"></i>
@@ -946,9 +952,11 @@ class Component extends DCLogic {
     let map;
     try {
       map = new mb.Map({
-        container: node, style: this.styleUrl(), interactive: false,
+        container: node, style: this.styleUrl(), interactive: true, keyboard: false, // free look: drag, twist, pinch, tilt
         center: this.geo(this.sim.wx, this.sim.wy), zoom: 18.5, pitch: 60, bearing: 0, fadeDuration: 0,
         attributionControl: false, logoPosition: 'bottom-left', projection: 'mercator',
+        // full page address as Referer: the demo token is restricted to .../roadsense-demo/
+        transformRequest: (url) => ({ url, referrerPolicy: 'no-referrer-when-downgrade' }),
       });
     } catch (e) { this.mbFailed = true; return; }
     map.addControl(new mb.AttributionControl({ compact: true }), 'bottom-left');
@@ -958,6 +966,7 @@ class Component extends DCLogic {
       // a saved style that no longer loads: start again on the default style
       if (this.styleUrl() !== this.MS.rs) { this.msUrl = this.MS.rs; this.msErr = "Couldn't load the saved style, so the Road Sense style is back."; try { localStorage.setItem('rs-map-style', this.MS.rs); } catch (e) {} this.mapClose(); return this.mapOpen(node); }
       this.mbFailed = true; this.mapClose();
+      if (this.alive) this.setState({ tick: this.state.tick + 1 });
     };
     this.mbTimer = setTimeout(fail, 10000);
     map.on('error', (e) => {
@@ -974,6 +983,9 @@ class Component extends DCLogic {
       if (this.msLoading) { this.msLoading = false; clearTimeout(this.msTimer); }
       if (this.alive) this.setState({ tick: this.state.tick + 1 });
     });
+    // the driver touches the map: stop following the car until Re-center (or 10 s without touching)
+    const touched = (e) => { if (!e || !e.originalEvent || this.map !== map || !this.mapOk) return; this.freeT = performance.now(); if (!this.free) { this.free = true; } this.redraw(); };
+    for (const ev of ['dragstart', 'drag', 'rotatestart', 'rotate', 'pitchstart', 'pitch', 'zoomstart', 'zoom']) map.on(ev, touched);
     map.on('load', () => {
       clearTimeout(this.mbTimer);
       if (this.map !== map) return;
@@ -1042,6 +1054,7 @@ class Component extends DCLogic {
   // 2D / 2.5D toggle (map app only). tilt 1 = 2.5D (60° pitch), 0 = flat 2D; eased over 300 ms on a switch
   toggleView() {
     const v = this.state.view === '2d' ? '3d' : '2d';
+    if (this.free && this.map) { this.freeT = performance.now(); this.map.easeTo({ pitch: v === '3d' ? 60 : 0, duration: 300 }); }
     this.tiltA = { from: this.tiltNow(), to: v === '3d' ? 1 : 0, t0: performance.now() };
     if (!this.still) { try { localStorage.setItem('rs-map-view', v); } catch (e) {} }
     this.setState({ view: v });
@@ -1056,16 +1069,42 @@ class Component extends DCLogic {
     const e = p < 0.5 ? 2 * p * p : 1 - Math.pow(2 - 2 * p, 2) / 2;
     return A.from + (A.to - A.from) * e;
   }
-  // camera: the car stays at (195, 560), heading up, as on the drawn map; pitch 60° (2.5D) or 0° (2D)
-  mapCam(zk, tl) {
+  // one redraw on the next frame (free look moves the map while the drive may be paused)
+  redraw() { if (!this.rdRaf) this.rdRaf = requestAnimationFrame(() => { this.rdRaf = 0; if (this.alive) this.setState({ tick: this.state.tick + 1 }); }); }
+  // follow camera: the car stays at (195, 560), heading up, as on the drawn map; pitch 60° (2.5D) or 0° (2D)
+  followCam(zk, tl) {
     const map = this.map, S = this.sim;
-    if (!map || !this.mapOk) return false;
     const [lng, lat] = this.geo(S.wx, S.wy);
     const mpp = 0.22614 / zk; // metres per screen px at the car
     const zoom = Math.log2(40075016.7 * Math.cos(lat * Math.PI / 180) / (512 * mpp));
     const h = map.getContainer().clientHeight || 844;
-    map.jumpTo({ center: [lng, lat], zoom, pitch: 60 * tl, bearing: S.rot, padding: { top: Math.max(0, 2 * 560 - h), bottom: 0, left: 0, right: 0 } });
+    return { center: [lng, lat], zoom, pitch: 60 * tl, bearing: S.rot, padding: { top: Math.max(0, 2 * 560 - h), bottom: 0, left: 0, right: 0 } };
+  }
+  mapCam(zk, tl) {
+    const map = this.map;
+    if (!map || !this.mapOk) return false;
+    const now = performance.now();
+    if (this.free && now - (this.freeT || 0) > 10000) this.recenter(); // hands off for 10 s: follow again
+    if (this.free) return true;
+    if (this.recT && now < this.recT) { this.redraw(); return true; } // easing back to the car
+    map.jumpTo(this.followCam(zk, tl));
     return true;
+  }
+  recenter() {
+    const map = this.map; if (!map) return;
+    this.free = false;
+    const tl = this.tiltNow(), zk = 1.45 * this.ZOOMS[this.state.zoom] * (0.45 + 0.55 * tl);
+    map.easeTo({ ...this.followCam(zk, tl), duration: 600 });
+    this.recT = performance.now() + 620;
+    this.redraw();
+  }
+  // map pictures: not even loaded on the live page (window.RS_LIVE_ONLY), which shows only the real map
+  liveOnly() { return !!window.RS_LIVE_ONLY && !!this.mbToken(); }
+  tileSrc() {
+    const out = {}, on = !this.liveOnly();
+    for (let i = 0; i <= 10; i++) out['m' + i] = on ? `v2/map/mb/m${i}.jpg` : '';
+    for (let i = 0; i <= 3; i++) out['e' + i] = on ? `v2/map/mb/e${i}.jpg` : '';
+    return out;
   }
   // only the map images near the car are shown (and so decoded): phones run out of memory with all 15
   tileVis() {
@@ -1130,11 +1169,14 @@ class Component extends DCLogic {
     // 2D shows the road from straight above, so it zooms out (x0.45) to see about as far ahead as 2.5D
     const tl = this.tiltNow(), A = 60 * tl * Math.PI / 180, cA = Math.cos(A), sA = Math.sin(A);
     const zk = 1.45 * this.ZOOMS[st.zoom] * (0.45 + 0.55 * tl);
+    if (fsA && this.free) this.recenter(); // a full-screen alert: back to following the car
     const live = this.mapCam(zk, tl);
+    const free = live && (this.free || (this.recT && performance.now() < this.recT));
+    const car = live ? this.map.project(this.geo(S.wx, S.wy)) : { x: 195, y: 560 };
     const proj = live ? (X, Y) => {
       const p = this.map.project(this.geo(X, Y)), p2 = this.map.project(this.geo(X + 8, Y));
       const f = Math.hypot(p2.x - p.x, p2.y - p.y) / (8 * zk);
-      return { x: p.x, y: p.y, f, ky: p.y - 560 };
+      return { x: p.x, y: p.y, f, ky: p.y - car.y };
     } : (X, Y) => {
       const r = -S.rot * Math.PI / 180, ux = X - S.wx, uy = Y - S.wy; // map turns with you (heading up)
       const k = zk, kx = k * (ux * Math.cos(r) - uy * Math.sin(r)), ky = k * (ux * Math.sin(r) + uy * Math.cos(r)), z = ky * sA, f = 640 / (640 - z);
@@ -1166,18 +1208,24 @@ class Component extends DCLogic {
       phoneCls: full ? 'ph-frame' : '',
       showPanel: full,
       showSplash: !drive,
-      tiles: this.tileVis(),
-      mbxId: this.mbxId || (this.mbxId = 'mbx' + Math.random().toString(36).slice(2, 9)), camCls: live ? 'mb-on' : '',
+      tiles: this.tileVis(), tsrc: this.tileSrc(),
+      mbxId: this.mbxId || (this.mbxId = 'mbx' + Math.random().toString(36).slice(2, 9)), camCls: (live ? 'mb-on' : '') + (this.liveOnly() ? ' live-only' : ''),
+      mbErr: this.liveOnly() && !!this.mbFailed, mbRetry: () => { this.mbFailed = false; const n = document.getElementById(this.mbxId); if (n) this.mapOpen(n); this.setState({ tick: this.state.tick + 1 }); },
       planeStyle: { transform: `rotateX(${(60 * tl).toFixed(2)}deg) scale(${zk.toFixed(3)}) rotate(${(-S.rot).toFixed(2)}deg) translate3d(${(-S.wx).toFixed(2)}px, ${(-S.wy).toFixed(2)}px, 0)` },
-      puckTilt: { transform: `perspective(420px) rotateX(${(50 * tl).toFixed(2)}deg)` },
+      puckTilt: { transform: `perspective(420px) rotateX(${(free ? Math.min(50, this.map.getPitch() * 0.83) : 50 * tl).toFixed(2)}deg)` },
+      puckPos: free ? { transform: `translate(${(car.x - 195).toFixed(1)}px, ${(car.y - 560).toFixed(1)}px)` } : {},
+      puckCls: free && (car.x < -30 || car.x > 420 || car.y < 0 || car.y > 880) ? 'off' : '',
+      freeOn: !!(live && this.free), recenter: () => this.recenter(),
       fogStyle: { opacity: (0.6 + 0.4 * tl).toFixed(3) }, // lighter in 2D: the road ahead is what you look at
       toggleView: () => this.toggleView(),
       viewBtn: st.view === '2d' ? '2.5D' : '2D', viewLabel: st.view === '2d' ? 'Tilt the map (2.5D view)' : 'Flat map (2D view)',
-      puckStyle: { transform: `rotate(${(((S.hdg - S.rot) % 360) + 540) % 360 - 180}deg)` },
+      puckStyle: { transform: `rotate(${(((S.hdg - (free ? this.map.getBearing() : S.rot)) % 360) + 540) % 360 - 180}deg)` },
       pins, tk, tk2, sigCls: '',
       ...this.setVals(!!fsA), ...this.styleVals(),
-      zoomIn: this.zoomIn, zoomOut: this.zoomOut,
-      zInCls: st.zoom >= this.ZOOMS.length - 1 ? 'dis' : '', zOutCls: st.zoom <= 0 ? 'dis' : '',
+      // free look: + / − zoom the map itself; following: the app's zoom steps
+      zoomIn: free ? () => { this.freeT = performance.now(); this.map.zoomIn({ duration: 250 }); } : this.zoomIn,
+      zoomOut: free ? () => { this.freeT = performance.now(); this.map.zoomOut({ duration: 250 }); } : this.zoomOut,
+      zInCls: !free && st.zoom >= this.ZOOMS.length - 1 ? 'dis' : '', zOutCls: !free && st.zoom <= 0 ? 'dis' : '',
       cones: this.cones,
       nextDist: dstr[0], nextUnit: dstr[1], nextName: nv.name, nameCls: this.nameFit(nv.name),
       sig, sigLabel, prio,
@@ -1188,7 +1236,7 @@ class Component extends DCLogic {
       toggleVoice: this.toggleVoice,
       mph, spdCls: over ? 'over' : '',
       limitText: limit == null ? '--' : String(limit), limLabel: limit == null ? 'No speed limit data' : `Speed limit ${limit}`,
-      limCls: limit == null ? 'none' : (over ? 'over ' : '') + (limit < 35 ? 'zone' : ''),
+      limCls: limit == null ? 'none' : over ? 'over' : '', // standard white sign in every zone (as v4)
       hdgLetter, hdgDeg: (Math.round(hdg) % 360) + '°', dialStyle: { transform: `rotate(${-hdg}deg)` },
       start: this.start,
       playing: st.playing, paused: !st.playing, playLabel: st.playing ? 'Pause' : st.done ? 'Replay' : drive ? 'Resume' : 'Play',

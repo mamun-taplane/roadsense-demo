@@ -36,6 +36,12 @@
 .mbx .mapboxgl-ctrl-bottom-left .mapboxgl-ctrl { margin: 0 0 0 10px; }
 .mb-attr { position: absolute; z-index: 4; pointer-events: none; left: 16px; bottom: 172px; font: 500 9px/1 Inter, sans-serif; color: rgba(16, 24, 40, .45); }
 .mb-attr.mb-on { display: none; }
+.cam.live-only .plane, .mb-attr.live-only { display: none; } /* live page: the real map only, no pictures */
+.tile { -webkit-user-drag: none; user-select: none; }
+.mb-err { position: absolute; z-index: 6; left: 50%; top: 380px; transform: translateX(-50%); width: 270px; padding: 18px; border-radius: 20px; background: var(--card); box-shadow: var(--shadow); display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+.mb-err-t { font-size: 17px; font-weight: 700; }
+.mb-err-s { font-size: 14px; color: var(--ink-2); }
+.mb-err-b { margin-top: 10px; height: 44px; padding: 0 20px; border: 0; border-radius: 22px; background: var(--ink); color: #fff; font: 600 15px/1 Inter, sans-serif; cursor: pointer; }
 .fog { position: absolute; left: 0; right: 0; top: 0; height: 360px; background: linear-gradient(#F7F8FA 0%, rgba(247, 248, 250, .92) 42%, rgba(247, 248, 250, 0) 100%); pointer-events: none; }
 .zone { position: absolute; }
 .zone-school { background: rgba(250, 204, 21, .16); border-top: 3px solid rgba(234, 179, 8, .7); border-bottom: 3px solid rgba(234, 179, 8, .7); }
@@ -58,7 +64,12 @@
 .mp-b img { width: 20px; height: 20px; display: block; }
 
 /* your vehicle: a disc lying on the road */
-.puck { position: absolute; left: 195px; top: 560px; width: 0; height: 0; z-index: 5; }
+.puck { position: absolute; left: 195px; top: 560px; width: 0; height: 0; z-index: 5; pointer-events: none; }
+.puck.off { display: none; }
+/* free look: shown while the map doesn't follow the car */
+.recenter { position: absolute; z-index: 20; left: 50%; bottom: 186px; transform: translateX(-50%); height: 44px; padding: 0 18px 0 14px; border: 0; border-radius: 22px; background: var(--card); box-shadow: var(--shadow); display: flex; align-items: center; gap: 8px; color: var(--accent); cursor: pointer; }
+.recenter svg { width: 18px; height: 18px; display: block; }
+.recenter-t { font: 600 15px/1 Inter, sans-serif; color: var(--ink); }
 .puck-tilt { position: absolute; left: -29px; top: -29px; width: 58px; height: 58px; transform: perspective(420px) rotateX(50deg); }
 .puck-glow { position: absolute; inset: -22px; border-radius: 50%; background: radial-gradient(closest-side, rgba(37, 99, 235, .26), rgba(37, 99, 235, 0)); }
 .puck-disc { position: absolute; inset: 0; border-radius: 50%; background: var(--accent); border: 3px solid #fff; box-shadow: 0 12px 20px -6px rgba(37, 99, 235, .6); display: grid; place-items: center; }
@@ -204,9 +215,7 @@
 .lim .lim-n { font-size: 33px; font-weight: 700; margin-top: 3px; letter-spacing: -1.8px; line-height: 32px; }
 .lim.none { border-style: dashed; border-color: #B8BEC6; color: var(--ink-3); }
 .lim.none .lim-n { letter-spacing: 1px; font-weight: 600; }
-.lim.over { box-shadow: 0 0 0 4px rgba(229, 56, 59, .25); border-color: var(--crit); animation: limpulse 1s ease-in-out infinite; }
-.lim.zone { background: #FEF9C3; }
-@keyframes limpulse { 50% { transform: scale(1.06); } }
+.lim.over { box-shadow: 0 0 0 4px rgba(229, 56, 59, .25), 0 0 0 5.5px var(--crit); } /* as v4: the sign stays the standard white sign; a red ring when over */
 .hdg { display: flex; align-items: center; gap: 8px; }
 .hdg-dial { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--line); position: relative; }
 .hdg-dial i { position: absolute; left: 50%; top: 2px; width: 0; height: 0; margin-left: -4px; border-left: 4px solid transparent; border-right: 4px solid transparent; border-bottom: 9px solid var(--crit); }

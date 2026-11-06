@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Road Sense — demo</title>
+<!-- Road Sense review demo: the map app (v2) with the LIVE Mapbox map, and the no-map cluster app (v4).
+     Runs anywhere that may load unpkg.com and api.mapbox.com: GitHub Pages (tools/demo/publish.sh), or
+     locally (node tools/render/server.js -> http://localhost:5178/web/ , cluster: /web/?cluster).
+     The claude.ai canvas can't (its viewer blocks Mapbox). -->
+<base href="../app/">
+<!-- Send the full page address to Mapbox: the token is URL-restricted to .../roadsense-demo/, and browsers
+     otherwise send only the site (https://mamun-taplane.github.io/), which Mapbox refuses (403). -->
+<meta name="referrer" content="no-referrer-when-downgrade">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap">
+<style>
+  :root { --bar: 52px; --ink: #15181D; --ink2: #5B636E; --line: #E3E6EA; }
+  html, body { margin: 0; height: 100%; background: #F6F7F9; font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif; }
+  /* demo switch: outside the app, so the app keeps its own screen */
+  .demo-bar { position: fixed; z-index: 100; left: 0; right: 0; top: 0; height: calc(var(--bar) + env(safe-area-inset-top, 0px)); padding-top: env(safe-area-inset-top, 0px); box-sizing: border-box; display: flex; align-items: center; justify-content: center; background: #fff; border-bottom: 1px solid var(--line); }
+  .demo-seg { display: flex; padding: 3px; border-radius: 12px; background: #EEF0F3; }
+  .demo-seg a { height: 36px; padding: 0 16px; border-radius: 9px; display: flex; align-items: center; font-size: 14px; font-weight: 600; color: var(--ink2); text-decoration: none; }
+  .demo-seg a.on { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(16, 24, 40, .14); }
+  .demo-seg a:focus-visible { outline: 2px solid #2563EB; outline-offset: 1px; }
+  #root { padding-top: calc(var(--bar) + env(safe-area-inset-top, 0px)); }
+  body.app { overflow: hidden; background: #EEF0F3; }
+  body.app #root { position: absolute; left: 50%; top: calc(var(--bar) + env(safe-area-inset-top, 0px)); padding: 0; width: 390px; height: 844px; transform-origin: 50% 0; }
+  body.app .ph { border-radius: 0; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script>
+  // "Road Sense demo" public token: URL-restricted in Mapbox to the demo (github.io/roadsense-demo) and localhost:5178.
+  // live only: never fall back to the canvas map pictures (a real app has none)
+  window.RS_LIVE_ONLY = true;
+  window.RS_MAPBOX_TOKEN = 'pk.eyJ1IjoiYWxhYXNoYWhlZW4iLCJhIjoiY213NG11OHg2MDhmZTJ5c2l5amt3NWVqciJ9.OrxhEM-2llvAp5Xx_Z7pKQ';
+</script>
+</head>
+<body>
+<nav class="demo-bar" aria-label="Choose the app"><div class="demo-seg"><a id="to-map">Map app</a><a id="to-cluster">No-map app</a></div></nav>
+<div id="root"></div>
+<script src="_dc.js"></script>
+<script>
+// Which app: /cluster/ (demo) or ?cluster (local) = the no-map cluster; else the map app.
+const q = new URLSearchParams(location.search);
+const local = /\/web\/?$/.test(location.pathname.replace(/cluster\/?$/, ''));
+const cluster = /\/cluster\/?$/.test(location.pathname) || q.has('cluster');
+const root = location.origin + location.pathname.replace(/cluster\/?$/, '');
+const keep = ['app', 'board'].filter(k => q.has(k)).join('&');
+const link = (c) => (c ? (local ? root + '?cluster' + (keep ? '&' + keep : '') : root + 'cluster/' + (keep ? '?' + keep : '')) : root + (keep ? '?' + keep : ''));
+const toMap = document.getElementById('to-map'), toCl = document.getElementById('to-cluster');
+toMap.href = link(false); toCl.href = link(true);
+(cluster ? toCl : toMap).className = 'on'; (cluster ? toCl : toMap).setAttribute('aria-current', 'page');
+// Phone (narrow screen) or ?app: just the app, scaled to fit under the bar. Computer: the board with the side panel.
+const app = q.has('app') || (!q.has('board') && matchMedia('(max-width: 900px)').matches);
+if (app) {
+  document.body.className = 'app';
+  const fit = () => {
+    const bar = document.querySelector('.demo-bar').getBoundingClientRect().height;
+    const k = Math.min(innerWidth / 390, (innerHeight - bar) / 844);
+    document.getElementById('root').style.transform = `translateX(-50%) scale(${k})`;
+  };
+  fit(); addEventListener('resize', fit);
+}
+(async () => {
+  try {
+    const Root = await DC.load(cluster ? 'Cluster.dc.html' : 'LiveDrive.dc.html');
+    ReactDOM.createRoot(document.getElementById('root')).render(DC.h(Root, app ? { app: '1' } : {}));
+  } catch (e) { document.getElementById('root').innerHTML = '<pre style="padding:16px;color:#B91C1C">Could not load the app: ' + e.message + '</pre>'; }
+})();
+</script>
+</body>
+</html>

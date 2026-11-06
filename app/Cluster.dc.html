@@ -1,0 +1,900 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Road Sense — cluster</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="rs2.css">
+<link rel="stylesheet" href="dash.css">
+<link rel="stylesheet" href="cluster.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div class="dash cl {{ rootCls }}">
+<div class="ph d-ph cl-ph {{ phoneCls }}">
+
+  <div class="d-sbar {{ sbarCls }}" aria-hidden="true">
+    <span>9:41</span>
+    <span class="d-sbar-r">
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+      <svg width="26" height="13" viewBox="0 0 26 13" fill="currentColor"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="17" height="9" rx="2"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" opacity=".4"/></svg>
+    </span>
+  </div>
+
+  <header class="d-top">
+    <div class="d-brand"><img class="d-cu" src="img/connected-utah.svg" alt="Connected Utah"></div>
+    <div class="d-top-r">
+      <button class="d-vbtn" onClick="{{ toggleVoice }}" aria-label="{{ voiceLabel }}">
+        <sc-if value="{{ voiceOn }}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></sc-if>
+        <sc-if value="{{ voiceOff }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9l5 6M21 9l-5 6"/></svg></sc-if>
+      </button>
+      <button class="d-vbtn" onClick="{{ openSet }}" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></button>
+    </div>
+  </header>
+
+  <!-- 1 · the next signal, drawn as a signal head: one lit arrow per movement -->
+  <section class="cl-sig {{ sigCls }} {{ nameCls }}" aria-label="{{ sigLabel }}">
+    <div class="cl-sig-h">
+      <div class="cl-sig-hl"><div class="cl-k">Next signal</div><div class="cl-sig-n">{{ nextName }}</div></div>
+      <div class="cl-sig-d {{ sigDCls }}"><span class="cl-sig-dv">{{ nextDist }}</span><span class="cl-sig-du">{{ nextUnit }}</span></div>
+    </div>
+    <div class="cl-lamps">
+      <div class="cl-lamp t-{{ sig.L.c }}">
+        <div class="cl-lens"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-6.5a4.5 4.5 0 0 0-4.5-4.5H6"/><path d="M10 5 6 9l4 4"/></svg></div>
+        <div class="cl-cd {{ sig.L.d }}">{{ sig.L.n }}</div>
+        <div class="cl-lk">Left</div>
+      </div>
+      <div class="cl-lamp t-{{ sig.S.c }}">
+        <div class="cl-lens"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5"/><path d="M7 10l5-5 5 5"/></svg></div>
+        <div class="cl-cd {{ sig.S.d }}">{{ sig.S.n }}</div>
+        <div class="cl-lk">Straight</div>
+      </div>
+      <div class="cl-lamp t-{{ sig.R.c }}">
+        <div class="cl-lens"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20v-6.5A4.5 4.5 0 0 1 12.5 9H18"/><path d="M14 5l4 4-4 4"/></svg></div>
+        <div class="cl-cd {{ sig.R.d }}">{{ sig.R.n }}</div>
+        <div class="cl-lk">Right</div>
+      </div>
+    </div>
+    <div class="cl-sig-f {{ prio.cls }}">
+      <sc-if value="{{ prio.show }}" hint-placeholder-val="{{ false }}">
+        <span class="cl-pr-ic">
+          <sc-if value="{{ prio.req }}" hint-placeholder-val="{{ false }}"><span class="cl-spin"></span></sc-if>
+          <sc-if value="{{ prio.ok }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.6 9.6 17 19 7.4"/></svg></sc-if>
+          <sc-if value="{{ prio.no }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M7 7l10 10M17 7 7 17"/></svg></sc-if>
+        </span>
+        <span class="cl-pr-t">{{ prio.t }}</span><span class="cl-pr-s">{{ prio.s }}</span>
+      </sc-if>
+      <sc-if value="{{ prio.none }}" hint-placeholder-val="{{ true }}">
+        <span class="cl-src"><i></i>Live timing from the signal</span>
+      </sc-if>
+      <sc-if value="{{ evMode }}" hint-placeholder-val="{{ false }}"><span class="cl-ev">EV mode</span></sc-if>
+    </div>
+  </section>
+
+  <!-- 2 · you: speed on a gauge, the limit sign as it is on the road, heading -->
+  <section class="cl-spd" aria-label="Your speed">
+    <div class="cl-gauge {{ spdCls }}">
+      <svg class="cl-arc" viewBox="0 0 180 180" aria-hidden="true">
+        <circle class="cl-arc-bg" cx="90" cy="90" r="78"/>
+        <circle class="cl-arc-v" cx="90" cy="90" r="78" style="{{ arcStyle }}"/>
+      </svg>
+      <div class="cl-tick {{ tickCls }}" style="{{ tickStyle }}" aria-hidden="true"><i></i></div>
+      <div class="cl-g-c"><span class="cl-g-n">{{ mph }}</span><span class="cl-g-u">mph</span></div>
+    </div>
+    <div class="cl-spd-r">
+      <div class="d-lim {{ limCls }}" aria-label="{{ limLabel }}">
+        <div class="d-lim-sign"><span class="d-lim-w">SPEED</span><span class="d-lim-w">LIMIT</span><span class="d-lim-n">{{ limitText }}</span></div>
+      </div>
+      <div class="cl-hdg" aria-label="{{ hdgLabel }}">
+        <div class="cl-hdg-dial"><i style="{{ dialStyle }}"></i></div>
+        <div class="cl-hdg-t"><span class="cl-hdg-l">{{ hdgLetter }}</span><span class="cl-hdg-g">{{ hdgDeg }}</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · the alert slot: always the same size; says so when there is nothing -->
+  <section class="cl-al {{ al.cls }}" aria-live="polite">
+    <div class="cl-al-c">
+      <div class="cl-al-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.6 9.6 17 19 7.4"/></svg></div>
+      <div class="cl-al-m"><div class="cl-al-k">All clear</div><div class="cl-al-t">No alerts ahead</div><div class="cl-al-s">Alerts appear here when in range</div></div>
+    </div>
+    <div class="cl-al-a">
+      <div class="cl-al-ic"><span class="icset ic-{{ al.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><svg class="i i-turn-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-6.5a4.5 4.5 0 0 0-4.5-4.5H6"/><path d="M10 5 6 9l4 4"/></svg><svg class="i i-turn-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20v-6.5A4.5 4.5 0 0 1 12.5 9H18"/><path d="M14 5l4 4-4 4"/></svg><svg class="i i-go-s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5"/><path d="M7 10l5-5 5 5"/></svg></span></div>
+      <div class="cl-al-m">
+        <div class="cl-al-k">{{ al.kick }}</div>
+        <div class="cl-al-t">{{ al.title }}</div>
+        <div class="cl-al-s">{{ al.sub }}</div>
+      </div>
+      <div class="cl-al-d"><div class="cl-al-dv {{ al.dCls }}">{{ al.dv }}</div><div class="cl-al-dl">{{ al.dl }}</div></div>
+      <span class="cl-al-more {{ al.moreCls }}">{{ al.more }}</span>
+    </div>
+  </section>
+
+  <!-- close or critical: the alert takes the whole screen; nothing underneath moves -->
+  <section class="cl-fs {{ fs.cls }}" role="alert">
+    <div class="cl-fs-top">
+      <div class="cl-fs-disc"><i class="cl-fs-wave"></i><i class="cl-fs-wave w2"></i><span class="cl-fs-ic"><span class="icset ic-{{ fs.ic }}"><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><svg class="i i-turn-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-6.5a4.5 4.5 0 0 0-4.5-4.5H6"/><path d="M10 5 6 9l4 4"/></svg><svg class="i i-turn-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20v-6.5A4.5 4.5 0 0 1 12.5 9H18"/><path d="M14 5l4 4-4 4"/></svg><svg class="i i-go-s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5"/><path d="M7 10l5-5 5 5"/></svg></span></span></div>
+      <div class="cl-fs-k">{{ fs.kick }}</div>
+      <div class="cl-fs-t {{ fs.tCls }}">{{ fs.title }}</div>
+      <div class="cl-fs-s">{{ fs.sub }}</div>
+    </div>
+    <div class="cl-fs-bot">
+      <div class="cl-fs-d {{ fs.dCls }}"><span class="cl-fs-dv">{{ fs.dv }}</span><span class="cl-fs-du">{{ fs.du }}</span></div>
+      <div class="cl-fs-dl">{{ fs.dl }}</div>
+      <div class="cl-fs-also {{ also.cls }}" role="status">
+        <div class="cl-fs-also-ic"><span class="icset ic-{{ also.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><svg class="i i-turn-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-6.5a4.5 4.5 0 0 0-4.5-4.5H6"/><path d="M10 5 6 9l4 4"/></svg><svg class="i i-turn-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20v-6.5A4.5 4.5 0 0 1 12.5 9H18"/><path d="M14 5l4 4-4 4"/></svg><svg class="i i-go-s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5"/><path d="M7 10l5-5 5 5"/></svg></span></div>
+        <div class="cl-fs-also-txt"><div class="cl-fs-also-k">Also</div><div class="cl-fs-also-t">{{ also.title }}</div><div class="cl-fs-also-s">{{ also.sub }}</div></div>
+        <div class="cl-fs-also-d"><div class="cl-fs-also-dv">{{ also.dv }}</div><div class="cl-fs-also-dl">{{ also.dl }}</div></div>
+      </div>
+      <div class="cl-fs-you">
+        <div class="cl-fs-spd {{ spdCls }}"><span>{{ mph }}</span><small>mph</small></div>
+        <div class="d-lim cl-fs-lim {{ limCls }}"><div class="d-lim-sign"><span class="d-lim-w">SPEED</span><span class="d-lim-w">LIMIT</span><span class="d-lim-n">{{ limitText }}</span></div></div>
+      </div>
+    </div>
+  </section>
+  <div class="d-home" aria-hidden="true"></div>
+
+  <!-- Settings: a sheet over the drive. A full-screen alert still takes over while it is open -->
+  <div class="d-set {{ setCls }}">
+    <div class="d-set-scrim" onClick="{{ closeSet }}"></div>
+    <div class="d-set-sheet" role="dialog" aria-label="Settings">
+      <div class="d-set-grab"></div>
+      <div class="d-set-h"><div class="d-set-t">Settings</div><button class="d-set-done" onClick="{{ closeSet }}">Done</button></div>
+      <div class="d-set-body">
+      <div class="d-set-sec">Alerts</div>
+      <div class="d-set-grp">
+        <div class="d-set-row"><div class="d-set-rt"><div class="d-set-l">Voice alerts</div><div class="d-set-d">Read every alert out loud</div></div><button class="d-set-tg {{ tVoice }}" onClick="{{ fVoice }}" aria-label="Voice alerts"><i></i></button></div>
+        <div class="d-set-row"><div class="d-set-rt"><div class="d-set-l">Alert chime</div><div class="d-set-d">A short tone before critical alerts</div></div><button class="d-set-tg {{ tChime }}" onClick="{{ fChime }}" aria-label="Alert chime"><i></i></button></div>
+        <div class="d-set-row d-set-row-col"><div class="d-set-rt"><div class="d-set-l">Speed warning</div><div class="d-set-d">Warn me when I am over the limit by</div></div>
+          <div class="d-set-seg"><button class="{{ ov0 }}" onClick="{{ setOv0 }}">Any amount</button><button class="{{ ov3 }}" onClick="{{ setOv3 }}">3 mph</button><button class="{{ ov5 }}" onClick="{{ setOv5 }}">5 mph</button></div>
+        </div>
+      </div>
+      <div class="d-set-sec">Vehicle</div>
+      <div class="d-set-grp">
+        <div class="d-set-row d-set-row-col"><div class="d-set-rt"><div class="d-set-l">Vehicle height</div><div class="d-set-d">Low-clearance alerts show only if you will not fit</div></div>
+          <div class="d-set-seg"><button class="{{ vh0 }}" onClick="{{ setVh0 }}">9 ft 6 in</button><button class="{{ vh1 }}" onClick="{{ setVh1 }}">11 ft 2 in</button><button class="{{ vh2 }}" onClick="{{ setVh2 }}">14 ft 0 in</button></div>
+        </div>
+        <div class="d-set-row"><div class="d-set-rt"><div class="d-set-l">Signal priority</div><div class="d-set-d">Requested when you approach</div></div><div class="d-set-v">Emergency</div><svg class="d-set-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+      </div>
+      <div class="d-set-sec">Display</div>
+      <div class="d-set-grp">
+        <div class="d-set-row"><div class="d-set-rt"><div class="d-set-l">Keep screen on</div><div class="d-set-d">While Road Sense is open</div></div><button class="d-set-tg {{ tAwake }}" onClick="{{ fAwake }}" aria-label="Keep screen on"><i></i></button></div>
+        <div class="d-set-row"><div class="d-set-rt"><div class="d-set-l">Text size</div><div class="d-set-d">Alerts and numbers</div></div><div class="d-set-v">Large</div><svg class="d-set-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+      </div>
+      <div class="d-set-foot">Connected Utah · Powered by Road Sense 1.0</div>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{ showSplash }}" hint-placeholder-val="{{ true }}">
+    <div class="spb">
+      <img class="spb-cu" src="img/connected-utah.svg" alt="Connected Utah">
+      <div class="spb-sig" aria-hidden="true">
+        <div class="spb-k">Next signal</div>
+        <div class="spb-row"><div class="spb-n">State St &amp; 800 S</div><div class="spb-d">410<small>ft</small></div></div>
+        <div class="spb-lamps">
+          <div class="spb-lp"><div class="spb-ln r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-6.5a4.5 4.5 0 0 0-4.5-4.5H6"/><path d="M10 5 6 9l4 4"/></svg></div><div class="spb-cd r">31</div></div>
+          <div class="spb-lp"><div class="spb-ln g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5"/><path d="M7 10l5-5 5 5"/></svg></div><div class="spb-cd g">18</div></div>
+          <div class="spb-lp"><div class="spb-ln g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20v-6.5A4.5 4.5 0 0 1 12.5 9H18"/><path d="M14 5l4 4-4 4"/></svg></div><div class="spb-cd g">18</div></div>
+        </div>
+      </div>
+      <div class="spb-al" aria-hidden="true">
+        <div class="spb-ai"><img src="v2/ic/school-w.svg" alt=""></div>
+        <div class="spb-am"><div class="spb-at">School zone ahead</div><div class="spb-as">Limit drops to 20 mph</div></div>
+        <div class="spb-ad">650 ft</div>
+      </div>
+      <div class="spb-body">
+        <div class="spb-h">See the light before you reach it.</div>
+        <div class="spb-p">Live signal timing and road alerts from Utah's connected roads.</div>
+        <button class="spb-btn" onClick="{{ start }}">Start driving</button>
+        <div class="spb-pow">Powered by <img src="img/roadsense.svg" alt="Road Sense"></div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+<sc-if value="{{ showPanel }}" hint-placeholder-val="{{ true }}">
+  <aside class="pnl">
+    <div class="pnl-h">
+      <img src="img/roadsense-icon.svg" alt="">
+      <div><div class="pnl-t">Live drive · cluster</div><div class="pnl-st">S State St, Salt Lake City · northbound</div></div>
+    </div>
+    <div class="ctl">
+      <button class="cb pri" onClick="{{ togglePlay }}">
+        <sc-if value="{{ playing }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="2" width="3.5" height="12" rx="1"/><rect x="9.5" y="2" width="3.5" height="12" rx="1"/></svg></sc-if>
+        <sc-if value="{{ paused }}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5v11a1 1 0 0 0 1.5.9l9-5.5a1 1 0 0 0 0-1.8l-9-5.5A1 1 0 0 0 4 2.5z"/></svg></sc-if>
+        {{ playLabel }}
+      </button>
+      <button class="cb" onClick="{{ restart }}"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8a5.5 5.5 0 1 0 1.6-3.9"/><path d="M2.5 2.5v3.2h3.2"/></svg>Restart</button>
+      <div class="seg">
+        <button class="{{ r1 }}" onClick="{{ rate1 }}">1×</button>
+        <button class="{{ r2 }}" onClick="{{ rate2 }}">2×</button>
+      </div>
+      <button class="cb" onClick="{{ toggleVoice }}">{{ voiceText }}</button>
+    </div>
+    <div class="now">
+      <div class="now-k">On screen</div>
+      <div class="now-v">{{ nowText }}</div>
+      <div class="now-q">{{ sayText }}</div>
+      <div class="bar"><i style="{{ progStyle }}"></i></div>
+    </div>
+    <div class="scn-h">Jump to</div>
+    <div class="scn">
+      <sc-for list="{{ scenes }}" as="sc" hint-placeholder-count="13">
+        <button class="sc {{ sc.on }}" onClick="{{ sc.pick }}">
+          <span class="sc-n">{{ sc.n }}</span>
+          <span class="sc-t">{{ sc.name }}</span>
+          <span class="sc-l {{ sc.tag }}">{{ sc.tagText }}</span>
+        </button>
+      </sc-for>
+    </div>
+    <div class="hint">Space plays or pauses. Same simulated drive and alerts as the map version, on a fixed layout: close alerts take the screen.</div>
+  </aside>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":960,"height":924},"still":{"editor":null,"default":""}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    // Route geometry, in map px (1 px = 0.22614 m). s = distance north of the drive start.
+    this.MPH = 1.9768;      // px per second for 1 mph
+    this.FT = 0.74193;      // feet per px
+    this.INTS = [
+      { n: '800 S', s: 861 }, { n: '700 S', s: 1934 }, { n: '600 S', s: 3004 }, { n: '500 S', s: 4072 },
+      { n: '400 S', s: 5190 }, { n: '300 S', s: 6245 }, { n: '200 S', s: 7297 }, { n: '100 S', s: 8388 }, { n: 'S Temple', s: 9402 },
+    ];
+    this.SCENES = [
+      { id: 'start', name: 'Start driving', tag: 'base', tagText: 'Normal', s: 0 },
+      { id: 'school', name: 'School zone', tag: 'adv', tagText: 'Advisory', s: 300 },
+      { id: 'red', name: 'Signal turning red', tag: 'warn', tagText: 'Warning', s: 1560 },
+      { id: 'ped', name: 'Pedestrian in crosswalk', tag: 'warn', tagText: 'Warning', s: 1960 },
+      { id: 'work', name: 'Work zone', tag: 'warn', tagText: 'Warning', s: 2660 },
+      { id: 'stopped', name: 'Stopped vehicle in work zone', tag: 'two', tagText: 'Two at once', s: 3150 },
+      { id: 'bridge', name: 'Low clearance · too tall', tag: 'crit', tagText: 'Critical', s: 3720, veh: 2 },
+      { id: 'bridgeok', name: 'Low clearance · fits under', tag: 'base', tagText: 'No alert', s: 3720, veh: 1 },
+      { id: 'rlr', name: 'Red light runner', tag: 'crit', tagText: 'Critical', s: 4680 },
+      { id: 'ev', name: 'Emergency vehicle', tag: 'crit', tagText: 'Critical', s: 5290 },
+      { id: 'nolimit', name: 'No speed limit data', tag: 'base', tagText: 'Normal', s: 5760 },
+      { id: 'granted', name: 'Signal priority granted', tag: 'ev', tagText: 'EV mode', s: 6420 },
+      { id: 'denied', name: 'Signal priority denied', tag: 'ev', tagText: 'EV mode', s: 7520 },
+    ];
+    this.END = 8800;
+    // one announcement per alert, said once when it first appears; the full screen does not repeat it
+    this.SAY = {
+      'school-a': 'School zone ahead. Slow to 20.', 'school-e': 'School zone ended.',
+      'red-y': 'Signal turning red. Prepare to stop.',
+      'ped': 'Pedestrian at the crosswalk ahead. Slow down.',
+      'work-a': 'Work zone ahead. Right lane closed, limit 25.', 'work-e': 'Work zone ended.',
+      'stop': 'Stopped vehicle ahead. Change lanes.',
+      'bridge': 'Low clearance ahead. Your vehicle will not fit. Turn right at 500 South.',
+      'bridge-ok': 'Overpass avoided. You will rejoin State Street at 400 South.',
+      'rlr': 'Stop! Red light runner from the left.',
+      'ev': 'Emergency vehicle approaching. Pull over to the right.',
+      'speed-20': 'Slow down. School zone, 20.', 'speed-25': 'Slow down. Work zone, 25.', 'speed-35': 'Slow down. Limit 35.', 'speed-30': 'Slow down. Limit 30.',
+      'p2-ok': 'Priority granted. Green light held.',
+      'p1-no': 'Priority denied. Stop at the red light.',
+    };
+    for (const f of ['start', 'togglePlay', 'restart', 'toggleVoice', 'openSet', 'closeSet', 'zoomIn', 'zoomOut']) this[f] = this[f].bind(this);
+    this.cones = [];
+    for (let y = 3260; y <= 3900; y += 40) this.cones.push({ style: { left: '40px', top: (-y) + 'px' } });
+    this.alCache = [];
+    this.tkCache = null; this.tk2Cache = null;
+    // full screen: zones take over well before you reach them and stay until you are in; everything else stays until cleared.
+    // values are distances (map px) at which the alert takes the screen; Infinity = at once
+    this.FS = { 'school-a': 480, 'red-y': Infinity, 'ped': 330, 'work-a': 420, 'stop': Infinity, 'bridge': 800, 'bridge-ok': 0, 'rlr': Infinity, 'ev': 600, 'speed': Infinity, 'prio-ok': Infinity, 'prio-no': Infinity };
+    // an alert that went full screen keeps it for its whole area: approach, inside, ended are one episode
+    this.GROUP = { 'school-a': 'school', 'school-i': 'school', 'school-e': 'school', 'work-a': 'work', 'work-i': 'work', 'work-e': 'work' };
+    // after the area is left, a short "clear" screen before the map or dashboard comes back (seconds)
+    this.HOLD = 2;
+    this.DONE = {
+      'speed': ['Back under the limit', 'Speed OK'],
+      'red-y': ['Through 700 S', 'Signal passed'],
+      'ped': ['Crosswalk passed', 'All clear'],
+      'stop': ['Stopped vehicle passed', 'All clear'],
+      'rlr': ['All clear', 'Red light runner has passed'],
+      'bridge': ['On another route', 'Overpass avoided'],
+      'prio-ok': ['Through 200 S', 'Priority used'],
+      'prio-no': ['Through 100 S', 'All clear'],
+    };
+    this.ZOOMS = [0.7, 0.85, 1, 1.2, 1.4]; // map zoom steps
+    // low clearance: the alert only exists when the vehicle is taller than the overpass
+    this.CLEAR = 162; // overpass clearance, inches (13 ft 6 in)
+    this.VEH = [{ l: '9 ft 6 in', h: 114 }, { l: '11 ft 2 in', h: 134 }, { l: '14 ft 0 in', h: 168 }];
+    // the way round it: right on 500 S, left on 200 E, left on 400 S, right back onto State St (map px; corners carry a radius)
+    this.DET_END = 5340;
+    this.DET = [
+      [40, -3990],
+      [40, -4050, 30, 'State St & 500 S', '500 S', 'right'],
+      [902, -4050, 40, '500 S & 200 E', '200 E', 'left'],
+      [902, -5212, 40, '200 E & 400 S', '400 S', 'left'],
+      [32, -5212, 30, 'State St & 400 S', 'State St', 'right'],
+      [32, -5340],
+    ];
+    this.REACT = 2.5; // seconds the simulated driver takes to slow down for a lower limit
+    this.WORD = { g: 'GO', r: 'STOP', y: 'SLOW', fy: 'YIELD' }; // shown under a lens that has no countdown
+    // seconds until the left-turn red changes, per intersection (some are long, to show how big numbers fit)
+    // left-turn red, from the signal's phase order (SPaT time-to-change is always under 2:30):
+    // lagging left = rest of the through green + yellow 4 s + all-red 2 s + the cross street's phase (s)
+    this.CROSS = { '800 S': 48, '500 S': 52, '400 S': 50, '200 S': 44, '100 S': 46 };
+    this.THRU_G = 25; // through green after a red (s), before the lagging left
+    this.SPAT_MAX = 149; // 2:29
+    this.spoken = {};
+    this.lastSay = '';
+    this.still = (props && props.still) || '';
+    this.state = { screen: this.still && this.still !== 'splash' ? 'drive' : 'splash', playing: false, rate: 1, voice: true, tick: 0, done: false, set: false, sChime: true, sAwake: true, sOver: 0, zoom: 2, sVeh: 1, view: '3d' };
+    // still boards can open Settings (",set") or pick a zoom step (",z0" … ",z4")
+    if (/,set/.test(this.still)) this.state.set = true;
+    // map view: 2.5D (tilted, default) or flat 2D (",2d" on a still board; the playable app remembers the viewer's pick)
+    if (/,2d/.test(this.still)) this.state.view = '2d';
+    else if (!this.still) { try { if (localStorage.getItem('rs-map-view') === '2d') this.state.view = '2d'; } catch (e) {} }
+    { const zm = this.still.match(/,z(\d)/); if (zm) this.state.zoom = +zm[1]; }
+    // some intersections have long names; ",long2" / ",long3" shows one that needs 2 or 3 lines
+    { const ln = this.still.match(/,long(\d)/); if (ln) this.LONGNAME = ln[1] === '3' ? 'South State Street & Martin Luther King Jr Blvd & Highland Drive' : 'State St & Martin Luther King Jr Blvd'; }
+    this.reset(0);
+    if (this.still && this.still !== 'splash') {
+      const [id, secs] = this.still.split('@');
+      const sc = this.SCENES.find(x => x.id === id) || this.SCENES[0];
+      if (sc.veh != null) this.state.sVeh = sc.veh;
+      this.reset(sc.s);
+      const n = Math.round((parseFloat(secs) || 0) * 60);
+      for (let i = 0; i < n; i++) this.step(1 / 60);
+    }
+  }
+
+  // ---------- simulation ----------
+  reset(s0) {
+    const D = -1e9; // "already happened" for events behind the start point
+    const at = (trig) => (s0 > trig ? D : null);
+    this.sim = {
+      t: 0, s: s0, v: 0, x: 32, vx: 0,
+      tRed: at(1600), tPed: at(2017), tRlr: at(4800), tRlrPass: s0 > 4800 ? D : null, tEv: at(5420), tEvPass: s0 > 5420 ? D : null,
+      tR2: at(6550), tR1: at(7650), tStop1: s0 > 8300 ? D : null,
+      exitSchool: D, exitWork: D, G: {}, fs: null, ep: {}, hold: null, cLim: null, slowAt: null, hdg: 0,
+      det: null, detDone: false, tBack: null, wx: 32, wy: -s0, rot: 0, // world position and map rotation (heading up)
+    };
+    const lim = this.limitAt(s0);
+    this.sim.v = ((lim || 35) - 2) * this.MPH;
+    this.sim.x = this.laneTarget();
+    this.sim.wx = this.sim.x;
+    this.spoken = {};
+    this.alCache = [];
+    this.tkCache = null; this.tk2Cache = null;
+  }
+  // null = no speed limit data for this stretch
+  limitAt(s) { return s >= 1050 && s < 1550 ? 20 : s >= 3250 && s < 3900 ? 25 : s >= 5760 && s < 6380 ? null : 35; }
+  // pedestrian: waits on the east curb at the crosswalk (the road is x -58..58), steps off after 7 s,
+  // walks across at ~1.6 m/s (7 map px/s) and stops on the far curb
+  pedWaiting() { const S = this.sim; return S.tPed != null && S.t - S.tPed < 7; }
+  pedX() { const S = this.sim, t = S.tPed == null ? 0 : Math.max(0, S.t - S.tPed - 7); return Math.max(-64, 64 - 7 * t); }
+  rlrX() { const S = this.sim; return S.tRlr == null ? -420 : Math.min(720, -420 + 100 * (S.t - S.tRlr)); }
+  evS() { const S = this.sim; return S.tEv == null ? 6400 : Math.max(-2000, 6400 - 95 * (S.t - S.tEv)); }
+  evActive() { const S = this.sim; return S.tEv != null && (S.tEvPass == null || S.t < S.tEvPass + 1.4); }
+  laneTarget() {
+    const s = this.sim.s;
+    if (this.evActive()) return 50;
+    if (s >= 3440 && s < 3960) return 16;
+    return 32;
+  }
+  step(dt) {
+    const S = this.sim, M = this.MPH;
+    S.t += dt;
+    if (S.tRed == null && S.s >= 1600) S.tRed = S.t;
+    // mid-block crosswalk on State St between 700 S and 600 S, at its real spot (Mapbox / OSM: 40.75525)
+    if (S.tPed == null && S.s >= 2017) S.tPed = S.t;
+    if (S.tRlr == null && S.s >= 4800) S.tRlr = S.t;
+    if (S.tRlr != null && S.tRlrPass == null && this.rlrX() > 70) S.tRlrPass = S.t;
+    if (S.tEv == null && S.s >= 5420) S.tEv = S.t;
+    if (S.tEv != null && S.tEvPass == null && this.evS() < S.s - 50) S.tEvPass = S.t;
+    if (S.tR2 == null && S.s >= 6550) S.tR2 = S.t;
+    if (S.tR1 == null && S.s >= 7650) S.tR1 = S.t;
+    if (S.tStop1 == null && S.s > 8200 && S.v < 1) S.tStop1 = S.t;
+    // too tall for the overpass: take the last turn before it
+    if (!S.det && !S.detDone && this.tooTall() && S.s >= 3700 && S.s < 3940) S.det = this.buildDetour(S.x, -S.s);
+    if (S.det) return this.stepDetour(dt);
+
+    // what the (simulated) driver wants
+    const limNow = this.limitAt(S.s) || 35;
+    if (S.cLim == null || limNow > S.cLim) { S.cLim = limNow; S.slowAt = null; }
+    else if (limNow < S.cLim) { if (S.slowAt == null) S.slowAt = S.t + this.REACT; if (S.t >= S.slowAt) { S.cLim = limNow; S.slowAt = null; } }
+    let cruise = (S.cLim - 2) * M;
+    const pedX = this.pedX();
+    if (S.tPed != null && pedX > -58 && S.s > 2117 && S.s < 2487) cruise = Math.min(cruise, 15 * M);
+    if (S.s >= 3330 && S.s < 3740) cruise = Math.min(cruise, 14 * M);
+    const stops = [];
+    const sg7 = this.sig700();
+    if (sg7 && (sg7.S.c === 'y' || sg7.S.c === 'r') && S.s < 1828) stops.push([1826, 10]);
+    if (S.tPed != null && pedX > -10 && pedX < 110 && S.s < 2447) stops.push([2443, 12]);
+    if (S.tRlr != null && S.tRlrPass == null && S.s < 5082) stops.push([5080, 14]);
+    if (this.evActive()) stops.push([5650, 10]);
+    const s3 = this.sigFor('300 S');
+    if (s3.S.c !== 'g' && S.s < 6139) stops.push([6137, 10]);
+    const s1 = this.sigFor('100 S');
+    if (s1.S.c !== 'g' && S.s < 8282) stops.push([8280, 10]);
+    stops.push([this.END, 8]);
+    let cap = 1e9;
+    for (const [p, a] of stops) cap = Math.min(cap, Math.sqrt(Math.max(0, 2 * a * (p - S.s - 1))));
+    if (S.v > cruise) S.v = Math.max(cruise, S.v - 12 * dt); else S.v = Math.min(cruise, S.v + 9 * dt);
+    if (S.v > cap) S.v = Math.max(cap, S.v - 40 * dt);
+    if (S.v < 0.3 && cap < 3) S.v = 0;
+    S.s += S.v * dt;
+    // lateral lane change
+    const tx = this.laneTarget();
+    const dx = Math.max(-14 * dt, Math.min(14 * dt, tx - S.x));
+    S.vx = S.v > 1 ? dx / dt : 0; S.x += S.v > 1 || Math.abs(dx) > 0 ? dx : 0;
+    // zone exits (for the short "ended" message)
+    if (S.s >= 1550 && S.s - S.v * dt < 1550) S.exitSchool = S.t;
+    if (S.s >= 3900 && S.s - S.v * dt < 3900) S.exitWork = S.t;
+    // heading as a phone reports it: follows lane changes, drifts a degree or two, holds when stopped
+    if (S.v > 2) S.hdg = Math.max(-12, Math.min(12, Math.atan2(S.vx * 0.25, S.v) * 180 / Math.PI)) + 1.4 * Math.sin(S.t * 0.31) + 0.7 * Math.sin(S.t * 1.07 + 1);
+    S.wx = S.x; S.wy = -S.s; S.rot = 0;
+    this.fsTick();
+  }
+  // ---------- detour round the low overpass ----------
+  buildDetour(x0, y0) {
+    const V = this.DET.filter((v, k) => k > 0 || y0 > v[1] + 10);
+    const pts = [[x0, y0]], corners = [];
+    const line = (x, y) => {
+      const [px, py] = pts[pts.length - 1], n = Math.ceil(Math.hypot(x - px, y - py) / 4);
+      for (let k = 1; k <= n; k++) pts.push([px + (x - px) * k / n, py + (y - py) * k / n]);
+    };
+    V.forEach((v, k) => {
+      const [x, y, r, name, street, turn] = v;
+      if (!r) return line(x, y);
+      const [px, py] = pts[pts.length - 1], [nx, ny] = V[k + 1];
+      const la = Math.hypot(px - x, py - y), lb = Math.hypot(nx - x, ny - y);
+      const ax = x + (px - x) / la * r, ay = y + (py - y) / la * r, bx = x + (nx - x) / lb * r, by = y + (ny - y) / lb * r;
+      line(ax, ay);
+      const i0 = pts.length - 1;
+      for (let q = 1; q <= 48; q++) { const t = q / 48, u = 1 - t; pts.push([u * u * ax + 2 * u * t * x + t * t * bx, u * u * ay + 2 * u * t * y + t * t * by]); }
+      corners.push({ i0, i1: pts.length - 1, n: name, street, turn });
+    });
+    const cum = [0];
+    for (let k = 1; k < pts.length; k++) cum.push(cum[k - 1] + Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]));
+    for (const c of corners) { c.d0 = cum[c.i0]; c.d1 = cum[c.i1]; }
+    return { pts, cum, L: cum[cum.length - 1], corners, d: 0, k: 0, tOff: null };
+  }
+  detPos(D) {
+    const c = D.cum, p = D.pts;
+    let k = D.k;
+    while (k < c.length - 2 && c[k + 1] < D.d) k++;
+    D.k = k;
+    const f = Math.min(1, Math.max(0, (D.d - c[k]) / Math.max(1e-6, c[k + 1] - c[k])));
+    const dx = p[k + 1][0] - p[k][0], dy = p[k + 1][1] - p[k][1];
+    return { x: p[k][0] + dx * f, y: p[k][1] + dy * f, a: Math.atan2(dx, -dy) * 180 / Math.PI };
+  }
+  stepDetour(dt) {
+    const S = this.sim, D = S.det, M = this.MPH;
+    let cap = ((this.limHere() || 35) - 2) * M; // keeps to the limit: 25 in the work zone, 30 on the side streets
+    for (const c of D.corners) if (c.d1 > D.d) cap = Math.min(cap, Math.sqrt((13 * M) ** 2 + 2 * 9 * Math.max(0, c.d0 - D.d)));
+    if (S.v > cap) S.v = Math.max(cap, S.v - 14 * dt); else S.v = Math.min(cap, S.v + 8 * dt);
+    D.d += S.v * dt;
+    if (D.tOff == null && D.d > D.corners[0].d1 + 20) D.tOff = S.t;
+    if (D.d >= D.L) { // back on State St, north of the overpass
+      S.det = null; S.detDone = true; S.tBack = S.t;
+      S.s = this.DET_END; S.x = 32; S.vx = 0; S.wx = 32; S.wy = -S.s; S.rot = 0;
+      if (S.tRlr == null) { S.tRlr = -1e9; S.tRlrPass = -1e9; } // rejoined north of 400 S
+      this.fsTick();
+      return;
+    }
+    const q = this.detPos(D);
+    S.wx = q.x; S.wy = q.y;
+    S.rot += ((((q.a - S.rot) % 360) + 540) % 360 - 180) * Math.min(1, dt * 6); // ease, so the map turns smoothly
+    if (D.d < D.corners[0].d1 + 10) S.s = -q.y; // still on State St (or turning off it)
+    S.vx = 0;
+    if (S.v > 2) S.hdg = q.a + 0.8 * Math.sin(S.t * 0.31) + 0.4 * Math.sin(S.t * 1.07 + 1);
+    this.fsTick();
+  }
+  onDetour() { const D = this.sim.det; return !!D && D.d > D.corners[0].d1; }
+  limHere() { return this.onDetour() ? 30 : this.limitAt(this.sim.s); }
+  // next signal for the top card: State St, or the corners of the detour
+  nextView() {
+    const S = this.sim, D = S.det, c = Math.ceil;
+    if (this.onDetour()) {
+      const k = D.corners.findIndex(q => q.d1 > D.d), cn = D.corners[k < 0 ? D.corners.length - 1 : k];
+      const to = cn.d0 - 30 - D.d, turning = to < 0;
+      if (S.G[cn.n] == null) S.G[cn.n] = S.t + Math.max(8, to / Math.max(S.v, 20) + 9);
+      const n = c(S.G[cn.n] - S.t), g = this.L('g', n >= 3 ? n : null);
+      const L = cn.turn === 'left' ? g : this.L('r', null);
+      return { name: cn.n, n: cn.n, dstr: turning ? ['Turning', ''] : this.dist(to).split(' '), sig: { L, S: { ...g }, R: { ...g } } };
+    }
+    const nx = this.nextInt() || this.INTS[this.INTS.length - 1];
+    const crossing = S.s > nx.s - 104; // past the stop line, inside the intersection
+    const atLine = !crossing && nx.s - 108 - S.s < 15; // waiting at the stop line
+    const dstr = crossing ? [D ? 'Turning' : 'Crossing', ''] : atLine ? ['At light', ''] : this.dist(nx.s - 90 - S.s - 18).split(' ');
+    return { name: this.LONGNAME || 'State St & ' + nx.n, n: nx.n, dstr, sig: this.sigFor(nx.n) };
+  }
+  // Full screen: an alert takes the screen once it is close (or at once if sudden) and keeps it for its whole area,
+  // approach, inside and ended, showing what is happening there. When the area is left, a short "clear" screen,
+  // then the map or dashboard. The most critical alert leads; the next one shows underneath.
+  fsTick() {
+    const S = this.sim, list = this.alertList();
+    const rank = { crit: 3, warn: 2, adv: 1, ok: 0 };
+    const grp = (k) => this.GROUP[k] || k;
+    const here = {};
+    for (const a of list) here[grp(a.key)] = 1;
+    for (const g in S.ep) if (!here[g]) delete S.ep[g]; // area left
+    for (const a of list) { const lim = this.FS[a.key]; if (lim != null && a.fd <= lim) S.ep[grp(a.key)] = 1; }
+    // "on another route" is only a moment; it does not hold the screen for the whole detour
+    const want = list.filter(a => a.key === 'hold' || (a.key === 'bridge-ok' ? a.fd <= 0 : S.ep[grp(a.key)]));
+    const real = want.filter(a => a.key !== 'hold');
+    const cur = S.fs ? real.find(a => a.key === S.fs.key) : null;
+    let best = cur || null;
+    for (const a of real) if (!best || rank[a.lv] > rank[best.lv]) best = a;
+    if (best) { S.hold = null; if (!cur || best.key !== cur.key) S.fs = { key: best.key, t0: S.t, lv: best.lv }; else S.fs.lv = best.lv; return; }
+    // nothing in its area any more: a short clear screen, unless the last one already said it ended
+    if (S.fs && S.fs.key !== 'hold' && S.fs.lv !== 'ok' && this.DONE[S.fs.key]) {
+      const [title, sub] = this.DONE[S.fs.key];
+      S.hold = { title, sub, until: S.t + this.HOLD };
+      S.fs = { key: 'hold', t0: S.t, lv: 'ok' };
+      return;
+    }
+    if (S.fs && S.fs.key === 'hold' && S.hold && S.t < S.hold.until) return;
+    S.fs = null; S.hold = null;
+  }
+
+  // ---------- signals: one per movement ----------
+  // countdown text under a lens: 45 · 2:28. SPaT time-to-change is always under 2:30, so this is too.
+  fmtSec(n) {
+    n = Math.min(this.SPAT_MAX, n);
+    if (n < 100) return String(n);
+    return Math.floor(n / 60) + ':' + String(n % 60).padStart(2, '0');
+  }
+  L(c, n) { const v = typeof n === 'number' ? this.fmtSec(n) : n == null ? '' : String(n); return { c, n: v || this.WORD[c], d: v ? '' : 'word w-' + c }; }
+  // thru = 'g' with k s of green left, or 'r' with k s of red left; k null = unknown (no countdown shown)
+  leftRed(name, thru, k) {
+    const X = this.CROSS[name];
+    if (X == null || k == null) return this.L('r', null);
+    const n = thru === 'g' ? k + 6 + X : k + this.THRU_G + 6;
+    return this.L('r', Math.max(1, Math.ceil(n)));
+  }
+  sig700() {
+    const S = this.sim; if (S.tRed == null) return null;
+    const tt = S.t - S.tRed, c = Math.ceil;
+    const Sx = tt < 3.5 ? this.L('y', c(3.5 - tt)) : tt < 19.5 ? this.L('r', c(19.5 - tt)) : this.L('g', null);
+    const Lx = tt < 5.5 ? this.L('r', null) : tt < 13.5 ? this.L('g', c(13.5 - tt)) : tt < 16.5 ? this.L('y', c(16.5 - tt)) : this.L('r', null);
+    return { L: Lx, S: Sx, R: { ...Sx } };
+  }
+  sigFor(name) {
+    const S = this.sim, c = Math.ceil;
+    const it = this.INTS.find(i => i.n === name);
+    const green = () => {
+      if (S.G[name] == null) S.G[name] = S.t + Math.max(10, (it.s - S.s) / Math.max(S.v, 20) + 12);
+      const n = c(S.G[name] - S.t);
+      return this.L('g', n >= 3 ? n : null);
+    };
+    if (name === '700 S') {
+      const p = this.sig700();
+      if (p) return p;
+      const n = Math.max(1, c((1600 - S.s) / Math.max(S.v, 25)) + 4);
+      return { L: this.L('r', null), S: this.L('g', n), R: this.L('g', n) };
+    }
+    if (name === '600 S') { const g = green(); return { L: this.L('fy', null), S: g, R: { ...g } }; }
+    if (name === '300 S' && S.tEv != null) {
+      const tt = S.t - S.tEv;
+      if (tt < 1) { const g = green(); return { L: this.L('r', null), S: g, R: { ...g } }; }
+      if (tt < 4) { const y = this.L('y', c(4 - tt)); return { L: this.L('r', null), S: y, R: { ...y } }; }
+      const gAt = S.tEvPass != null ? S.tEvPass + 5 : null;
+      if (gAt == null || S.t < gAt) { const n = gAt == null ? null : c(gAt - S.t); return { L: this.L('r', null), S: this.L('r', n), R: this.L('r', n) }; }
+      return { L: this.L('r', null), S: this.L('g', null), R: this.L('g', null) };
+    }
+    if (name === '200 S') {
+      if (S.tR2 != null && S.t - S.tR2 >= 2.5) return { L: this.leftRed(name, 'g', null), S: this.L('g', 'HOLD'), R: this.L('g', null) }; // green held: no end time
+      const n = Math.max(2, c((6550 - S.s) / Math.max(S.v, 30)) + 3);
+      return { L: this.leftRed(name, 'g', n), S: this.L('g', n), R: this.L('g', n) };
+    }
+    if (name === '100 S') {
+      const gAt = S.tStop1 != null ? S.tStop1 + 5 : null;
+      if (gAt != null && S.t >= gAt) return { L: this.leftRed(name, 'g', Math.max(0, gAt + this.THRU_G - S.t) - this.CROSS[name]), S: this.L('g', null), R: this.L('g', null) };
+      const n = gAt == null ? null : c(gAt - S.t);
+      return { L: this.leftRed(name, 'r', n), S: this.L('r', n), R: this.L('r', n) };
+    }
+    const g = green();
+    return { L: this.leftRed(name, 'g', Math.max(0, S.G[name] - S.t)), S: g, R: { ...g } };
+  }
+
+  // ---------- alerts ----------
+  dist(px) {
+    const ft = Math.max(0, px) * this.FT;
+    if (ft >= 1000) return (ft / 5280).toFixed(1) + ' mi';
+    return (ft < 50 ? Math.round(ft / 5) * 5 : Math.round(ft / 10) * 10) + ' ft';
+  }
+  alertList() {
+    const S = this.sim, s = S.s, t = S.t, out = [];
+    const A = (o) => out.push(o);
+    // 0 school zone
+    if (s >= 450 && s < 1050) A({ i: 0, lv: 'adv', ic: 'school-w', title: 'School zone ahead', sub: 'Limit drops to 20 mph', dv: this.dist(1050 - s), dl: 'ahead', d: 1050 - s, key: 'school-a' });
+    else if (s >= 1050 && s < 1550) A({ i: 0, lv: 'adv', ic: 'school-w', title: 'School zone', sub: 'Slow to 20 mph', dv: this.dist(1550 - s), dl: 'to end', d: 0, key: 'school-i' });
+    else if (s >= 1550 && t - S.exitSchool < this.HOLD) A({ i: 0, lv: 'ok', ic: 'check-w', title: 'School zone ended', sub: 'Limit back to 35 mph', dv: '', dl: '', d: 0, key: 'school-e' });
+    // 1 signal turning red at 700 S (until the car has stopped)
+    const p7 = this.sig700();
+    if (p7 && s < 1934) {
+      const c7 = p7.S.c, stopped = S.v < 0.5 && s > 1780, past = s > 1826;
+      if (c7 === 'y') A({ i: 1, lv: 'warn', ic: 'signal-k', title: 'Signal turning red', sub: 'Prepare to stop', dv: this.dist(1826 - s), dl: 'to stop line', d: 1826 - s, key: 'red-y' });
+      else if (c7 === 'r' && !stopped) A({ i: 1, lv: 'warn', ic: 'signal-k', title: 'Red light', sub: 'Stop at 700 S', dv: this.dist(Math.max(0, 1826 - s)), dl: 'to stop line', d: 1826 - s, key: 'red-y' });
+      else if (c7 === 'r') A({ i: 1, lv: 'warn', ic: 'signal-k', title: 'Red light', sub: 'Stopped at 700 S', dv: p7.S.n + ' s', dl: 'to green', d: 0, key: 'red-y' });
+      else A({ i: 1, lv: 'ok', ic: 'check-w', title: 'Green light', sub: past ? 'Crossing 700 S' : 'Go ahead', dv: '', dl: '', d: 0, key: 'red-y' });
+    }
+    // 2 pedestrian in the mid-block crosswalk
+    const px = this.pedX();
+    if (S.tPed != null && px > -58 && s < 2497) A({ i: 2, lv: 'warn', ic: 'ped-k', title: this.pedWaiting() ? 'Pedestrian ahead' : 'Pedestrian crossing', sub: this.pedWaiting() ? 'Waiting at the curb' : S.v < 0.5 ? 'Wait for them to cross' : 'Crossing now', dv: this.dist(2487 - s), dl: 'ahead', d: 2487 - s, key: 'ped' });
+    else if (S.tPed != null && s < 2497) A({ i: 2, lv: 'ok', ic: 'check-w', title: 'Crosswalk clear', sub: 'Go ahead', dv: this.dist(Math.max(0, 2487 - s)), dl: 'to crosswalk', d: 2487 - s, key: 'ped' });
+    // 3 work zone
+    if (s >= 2750 && s < 3250) A({ i: 3, lv: 'warn', ic: 'work-k', title: 'Work zone ahead', sub: 'Right lane closed', dv: this.dist(3250 - s), dl: 'ahead', d: 3250 - s, key: 'work-a' });
+    else if (s >= 3250 && s < 3900) A({ i: 3, lv: 'warn', ic: 'work-k', title: 'Work zone', sub: '25 mph · Right lane closed', dv: this.dist(3900 - s), dl: 'to end', d: 9999, key: 'work-i' });
+    else if (s >= 3900 && t - S.exitWork < this.HOLD) A({ i: 3, lv: 'ok', ic: 'check-w', title: 'Work zone ended', sub: 'Limit back to 35 mph', dv: '', dl: '', d: 9999, key: 'work-e' });
+    // 4 stopped vehicle (critical)
+    if (s >= 3300 && s < 3712) A({ i: 4, lv: 'crit', ic: 'stopped-w', title: 'Stopped vehicle', sub: 'Blocking the middle lane', dv: this.dist(3700 - s), dl: 'ahead', d: 3700 - s, key: 'stop' });
+    // 5 low clearance
+    // it points you to the last turn before it, then confirms the way round
+    const Dt = S.det, c1 = Dt && Dt.corners[0];
+    if (this.tooTall() && !S.detDone && !(Dt && Dt.tOff != null) && s >= 3700 && s < 4600) {
+      const to = Dt ? (c1.d0 + c1.d1) / 2 - Dt.d : 4040 - s; // to the turn
+      if (!Dt && s >= 3940) A({ i: 5, lv: 'crit', ic: 'bridge-w', title: 'Low clearance', sub: '13 ft 6 in · Too low for you', dv: this.dist(4600 - s), dl: 'ahead', d: 4600 - s, key: 'bridge' }); // height changed too late to turn
+      else A({ i: 5, lv: 'crit', ic: 'bridge-w', title: 'Low clearance', sub: '13 ft 6 in · Turn at 500 S', fsSub: '13 ft 6 in · Turn right at 500 S', dv: to < 30 ? 'Turn' : this.dist(to), dl: to < 30 ? 'right now' : 'to 500 S', d: 4600 - s, key: 'bridge' });
+    } else if (Dt && Dt.tOff != null) {
+      A({ i: 5, lv: 'ok', ic: 'check-w', title: 'Overpass avoided', sub: 'Back on State St at 400 S', fsTitle: 'On another route', fsSub: 'Overpass avoided · Back on State St at 400 S', dv: this.dist(Dt.L - Dt.d), dl: 'to State St', d: 9999, fd: S.t - Dt.tOff < 5 ? 0 : 1e9, key: 'bridge-ok' });
+    } else if (S.detDone && S.t - S.tBack < 3) A({ i: 5, lv: 'ok', ic: 'check-w', title: 'Back on State St', sub: 'Past the low overpass', dv: '', dl: '', d: 9999, key: 'bridge-back' });
+    // 6 red light runner (critical)
+    if (S.tRlr != null && (S.tRlrPass == null || t < S.tRlrPass + 1.5)) A({ i: 6, lv: 'crit', ic: 'rlr-w', title: 'Red light runner', sub: '400 S · From the left', dv: 'Stop', dl: 'now', d: 0, key: 'rlr' });
+    // 7 emergency vehicle
+    if (S.tEv != null && (S.tEvPass == null || t < S.tEvPass + 2)) {
+      const gone = S.tEvPass != null;
+      A({ i: 7, lv: gone ? 'ok' : 'crit', ic: gone ? 'check-w' : 'siren-w', title: gone ? 'Emergency vehicle passed' : 'Emergency vehicle', sub: gone ? 'Merge back when clear' : 'Oncoming · Pull over right', dv: gone ? '' : (this.evS() - s < 70 ? 'Passing' : this.dist(this.evS() - s)), dl: gone || this.evS() - s < 70 ? '' : 'away', d: 0, fd: gone ? 1e9 : this.evS() - s, key: 'ev' });
+    }
+    // 9 EV signal priority result: granted holds until you reach the green; denied holds until you have stopped at the red
+    const pr = this.prioState();
+    if (pr && pr.st === 'ok' && s < 7297 - 108) A({ i: 9, lv: 'ok', ic: 'check-w', title: 'Priority granted', sub: 'Green held at 200 S · Go ahead', dv: this.dist(7297 - 108 - s), dl: 'to signal', d: 7297 - 108 - s, key: 'prio-ok', vk: 'p2-ok' });
+    if (pr && pr.st === 'no' && S.tStop1 == null) A({ i: 9, lv: 'crit', ic: 'signal-w', title: 'Priority denied', sub: 'Red light at 100 S · Prepare to stop', dv: this.dist(8280 - s), dl: 'to stop line', d: 8280 - s, key: 'prio-no', vk: 'p1-no' });
+    else if (pr && pr.st === 'no' && s < 8388) {
+      const c1 = this.sigFor('100 S').S;
+      if (c1.c !== 'g') A({ i: 9, lv: 'crit', ic: 'signal-w', title: 'Red light', sub: 'Priority denied · Wait at 100 S', dv: (/^\d+$/.test(c1.n) ? c1.n + ' s' : 'Stop'), dl: /^\d+$/.test(c1.n) ? 'to green' : '', d: 0, key: 'prio-no', vk: 'p1-no' });
+      else A({ i: 9, lv: 'ok', ic: 'check-w', title: 'Green light', sub: 'Go ahead', dv: '', dl: '', d: 0, key: 'prio-no', vk: 'p1-no' });
+    }
+    // 8 over the speed limit (anywhere a limit is known; named when inside a zone)
+    const lim = this.limHere(), mph = Math.round(S.v / this.MPH);
+    if (lim != null && mph > lim + ((this.state && this.state.sOver) || 0)) { // tolerance from Settings
+      const zone = this.onDetour() ? '' : s >= 1050 && s < 1550 ? 'School zone · ' : s >= 3250 && s < 3900 ? 'Work zone · ' : '';
+      A({ i: 8, lv: 'warn', ic: 'speed-k', title: 'Slow down', sub: zone + 'Limit ' + lim + ' mph', dv: mph + ' mph', dl: 'your speed', d: -1, key: 'speed', vk: 'speed-' + lim });
+    }
+    const H = S.hold;
+    if (H && t < H.until) A({ i: 10, lv: 'ok', ic: 'check-w', title: H.title, sub: H.sub, dv: '', dl: '', d: 0, fd: 0, key: 'hold' });
+    for (const a of out) if (a.fd == null) a.fd = a.d;
+    return out;
+  }
+
+  // ---------- loop ----------
+  componentDidMount() {
+    this.alive = true;
+    if (this.viewMount) this.viewMount();
+    if (this.still) return;
+    this.last = performance.now();
+    const loop = (ts) => {
+      if (!this.alive) return;
+      const dt = Math.min(0.05, Math.max(0, (ts - this.last) / 1000));
+      this.last = ts;
+      if (this.state.playing && this.state.screen === 'drive') {
+        let k = dt * this.state.rate;
+        while (k > 1e-6) { const h = Math.min(k, 1 / 60); this.step(h); k -= h; }
+        this.voiceTick();
+        const done = this.sim.s > this.END - 40 && this.sim.v < 0.5;
+        this.setState({ tick: this.state.tick + 1, playing: !done, done });
+      }
+      this.raf = requestAnimationFrame(loop);
+    };
+    this.raf = requestAnimationFrame(loop);
+    // one drive at a time on the canvas: Space only works the board that was played last
+    this.onKey = (e) => { if (e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return; if (e.code === 'Space' && this.state.screen === 'drive' && this.isLive()) { e.preventDefault(); this.togglePlay(); } };
+    window.addEventListener('keydown', this.onKey);
+    this.onClaim = (e) => { if (e.detail !== this && this.state.playing) this.setState({ playing: false }); };
+    window.addEventListener('rs-claim', this.onClaim);
+  }
+  componentWillUnmount() {
+    this.alive = false;
+    if (this.viewUnmount) this.viewUnmount();
+    cancelAnimationFrame(this.raf);
+    if (this.onKey) window.removeEventListener('keydown', this.onKey);
+    if (this.onClaim) window.removeEventListener('rs-claim', this.onClaim);
+    if (window.__rsLive === this) { window.__rsLive = null; try { window.speechSynthesis.cancel(); } catch (e) {} }
+  }
+  // the board being played now: the others pause and stay quiet, so an alert is never said twice
+  claim() {
+    if (window.__rsLive !== this) { try { window.speechSynthesis.cancel(); } catch (e) {} }
+    window.__rsLive = this;
+    try { window.dispatchEvent(new CustomEvent('rs-claim', { detail: this })); } catch (e) {}
+  }
+  isLive() { return !window.__rsLive || window.__rsLive === this; }
+  speak(key, urgent) {
+    const line = this.SAY[key]; if (!line) return;
+    this.lastSay = line;
+    if (!this.state.voice || !this.isLive()) return;
+    try {
+      const u = new SpeechSynthesisUtterance(line); u.rate = 1.05;
+      if (urgent) window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+  voiceTick() {
+    const keys = this.alertList().map(a => [a.vk || a.key, a.lv === 'crit']);
+    const p = this.prioState();
+    if (p) keys.push([p.key, false]);
+    for (const [k, urgent] of keys) if (!this.spoken[k]) { this.spoken[k] = 1; this.speak(k, urgent); }
+  }
+  prioState() {
+    const S = this.sim, nx = this.nextInt();
+    if (!nx) return null;
+    if (nx.n === '200 S' && S.tR2 != null) return S.t - S.tR2 < 2.5 ? { st: 'req', key: 'p2-req' } : { st: 'ok', key: 'p2-ok' };
+    if (nx.n === '100 S' && S.tR1 != null) return S.t - S.tR1 < 2.5 ? { st: 'req', key: 'p1-req' } : { st: 'no', key: 'p1-no' };
+    return null;
+  }
+  nextInt() { const s = this.sim.s; return this.INTS.find(i => i.s + 70 > s); } // until past the far side
+
+  // ---------- actions ----------
+  start() { this.claim(); this.reset(0); this.setState({ screen: 'drive', playing: true, done: false }); };
+  togglePlay() {
+    if (this.state.screen !== 'drive') return this.start();
+    if (this.state.done) { this.claim(); this.reset(0); return this.setState({ playing: true, done: false }); }
+    if (!this.state.playing) this.claim();
+    this.setState({ playing: !this.state.playing });
+  };
+  restart() { try { window.speechSynthesis.cancel(); } catch (e) {} this.reset(0); this.lastSay = ''; this.setState({ screen: 'splash', playing: false, done: false }); };
+  toggleVoice() { const v = !this.state.voice; if (!v) { try { window.speechSynthesis.cancel(); } catch (e) {} } this.setState({ voice: v }); };
+  openSet() { this.setState({ set: true }); }
+  closeSet() { this.setState({ set: false }); }
+  zoomIn() { this.setState({ zoom: Math.min(this.ZOOMS.length - 1, this.state.zoom + 1) }); }
+  zoomOut() { this.setState({ zoom: Math.max(0, this.state.zoom - 1) }); }
+  // values for the Settings sheet (hidden while a full-screen alert is up)
+  setVals(fsOn) {
+    const st = this.state, on = (v) => (v ? 'on' : '');
+    const flip = (k) => () => this.setState({ [k]: !this.state[k] });
+    return {
+      setCls: st.set && !fsOn ? 'on' : '', openSet: this.openSet, closeSet: this.closeSet,
+      tVoice: on(st.voice), tChime: on(st.sChime), tAwake: on(st.sAwake),
+      fVoice: this.toggleVoice, fChime: flip('sChime'), fAwake: flip('sAwake'),
+      ov0: on(st.sOver === 0), ov3: on(st.sOver === 3), ov5: on(st.sOver === 5),
+      setOv0: () => this.setState({ sOver: 0 }), setOv3: () => this.setState({ sOver: 3 }), setOv5: () => this.setState({ sOver: 5 }),
+      vh0: on(st.sVeh === 0), vh1: on(st.sVeh === 1), vh2: on(st.sVeh === 2),
+      setVh0: () => this.setState({ sVeh: 0 }), setVh1: () => this.setState({ sVeh: 1 }), setVh2: () => this.setState({ sVeh: 2 }),
+    };
+  }
+  tooTall() { const v = this.state && this.state.sVeh != null ? this.state.sVeh : 1; return this.VEH[v].h > this.CLEAR; }
+  // the scene the drive is in now (the two overpass scenes share a start; pick the one that matches the vehicle)
+  sceneIdx() {
+    const s = this.sim.s, tall = this.tooTall();
+    return this.SCENES.reduce((acc, sc, k) => (s >= sc.s - 1 && (sc.veh == null || (sc.veh === 2) === tall) ? k : acc), 0);
+  }
+  jump(sc) {
+    try { window.speechSynthesis.cancel(); } catch (e) {}
+    this.claim();
+    if (sc.veh != null) this.state.sVeh = sc.veh;
+    this.reset(sc.s); this.lastSay = '';
+    this.setState({ screen: 'drive', playing: true, done: false, ...(sc.veh != null ? { sVeh: sc.veh } : {}) });
+  }
+
+  // how many lines an intersection name needs (the app would measure the text; this is close enough here)
+  nameFit(name) { const n = String(name).length; return n > 40 ? 'n3' : n > 19 ? 'n2' : ''; }
+
+  // the second alert, as a row under the lead one (no-map and cluster full screens)
+  alsoView(a, mph, limit) {
+    if (!a) return null;
+    if (a.key === 'speed' && limit != null) return { lv: a.lv, ic: a.ic, title: 'Slow down', sub: `${Math.max(1, mph - limit)} mph over`, dv: limit + ' mph', dl: 'limit' };
+    return { lv: a.lv, ic: a.ic, title: a.title, sub: a.sub, dv: a.dv || '', dl: a.dl || '' };
+  }
+
+  // ---------- view: cluster ----------
+  // on the way round the low overpass: the next turn goes in the alert slot
+  routeStage() {
+    const D = this.sim.det, k = D.corners.findIndex(c => c.d0 - D.d > 4);
+    if (k >= 0) {
+      const c = D.corners[k], to = c.d0 - D.d;
+      return { lv: 'adv', ic: c.turn === 'left' ? 'turn-l' : 'turn-r', kick: 'Detour', title: `${c.turn === 'left' ? 'Left' : 'Right'} on ${c.street}`, sub: c.n,
+        dv: to < 30 ? 'Now' : this.dist(to), dl: to < 30 ? 'turn' : 'to the turn' };
+    }
+    return { lv: 'ok', ic: 'go-s', kick: 'Overpass avoided', title: 'Back on State St', sub: 'Carry on north', dv: this.dist(D.L - D.d), dl: 'to go' };
+  }
+  renderVals() {
+    const S = this.sim, st = this.state;
+    const drive = st.screen === 'drive';
+    const limit = this.limHere();
+    const mph = Math.round(S.v / this.MPH);
+    const over = limit != null && mph > limit;
+    const KICK = { crit: 'Critical', warn: 'Warning', adv: 'Advisory', ok: 'All good' };
+    const blank = { lv: 'adv', ic: 'info-w', title: '', sub: '', dv: '', dl: '' };
+
+    // next intersection: one lamp per movement
+    const nv = this.nextView(), dstr = nv.dstr, sig = {};
+    for (const k of ['L', 'S', 'R']) { const m = nv.sig[k]; sig[k] = { ...m, d: (m.d || '') + (!m.d && String(m.n).length >= 3 ? ' long' : '') }; }
+    const word = { g: 'green', y: 'yellow', r: 'red', fy: 'flashing yellow' };
+    const sigLabel = `Next signal ${nv.name}: left ${word[sig.L.c]}, straight ${word[sig.S.c]}, right ${word[sig.R.c]}`;
+    const p = this.prioState();
+    const prio = p ? {
+      show: true, none: false, req: p.st === 'req', ok: p.st === 'ok', no: p.st === 'no', cls: 'p-' + p.st,
+      t: p.st === 'req' ? 'Requesting priority' : p.st === 'ok' ? 'Priority granted' : 'Priority denied',
+      s: p.st === 'req' ? 'Sent automatically' : p.st === 'ok' ? 'Green held for you' : 'Signal stays red',
+    } : { show: false, none: true, req: false, ok: false, no: false, cls: '', t: '', s: '' };
+
+    // alerts: the one the app escalates goes full screen (same rule as the map app); the next one sits in the slot
+    const list = this.alertList();
+    const rank = { crit: 3, warn: 2, adv: 1, ok: 0 };
+    const det = this.onDetour();
+    const fsA = S.fs ? list.find(a => a.key === S.fs.key) : null;
+    if (fsA) this.fsCache = fsA;
+    let f = fsA || this.fsCache || blank;
+    // speeding: your speed is already at the bottom, so the big number is the limit
+    if (f.key === 'speed' && limit != null) f = { ...f, fsSub: String(f.fsSub || f.sub).replace(/Limit \d+ mph/, `${Math.max(1, mph - limit)} mph over`), dv: limit + ' mph', dl: 'speed limit' };
+    const fdp = String(f.dv || '').split(' ');
+    const ranked = list.filter(a => a.key !== 'bridge-ok' || (det && a.fd === 0)).sort((a, b) => (rank[b.lv] - rank[a.lv]) || (a.d - b.d));
+    const others = ranked.filter(a => !fsA || a.key !== fsA.key);
+    const fsTitle = f.fsTitle || f.title;
+    const fs = {
+      cls: `lv-${f.lv}${fsA ? ' on' : ''}`, kick: KICK[f.lv], title: fsTitle, tCls: String(fsTitle).length > 16 ? 'long' : '',
+      ic: String(f.ic).replace(/-w$/, '-k'), sub: f.fsSub || f.sub, dv: fdp[0], du: fdp[1] || '', dl: f.dl, dCls: fdp[0].length > 4 ? 'word' : '',
+    };
+    // a second alert at the same time gets its own row on the full screen
+    const a2 = fsA ? this.alsoView(others.find(a => a.key !== 'hold'), mph, limit) : null;
+    if (a2) this.alsoCache = a2;
+    const al2 = a2 || this.alsoCache || { lv: 'adv', ic: 'info-w', title: '', sub: '', dv: '', dl: '' };
+    const also = { ...al2, cls: `lv-${al2.lv}${a2 ? '' : ' hide'}` };
+    let lead = others[0] || null, slot = null;
+    if (det && !(lead && rank[lead.lv] >= 2)) slot = this.routeStage();
+    else if (lead) slot = { lv: lead.lv, ic: lead.ic, kick: KICK[lead.lv], title: lead.title, sub: lead.sub, dv: lead.dv, dl: lead.dl };
+    // speeding: the gauge already shows your speed, so the slot shows the limit and how far over you are
+    if (slot && lead && lead.key === 'speed' && limit != null && !(det && !(rank[lead.lv] >= 2))) slot = { ...slot, sub: `${mph - limit} mph over`, dv: limit + ' mph', dl: 'speed limit' };
+    if (slot) this.slotCache = slot;
+    const sc = slot || this.slotCache || blank;
+    const extra = slot ? Math.max(0, others.length - 1) : 0;
+    const al = {
+      cls: slot ? `lv-${sc.lv}` : `calm lv-${sc.lv}`, ic: sc.ic, kick: sc.kick, title: sc.title, sub: sc.sub, dv: sc.dv, dl: sc.dl,
+      dCls: String(sc.dv).length > 6 ? 'word' : '', more: `+${extra} more`, moreCls: extra ? '' : 'hide',
+    };
+
+    // speed gauge: 0 to 60 mph over 270 degrees, with a tick at the limit
+    const ARC = 367.57, C = 490.09, MAX = 60;
+    const pv = Math.max(0, Math.min(1, mph / MAX));
+    const pl = limit == null ? 0 : Math.max(0, Math.min(1, limit / MAX));
+    const hdg = (S.hdg + 360) % 360;
+    const hdgLetter = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'][Math.round(hdg / 45) % 8];
+    const scIdx = this.sceneIdx();
+    const full = !this.still && !(this.props && this.props.app); // app: just the phone screen (live page on a phone)
+    const near = !dstr[1] || (dstr[1] === 'ft' && Number(dstr[0]) <= 400);
+    const fsOn = drive && !!fsA;
+    return {
+      also,
+      rootCls: full ? 'board' : '',
+      phoneCls: (full ? 'ph-frame ' : '') + (fsOn ? 'fs-on' : ''),
+      showPanel: full,
+      showSplash: !drive,
+      sbarCls: fsOn && f.lv !== 'warn' ? 'inv' : '',
+      ...this.setVals(fsOn),
+      sigCls: near ? 'near' : '', sigDCls: dstr[1] ? '' : 'word',
+      nextDist: dstr[0], nextUnit: dstr[1], nextName: nv.name, nameCls: this.nameFit(nv.name),
+      sig, sigLabel, prio, al, fs,
+      evMode: S.s >= 6400,
+      voiceOn: st.voice, voiceOff: !st.voice, voiceLabel: st.voice ? 'Mute voice alerts' : 'Unmute voice alerts',
+      toggleVoice: this.toggleVoice,
+      mph, spdCls: limit == null ? '' : over ? 'over' : 'ok',
+      arcStyle: { strokeDasharray: `${(ARC * pv).toFixed(1)} ${C}`, strokeOpacity: pv < 0.01 ? 0 : 1 },
+      tickStyle: { transform: `rotate(${(-135 + 270 * pl).toFixed(1)}deg)` }, tickCls: limit == null ? 'hide' : '',
+      limitText: limit == null ? '--' : String(limit), limLabel: limit == null ? 'No speed limit data' : `Speed limit ${limit}`,
+      limCls: limit == null ? 'none' : over ? 'over' : '',
+      hdgLetter, hdgDeg: (Math.round(hdg) % 360) + '°', hdgLabel: `Heading ${hdgLetter}, ${Math.round(hdg) % 360} degrees`, dialStyle: { transform: `rotate(${hdg > 180 ? hdg - 360 : hdg}deg)` },
+      start: this.start,
+      playing: st.playing, paused: !st.playing, playLabel: st.playing ? 'Pause' : st.done ? 'Replay' : drive ? 'Resume' : 'Play',
+      togglePlay: this.togglePlay, restart: this.restart,
+      r1: st.rate === 1 ? 'on' : '', r2: st.rate === 2 ? 'on' : '',
+      rate1: () => this.setState({ rate: 1 }), rate2: () => this.setState({ rate: 2 }),
+      voiceText: st.voice ? 'Voice on' : 'Voice off',
+      nowText: !drive ? 'Get started · tap Start driving' : st.done ? 'Drive complete' : fsA ? `Full screen · ${fsTitle}` : slot ? `${sc.kick} · ${sc.title}` : `All clear · next signal ${nv.n}`,
+      sayText: this.lastSay ? `“${this.lastSay}”` : '',
+      progStyle: { width: Math.min(100, (S.s / this.END) * 100).toFixed(1) + '%' },
+      scenes: this.SCENES.map((sc, k) => ({ ...sc, n: String(k + 1).padStart(2, '0'), on: drive && k === scIdx ? 'on' : '', pick: () => this.jump(sc) })),
+    };
+  }
+}
+</script>
+</body>
+</html>
