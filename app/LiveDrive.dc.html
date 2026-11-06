@@ -91,6 +91,7 @@
           {{ nextName }}
         </div>
       </div>
+      <sc-if value="{{ notWalk }}" hint-placeholder-val="{{ true }}">
       <div class="sighead {{ sigCls }}" role="img" aria-label="{{ sigLabel }}">
         <div class="mv">
           <div class="lens {{ sig.L.c }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-6.5a4.5 4.5 0 0 0-4.5-4.5H6"/><path d="M10 5 6 9l4 4"/></svg></div>
@@ -106,6 +107,13 @@
           <div class="mv-n {{ sig.R.d }}">{{ sig.R.n }}</div>
         </div>
       </div>
+      </sc-if>
+      <sc-if value="{{ walkOn }}" hint-placeholder-val="{{ false }}">
+      <div class="pedhead {{ wsig.cls }}" role="img" aria-label="{{ sigLabel }}">
+        <div class="ph-lens"><svg class="wk-hand" viewBox="0 0 24 24" fill="currentColor"><path d="M8.2 12.6V5.7a1.4 1.4 0 0 1 2.8 0v5.6h.6V4.4a1.4 1.4 0 0 1 2.8 0v6.9h.6V5.6a1.4 1.4 0 0 1 2.8 0v8.6c0 4.4-2.6 7.3-6.3 7.3-2.6 0-4.1-1.3-5.4-3.4l-2.4-4.1a1.3 1.3 0 0 1 2.2-1.4z"/></svg><svg class="wk-walk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="4" r="2" fill="currentColor" stroke="none"/><path d="M13 7.5 11 14l3 3 1 4.5"/><path d="M11 14l-2.5 3L6 20.5"/><path d="M12.5 8.5 9 10.5 8 13.5"/><path d="M13 8.5l2 3 3 1"/></svg></div>
+        <div class="ph-txt"><div class="ph-n">{{ wsig.n }}</div><div class="ph-l">{{ wsig.lbl }}</div></div>
+      </div>
+      </sc-if>
     </div>
     <sc-if value="{{ prio.show }}" hint-placeholder-val="{{ false }}">
       <div class="prio {{ prio.cls }}">
@@ -178,8 +186,8 @@
       <div class="dk-num {{ spdCls }}">{{ mph }}</div>
       <div class="dk-lbl">mph</div>
     </div>
-    <div class="dk-sep"></div>
-    <div class="dk">
+    <div class="dk-sep dk-lim-sep"></div>
+    <div class="dk dk-lim">
       <div class="lim {{ limCls }}" aria-label="{{ limLabel }}"><span class="lim-w">SPEED</span><span class="lim-w">LIMIT</span><b class="lim-n">{{ limitText }}</b></div>
     </div>
     <div class="dk-sep"></div>
@@ -329,6 +337,8 @@ class Component extends DCLogic {
       { id: 'granted', name: 'Signal priority granted', tag: 'ev', tagText: 'EV mode', s: 6420, mode: 'ev', modes: ['ev'] },
       { id: 'denied', name: 'Signal priority denied', tag: 'ev', tagText: 'EV mode', s: 7520, mode: 'ev', modes: ['ev'] },
       { id: 'uturn', name: 'No U-turn sign at S Temple', tag: 'base', tagText: 'Signal', s: 8470 },
+      { id: 'walk', name: 'Walk to the crosswalk · cross State St', tag: 'warn', tagText: 'Crossing', s: 2410, mode: 'walk', modes: ['walk'] },
+      { id: 'walkwest', name: 'West sidewalk · emergency vehicle', tag: 'crit', tagText: 'Critical', s: 2492, mode: 'walk', modes: ['walk'] },
     ];
     this.END = 8800;
     // one announcement per alert, said once when it first appears; the full screen does not repeat it
@@ -338,6 +348,15 @@ class Component extends DCLogic {
       'ped': 'Pedestrian at the crosswalk ahead. Slow down.',
       'work-a': 'Work zone ahead. Right lane closed, limit 25.', 'work-e': 'Work zone ended.',
       'stop': 'Stopped vehicle ahead. Change lanes.',
+      // pedestrian: orientation first, every step said once (accessibility: the screen may not be seen)
+      'w-near': 'You are on the east side of State Street, walking north. Mid-block crosswalk ahead.',
+      'w-wait': 'You are at the crosswalk. Crossing requested. Wait.',
+      'w-car': 'Wait. A car is coming from the left and is not slowing down.',
+      'w-walk': 'Walk sign is on to cross State Street. Cross now.',
+      'w-done': 'You crossed State Street. You are on the west side, facing north.',
+      'w-ev': 'Emergency vehicle coming. Stay on the sidewalk.',
+      'w-ev-gone': 'Emergency vehicle passed.',
+      'w-end': 'You have arrived at 600 South.',
       'bridge': 'Low clearance ahead. Your vehicle will not fit. Turn left at 500 South.',
       'bridge-ok': 'Overpass avoided. You will rejoin State Street at 400 South.',
       'rlr': 'Stop! Red light runner from the left.',
@@ -353,12 +372,13 @@ class Component extends DCLogic {
     this.tkCache = null; this.tk2Cache = null;
     // full screen: zones take over well before you reach them and stay until you are in; everything else stays until cleared.
     // values are distances (map px) at which the alert takes the screen; Infinity = at once
-    this.FS = { 'school-a': 480, 'red-y': Infinity, 'ped': 330, 'work-a': 420, 'stop': Infinity, 'bridge': 800, 'bridge-ok': 0, 'rlr': Infinity, 'ev': 600, 'speed': Infinity, 'prio-ok': Infinity, 'prio-no': Infinity };
+    this.FS = { 'w-wait': Infinity, 'w-car': Infinity, 'w-walk': Infinity, 'w-ev': Infinity, 'school-a': 480, 'red-y': Infinity, 'ped': 330, 'work-a': 420, 'stop': Infinity, 'bridge': 800, 'bridge-ok': 0, 'rlr': Infinity, 'ev': 600, 'speed': Infinity, 'prio-ok': Infinity, 'prio-no': Infinity };
     // an alert that went full screen keeps it for its whole area: approach, inside, ended are one episode
-    this.GROUP = { 'school-a': 'school', 'school-i': 'school', 'school-e': 'school', 'work-a': 'work', 'work-i': 'work', 'work-e': 'work' };
+    this.GROUP = { 'w-wait': 'wx', 'w-car': 'wx', 'w-walk': 'wx', 'school-a': 'school', 'school-i': 'school', 'school-e': 'school', 'work-a': 'work', 'work-i': 'work', 'work-e': 'work' };
     // after the area is left, a short "clear" screen before the map or dashboard comes back (seconds)
     this.HOLD = 2;
     this.DONE = {
+      'w-walk': ['You crossed State Street', 'West side · facing north'], 'w-ev': ['Emergency vehicle passed', 'Walk on'],
       'speed': ['Back under the limit', 'Speed OK'],
       'red-y': ['Through 700 S', 'Signal passed'],
       'ped': ['Crosswalk passed', 'All clear'],
@@ -415,6 +435,7 @@ class Component extends DCLogic {
       const [id, secs] = this.still.split('@');
       const sc = this.SCENES.find(x => x.id === id) || this.SCENES[0];
       if (sc.veh != null) this.state.sVeh = sc.veh;
+      if (sc.mode && !/,(ev|bike|walk)\b/.test(this.still)) this.state.mode = sc.mode;
       this.reset(sc.s);
       const n = Math.round((parseFloat(secs) || 0) * 60);
       for (let i = 0; i < n; i++) this.step(1 / 60);
@@ -423,6 +444,12 @@ class Component extends DCLogic {
 
   // ---------- simulation ----------
   reset(s0) {
+    if (this.mode() === 'walk') {
+      this.sim = { t: 0, s: 0, v: 0, x: 0, vx: 0, G: {}, fs: null, ep: {}, hold: null, det: null, detDone: true, wx: 0, wy: 0, rot: 0, hdg: 0, tPed: null, tRlr: null, tEv: null, tR1: null, tR2: null, tStop1: null, exitSchool: -1e9, exitWork: -1e9 };
+      this.resetWalk(s0);
+      this.spoken = {}; this.alCache = []; this.tkCache = null; this.tk2Cache = null;
+      return;
+    }
     const D = -1e9; // "already happened" for events behind the start point
     const at = (trig) => (s0 > trig ? D : null);
     this.sim = {
@@ -457,6 +484,7 @@ class Component extends DCLogic {
   }
   step(dt) {
     const S = this.sim, M = this.MPH;
+    if (this.mode() === 'walk') return this.stepWalk(dt);
     S.t += dt;
     if (S.tRed == null && S.s >= 1600) S.tRed = S.t;
     // mid-block crosswalk on State St between 700 S and 600 S, at its real spot (Mapbox / OSM: 40.75525)
@@ -568,8 +596,19 @@ class Component extends DCLogic {
   onDetour() { const D = this.sim.det; return !!D && D.d > D.corners[0].d1; }
   limHere() { return this.onDetour() ? 30 : this.limitAt(this.sim.s); }
   // next signal for the top card: State St, or the corners of the detour
+  walkLabel() { const g = this.walkSig(); return 'Pedestrian signal: ' + (g.c === 'w' ? 'walk' : g.c === 'fdw' ? 'finish crossing' : "don't walk") + (g.n != null ? ', ' + g.n + ' seconds' : ''); }
+  // the pedestrian signal for the views: hand (don't walk) or walking person, the countdown under it
+  walkSigView() {
+    const g = this.walkSig(), lbl = g.c === 'w' ? 'Walk' : g.c === 'fdw' ? 'Finish crossing' : g.n != null ? 'Walk in' : 'Don\'t walk';
+    return { c: g.c, n: g.n != null ? String(g.n) : '', lbl, cls: 'ws-' + g.c };
+  }
   nextView() {
     const S = this.sim, D = S.det, c = Math.ceil;
+    if (this.mode() === 'walk') {
+      const K = this.WK, ph = S.wph, g = this.L('g', null);
+      const dstr = ph === 'to' ? this.dist(K.xw - S.s).split(' ') : ph === 'curb' ? ['At crosswalk', ''] : ph === 'cross' ? ['Crossing', ''] : ['West side', ''];
+      return { name: ph === 'west' || ph === 'end' ? 'State St · west sidewalk' : 'State St · mid-block crosswalk', n: 'xwalk', dstr, sig: { L: g, S: { ...g }, R: { ...g } } };
+    }
     if (this.onDetour()) {
       const k = D.corners.findIndex(q => q.d1 > D.d), cn = D.corners[k < 0 ? D.corners.length - 1 : k];
       const to = cn.d0 - 30 - D.d, turning = to < 0;
@@ -686,6 +725,7 @@ class Component extends DCLogic {
     return (ft < 50 ? Math.round(ft / 5) * 5 : Math.round(ft / 10) * 10) + ' ft';
   }
   alertList() {
+    if (this.mode() === 'walk') return this.walkAlerts();
     const S = this.sim, s = S.s, t = S.t, out = [];
     const A = (o) => out.push(o);
     // 0 school zone
@@ -763,7 +803,7 @@ class Component extends DCLogic {
         let k = dt * this.state.rate;
         while (k > 1e-6) { const h = Math.min(k, 1 / 60); this.step(h); k -= h; }
         this.voiceTick();
-        const done = this.sim.s > this.END - 40 && this.sim.v < 0.5;
+        const done = (this.sim.s > this.END - 40 && this.sim.v < 0.5) || !!this.sim.walkDone;
         this.setState({ tick: this.state.tick + 1, playing: !done, done });
       }
       this.raf = requestAnimationFrame(loop);
@@ -851,19 +891,86 @@ class Component extends DCLogic {
   setMode(m) {
     if (m === this.mode()) return;
     try { window.speechSynthesis.cancel(); } catch (e) {}
-    this.state.mode = m; this.snaps = null;
+    this.state.mode = m; this.snaps = null; this.lz = null; this.lzT = null;
     this.reset(0); this.lastSay = '';
     this.setState({ mode: m, done: false, playing: this.state.screen === 'drive' ? this.state.playing : false });
   }
-  sceneFits(sc) { const m = this.mode(); return sc.modes ? sc.modes.includes(m) : true; }
+  sceneFits(sc) { const m = this.mode(); return sc.modes ? sc.modes.includes(m) : m !== 'walk'; }
+  // ---------- pedestrian (VRU) ----------
+  // You walk north on the east sidewalk of State St (x 84), cross State St westward at the real mid-block
+  // crosswalk (s 2487, 40.75525), then walk north on the west sidewalk (x -84) to s 2700. Your phone sends a
+  // crossing request (as a push button would) and broadcasts your position (PSM). At the curb: Wait (walk in
+  // a few s) → a car approaching without slowing (its BSM) → hold → Walk 30 s (extended crossing on) → cross.
+  // On the west side an emergency vehicle comes south: stay on the sidewalk. Walk ~1.5 m/s = 6.5 map px/s.
+  get WK() { return { x0: 84, s0: 2410, xw: 2487, x1: -84, s1: 2700, v: 6.5, walkIn: 4, walkFor: 30, carS0: 2240, carV: 55, carX: 32, evS0: 2980, evV: 70, evX: -32 }; }
+  resetWalk(s0) {
+    const K = this.WK, S = this.sim;
+    Object.assign(S, { s: Math.max(K.s0, Math.min(K.s1, s0 || K.s0)), x: K.x0, wph: 'to', tA: null, tGo: null, tDone: null, tCar: null, tEvW: null, tEvGone: null, walkDone: false, v: K.v, hdg: 0, rot: 0 });
+    if (S.s > K.xw) { S.x = K.x1; S.wph = 'west'; S.tA = S.tGo = S.tDone = -1e9; }
+    S.wx = S.x; S.wy = -S.s;
+  }
+  carSW() { const S = this.sim, K = this.WK; return S.tCar == null ? null : K.carS0 + K.carV * (S.t - S.tCar); }
+  evSW() { const S = this.sim, K = this.WK; return S.tEvW == null || S.t < S.tEvW ? null : K.evS0 - K.evV * (S.t - S.tEvW); }
+  walkSig() { // the crosswalk's pedestrian signal: dw (don't walk) / w (walk, countdown) / fdw (flashing, last 8 s)
+    const S = this.sim, K = this.WK, c = Math.ceil;
+    if (S.tA == null) return { c: 'dw', n: null };
+    const on = S.tA + K.walkIn, off = on + K.walkFor;
+    if (S.t < on) return { c: 'dw', n: c(on - S.t) };
+    if (S.t < off) return { c: off - S.t <= 8 ? 'fdw' : 'w', n: c(off - S.t) };
+    return { c: 'dw', n: null };
+  }
+  stepWalk(dt) {
+    const S = this.sim, K = this.WK;
+    S.t += dt;
+    const step = K.v * dt;
+    if (S.wph === 'to') { // walking north to the crosswalk
+      S.s = Math.min(K.xw, S.s + step); S.x = K.x0; S.rot = 0;
+      if (S.s >= K.xw) { S.wph = 'curb'; S.tA = S.t; S.tCar = S.t + 0.5; }
+    } else if (S.wph === 'curb') { // waiting: request sent; walk comes on; a car that isn't stopping must pass first
+      const cs = this.carSW(), sg = this.walkSig();
+      const carNear = cs != null && cs < K.xw + 20;
+      if (sg.c !== 'dw' && !carNear) { S.wph = 'cross'; S.tGo = S.t; }
+    } else if (S.wph === 'cross') { // crossing west
+      S.x = Math.max(K.x1, S.x - step); S.rot = -90;
+      if (S.x <= K.x1) { S.wph = 'west'; S.tDone = S.t; S.tEvW = S.t + 3; }
+    } else if (S.wph === 'west') { // west sidewalk, north
+      S.s = Math.min(K.s1, S.s + step); S.rot = 0;
+      const es = this.evSW();
+      if (es != null && S.tEvGone == null && es < S.s - 60) S.tEvGone = S.t;
+      if (S.s >= K.s1 && (S.tEvGone == null || S.t > S.tEvGone + 3)) { S.walkDone = true; S.wph = 'end'; }
+    }
+    const moving = S.wph === 'to' || S.wph === 'cross' || S.wph === 'west';
+    S.v = moving ? K.v : 0; // map px/s, like the car (~3 mph)
+    S.wx = S.x; S.wy = -S.s;
+    S.hdg = (moving ? S.rot : S.wph === 'curb' ? -90 : S.rot) + 0.8 * Math.sin(S.t * 0.4);
+    this.fsTick();
+  }
+  walkAlerts() {
+    const S = this.sim, K = this.WK, out = [], A = (o) => out.push(o);
+    const sg = this.walkSig(), cs = this.carSW(), es = this.evSW();
+    if (S.wph === 'to') A({ i: 2, lv: 'adv', ic: 'ped-k', title: 'Crosswalk ahead', sub: 'Mid-block · State St', dv: this.dist(K.xw - S.s), dl: 'ahead', d: K.xw - S.s, key: 'w-near' });
+    if (S.wph === 'curb') {
+      const carNear = cs != null && cs < K.xw + 20;
+      if (sg.c !== 'dw' && carNear) A({ i: 6, lv: 'crit', ic: 'rlr-w', title: 'Wait · car not stopping', sub: 'From the left · northbound', fsTitle: 'Wait', fsSub: 'A car is coming and not slowing down', dv: 'Wait', dl: 'stay on the curb', d: 0, key: 'w-car' });
+      else A({ i: 2, lv: 'warn', ic: 'ped-k', title: 'Wait to cross', sub: 'Crossing requested', fsTitle: 'Wait', fsSub: 'Crossing requested · State St', dv: sg.n != null ? sg.n + ' s' : '', dl: 'to walk', d: 0, key: 'w-wait' });
+    }
+    if (S.wph === 'cross') A({ i: 2, lv: 'ok', ic: 'ped-k', title: 'Walk', sub: 'Cross State St', fsTitle: 'Walk', fsSub: 'Cross State Street to the west side', dv: sg.n != null ? sg.n + ' s' : '', dl: 'to cross', d: 0, key: 'w-walk', vk: 'w-walk' });
+    if (S.wph === 'west' && S.t - S.tDone < 3) A({ i: 2, lv: 'ok', ic: 'check-w', title: 'Crossed State St', sub: 'West side · facing north', dv: '', dl: '', d: 0, key: 'w-done' });
+    if (es != null && S.tEvGone == null) A({ i: 7, lv: 'crit', ic: 'siren-w', title: 'Emergency vehicle', sub: 'Southbound · stay on the sidewalk', fsSub: 'Coming south on State St · stay on the sidewalk', dv: es - S.s < 60 ? 'Passing' : this.dist(Math.max(0, es - S.s)), dl: es - S.s < 60 ? '' : 'away', d: 0, key: 'w-ev' });
+    else if (S.tEvGone != null && S.t < S.tEvGone + 2) A({ i: 7, lv: 'ok', ic: 'check-w', title: 'Emergency vehicle passed', sub: 'Walk on', dv: '', dl: '', d: 0, key: 'w-ev-gone' });
+    if (S.wph === 'end') A({ i: 10, lv: 'ok', ic: 'check-w', title: 'You have arrived', sub: 'State St & 600 S · west side', dv: '', dl: '', d: 0, key: 'w-end' });
+    for (const a of out) if (a.fd == null) a.fd = a.d;
+    return out;
+  }
   // holes for the mode switch (Settings + desktop panel), the chips and the per-mode "Jump to" list (both apps)
   modeVals(drive, scIdx) {
     const m = this.mode(), on = (x) => (m === x ? 'on' : '');
     const pick = (x) => () => this.setMode(x);
     const list = this.SCENES.map((sc, k) => ({ sc, k })).filter(o => this.sceneFits(o.sc));
     return {
-      mdDrive: on('drive'), mdEv: on('ev'), mdBike: on('bike'), mdWalk: 'dis',
-      pickDrive: pick('drive'), pickEv: pick('ev'), pickBike: pick('bike'), pickWalk: () => {},
+      mdDrive: on('drive'), mdEv: on('ev'), mdBike: on('bike'), mdWalk: on('walk'),
+      pickDrive: pick('drive'), pickEv: pick('ev'), pickBike: pick('bike'), pickWalk: pick('walk'),
+      walkOn: m === 'walk', notWalk: m !== 'walk', walkCls: m === 'walk' ? 'walk' : '', sigK: m === 'walk' ? 'Crosswalk' : 'Next signal', wsig: m === 'walk' ? this.walkSigView() : { c: 'dw', n: '', lbl: '' },
       evMode: m === 'ev', vruOn: this.vru(), notVru: !this.vru(),
       modeName: { drive: 'Driver', ev: 'Emergency vehicle', bike: 'Cyclist', walk: 'Pedestrian' }[m],
       scenes: list.map(({ sc, k }, j) => ({ ...sc, n: String(j + 1).padStart(2, '0'), on: drive && k === scIdx ? 'on' : '', pick: () => this.jump(sc) })),
@@ -1176,7 +1283,7 @@ class Component extends DCLogic {
   liveZk(tl) {
     const lat = this.geo(this.sim.wx, this.sim.wy)[1];
     // starts where the old zoom steps ended (their widest view, user 2026-11-06); a still board's ",z0..z4" keeps its step
-    if (this.lz == null) this.lz = this.zoomOf(1.45 * this.ZOOMS[/,z\d/.test(this.still) ? this.state.zoom : 0], lat);
+    if (this.lz == null) this.lz = this.zoomOf(1.45 * this.ZOOMS[/,z\d/.test(this.still) ? this.state.zoom : 0], lat) + (this.mode() === 'walk' ? 1.2 : 0); // walking: closer
     if (this.lzT != null) { // + / −: glide to the new level (~250 ms)
       const d = this.lzT - this.lz;
       if (Math.abs(d) < 0.01 || this.free || this.uz) { this.lz = this.lzT; this.lzT = null; } else { this.lz += d * 0.22; this.redraw(); }
@@ -1238,7 +1345,7 @@ class Component extends DCLogic {
     // next intersection + its per-movement signals
     const nv = this.nextView(), dstr = nv.dstr, sig = nv.sig, nx = { n: nv.n };
     const word = { g: 'green', y: 'yellow', r: 'red', fy: 'flashing yellow' };
-    const sigLabel = `Left ${word[sig.L.c]}${sig.L.ut === 'ok' ? ' (U-turn allowed)' : sig.L.ut === 'no' ? ' (no U-turn)' : ''}, straight ${word[sig.S.c]}, right ${word[sig.R.c]}`;
+    const sigLabel = this.mode() === 'walk' ? this.walkLabel() : `Left ${word[sig.L.c]}${sig.L.ut === 'ok' ? ' (U-turn allowed)' : sig.L.ut === 'no' ? ' (no U-turn)' : ''}, straight ${word[sig.S.c]}, right ${word[sig.R.c]}`;
     const p = this.prioState();
     const prio = p ? {
       show: true, req: p.st === 'req', ok: p.st === 'ok', no: p.st === 'no', cls: p.st,
@@ -1283,7 +1390,7 @@ class Component extends DCLogic {
     // 2D shows the road from straight above, so it zooms out (x0.45) to see about as far ahead as 2.5D
     const tl = this.tiltNow(), A = 60 * tl * Math.PI / 180, cA = Math.cos(A), sA = Math.sin(A);
     const live0 = !!(this.map && this.mapOk);
-    const zk = live0 ? this.liveZk(tl) : 1.45 * this.ZOOMS[st.zoom] * (0.45 + 0.55 * tl);
+    const zk = live0 ? this.liveZk(tl) : 1.45 * this.ZOOMS[st.zoom] * (0.45 + 0.55 * tl) * (this.mode() === 'walk' ? 2.3 : 1);
     if (fsA && this.free) this.recenter(); // a full-screen alert: back to following the car
     const live = this.mapCam(zk, tl);
     const free = live && (this.free || this.uz || (this.recT && performance.now() < this.recT));
@@ -1304,18 +1411,22 @@ class Component extends DCLogic {
     const mk = (on, X, Y, act) => {
       const q = proj(X, Y);
       // zoomed out to the city (live map below zoom 14.5) the hazards would all sit on the car: hide them
-      const vis = on && near(Y) && q.y > -80 && q.y < 900 && q.f > 0 && !(live && this.map.getZoom() < 14.5);
+      // above the top card's bottom edge (152 px + the pin's height) a marker is hidden, as the map is (fade)
+      const vis = on && near(Y) && q.y > 205 && q.y < 900 && q.f > 0 && !(live && this.map.getZoom() < 14.5);
       return { cls: vis ? (act ? 'act' : '') : 'off', style: { transform: `translate(${q.x.toFixed(1)}px, ${q.y.toFixed(1)}px) scale(${Math.max(0.6, Math.min(1, q.f * 1.25)).toFixed(3)})` } };
     };
     const pins = {
       school: mk(true, -26, -1090, has(0, ['school-a'])),                       // inside the shaded zone, at its start
       work: mk(true, 48, -3290, has(3, ['work-a'])),                          // on the closed-lane strip
-      ped: mk(this.pedX() > -58 || S.s < 2487, this.pedX(), -2487, has(2)), // on the curb, then crossing
+      ped: mk(this.mode() !== 'walk' && (this.pedX() > -58 || S.s < 2487), this.pedX(), -2487, has(2)), // on the curb, then crossing
       stop: mk(true, 32, -3700, has(4)),                          // the stopped vehicle in the middle lane
       bridge: mk(this.tooTall(), -26, -4600, has(5)),              // under the overpass, only if you won't fit
       sig: mk(has(1), 32, -1832),                          // the signal turning red: only while it is the alert
-      rlr: mk(S.tRlr != null && S.tRlrPass == null, this.rlrX(), -5160, has(6)), // the runner, while it crosses
-      ev: mk(S.tEv != null && S.tEvPass == null, -32, -this.evS(), has(7)),      // the emergency vehicle, while it comes
+      // walking: the car that isn't stopping (its BSM) and the emergency vehicle use these two markers
+      rlr: this.mode() === 'walk' ? mk(this.carSW() != null && this.carSW() < 2620, this.WK.carX, -(this.carSW() || 0), has(6))
+        : mk(S.tRlr != null && S.tRlrPass == null, this.rlrX(), -5160, has(6)),
+      ev: this.mode() === 'walk' ? mk(this.evSW() != null && S.tEvGone == null, this.WK.evX, -(this.evSW() || 0), has(7))
+        : mk(S.tEv != null && S.tEvPass == null, -32, -this.evS(), has(7)),
     };
 
     const hdg = (S.hdg + 360) % 360;
@@ -1335,7 +1446,7 @@ class Component extends DCLogic {
       puckPos: free ? { transform: `translate(${(car.x - 195).toFixed(1)}px, ${(car.y - 560).toFixed(1)}px)` } : {},
       puckCls: free && (car.x < -30 || car.x > 420 || car.y < 0 || car.y > 880) ? 'off' : '',
       freeOn: !!(live && this.free), recenter: () => this.recenter(),
-      fogStyle: { opacity: (0.6 + 0.4 * tl).toFixed(3) }, // lighter in 2D: the road ahead is what you look at
+      fogStyle: {}, // the same in 2D and 2.5D: nothing shows above the top card
       toggleView: () => this.toggleView(),
       viewBtn: st.view === '2d' ? '2.5D' : '2D', viewLabel: st.view === '2d' ? 'Tilt the map (2.5D view)' : 'Flat map (2D view)',
       puckStyle: { transform: `rotate(${(((S.hdg - (free ? this.map.getBearing() : S.rot)) % 360) + 540) % 360 - 180}deg)` },
@@ -1356,7 +1467,7 @@ class Component extends DCLogic {
       ...this.modeVals(drive, scIdx),
       voiceOn: st.voice, voiceOff: !st.voice, voiceLabel: st.voice ? 'Mute voice alerts' : 'Unmute voice alerts',
       toggleVoice: this.toggleVoice,
-      mph, spdCls: over ? 'over' : '', dockCls: over ? 'over' : '', // over the limit: the bottom bar pulses
+      mph, spdCls: over ? 'over' : '', dockCls: (over ? 'over' : '') + (this.mode() === 'walk' ? ' walk' : ''), // over the limit: the bottom bar pulses; walking: no limit sign
       limitText: limit == null ? '--' : String(limit), limLabel: limit == null ? 'No speed limit data' : `Speed limit ${limit}`,
       limCls: limit == null ? 'none' : over ? 'over' : '', // standard white sign in every zone (as v4)
       hdgLetter, hdgDeg: (Math.round(hdg) % 360) + '°', dialStyle: { transform: `rotate(${-hdg}deg)` },
