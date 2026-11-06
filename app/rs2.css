@@ -489,6 +489,14 @@
 
 .ph.tab-p .spm-vis > * { translate: 0 -230px; } .ph.tab-p .spm-vis .spm-tf { translate: none; } /* portrait card is shorter: lift so the car shows */
 
+/* no pulsing border on a "clear" (green) full screen; two alerts side by side: each half its own border */
+.tk.lv-ok::before { display: none; }
+.ph.tab-l .tk.two::before { right: 50%; border-radius: 30px 0 0 30px; }
+.ph.tab-l .tk.two .tk2::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 7px var(--lv); opacity: 0; }
+.ph.tab-l .tk.two.on .tk2::before { animation: fs-edge 1.6s ease-in-out infinite; }
+.ph.tab-l .tk.two.on .tk2.lv-crit::before { animation-duration: 1s; }
+.ph.tab-l .tk.two .tk2.lv-ok::before, .ph.tab-l .tk.two .tk2.hide::before { display: none; }
+
 /* ==== get started (from splash.css) ==== */
 /* Get started: shared by every version. Plain white page, the Road Sense mark in a few faint rings,
    the Connected Utah wordmark, one line, one button. */
