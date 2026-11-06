@@ -31,11 +31,16 @@
 .cl-sig-du { font-size: 15px; font-weight: 600; color: #98A0AA; }
 .cl-sig-d.word .cl-sig-dv { font-size: 16px; font-weight: 700; letter-spacing: 0; padding: 7px 11px; border-radius: 10px; background: rgba(255, 255, 255, .1); }
 .cl-lamps { margin-top: 14px; flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding: 14px 6px 10px; border-radius: 22px; background: #0C0E11; }
-.cl-lamp { min-width: 0; display: flex; flex-direction: column; align-items: center; --sc: #22C55E; --sg: rgba(34, 197, 94, .26); }
+.cl-lamp { position: relative; min-width: 0; display: flex; flex-direction: column; align-items: center; --sc: #22C55E; --sg: rgba(34, 197, 94, .26); }
 .cl-lamp.t-y, .cl-lamp.t-fy { --sc: #FACC15; --sg: rgba(250, 204, 21, .24); }
 .cl-lamp.t-r { --sc: #EF4444; --sg: rgba(239, 68, 68, .28); }
 .cl-lens { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; color: #0C0E11; background: var(--sc); transition: background-color .3s; }
 .cl-lens svg { width: 44px; height: 44px; }
+/* U-turn mark on the Left lens: allowed (white sign) / No U-turn (red ring + slash), as the map app */
+.cl-ut { position: absolute; top: -4px; left: calc(50% + 20px); width: 28px; height: 28px; display: none; }
+.cl-ut.ut-ok, .cl-ut.ut-no { display: block; }
+.cl-ut .ut-i { display: none; width: 28px; height: 28px; border-radius: 50%; box-shadow: 0 0 0 3px #15181D; }
+.cl-ut.ut-ok .ut-ok, .cl-ut.ut-no .ut-no { display: block; }
 .cl-cd { margin-top: 10px; font-size: 36px; font-weight: 800; letter-spacing: -1.4px; line-height: 1; color: var(--sc); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .cl-cd.long { font-size: 30px; letter-spacing: -1px; }
 .cl-cd.word { font-size: 20px; letter-spacing: .6px; line-height: 36px; height: 36px; }

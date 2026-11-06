@@ -91,7 +91,12 @@
 .ah-name.n2, .ah-name.n3 { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-height: 1.25; }
 .ah-name.n3 { font-size: 14px; margin-top: 6px; }
 .sighead { display: flex; align-items: center; gap: 6px; background: #1C2026; border-radius: 18px; padding: 7px; height: 72px; }
-.mv { width: 44px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.mv { position: relative; width: 44px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+/* U-turn mark on the Left lens: allowed (white sign) / No U-turn (red ring + slash) */
+.ut { position: absolute; top: -5px; right: -6px; width: 19px; height: 19px; display: none; }
+.ut.ut-ok, .ut.ut-no { display: block; }
+.ut-i { display: none; width: 19px; height: 19px; border-radius: 50%; box-shadow: 0 0 0 2px #1C2026; }
+.ut.ut-ok .ut-ok, .ut.ut-no .ut-no { display: block; }
 .lens { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: #3A3F47; transition: background-color .25s; }
 .lens svg { width: 24px; height: 24px; }
 .lens.g { background: var(--sig-g); }

@@ -95,6 +95,7 @@
         <div class="mv">
           <div class="lens {{ sig.L.c }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-6.5a4.5 4.5 0 0 0-4.5-4.5H6"/><path d="M10 5 6 9l4 4"/></svg></div>
           <div class="mv-n {{ sig.L.d }}">{{ sig.L.n }}</div>
+          <span class="ut ut-{{ sig.L.ut }}" aria-hidden="true"><img class="ut-i ut-ok" src="v2/ic/uturn-ok.svg" alt=""><img class="ut-i ut-no" src="v2/ic/uturn-no.svg" alt=""></span>
         </div>
         <div class="mv">
           <div class="lens {{ sig.S.c }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5"/><path d="M7 10l5-5 5 5"/></svg></div>
@@ -228,7 +229,7 @@
 
   <sc-if value="{{ showSplash }}" hint-placeholder-val="{{ true }}">
     <div class="spm">
-      <img class="spm-map" src="img/map-plain.png" alt="">
+      <img class="spm-map" src="img/map-start.png" alt="">
       <svg class="spm-route" viewBox="0 0 390 844" aria-hidden="true"><polygon points="180,844 198,844 190.8,22 189.2,22" fill="#2563EB"/></svg>
       <div class="spm-tf"></div><div class="spm-bf"></div>
       <div class="sbar" aria-hidden="true">
@@ -376,6 +377,8 @@ class Component extends DCLogic {
     // left-turn red, from the signal's phase order (SPaT time-to-change is always under 2:30):
     // lagging left = rest of the through green + yellow 4 s + all-red 2 s + the cross street's phase (s)
     this.CROSS = { '800 S': 48, '500 S': 52, '400 S': 50, '200 S': 44, '100 S': 46 };
+    // U-turns on northbound State St (Utah: allowed unless signed): No U-turn at the big crossings
+    this.UTURN = { '800 S': true, '700 S': true, '600 S': true, '500 S': false, '400 S': false, '300 S': true, '200 S': false, '100 S': true, 'S Temple': false };
     this.THRU_G = 25; // through green after a red (s), before the lagging left
     this.SPAT_MAX = 149; // 2:29
     this.spoken = {};
@@ -561,7 +564,10 @@ class Component extends DCLogic {
     const crossing = S.s > nx.s - 104; // past the stop line, inside the intersection
     const atLine = !crossing && nx.s - 108 - S.s < 15; // waiting at the stop line
     const dstr = crossing ? [D ? 'Turning' : 'Crossing', ''] : atLine ? ['At light', ''] : this.dist(nx.s - 90 - S.s - 18).split(' ');
-    return { name: this.LONGNAME || 'State St & ' + nx.n, n: nx.n, dstr, sig: this.sigFor(nx.n) };
+    // U-turn from the left lane at this intersection (signed "No U-turn" where it isn't allowed)
+    const sig = this.sigFor(nx.n), u = this.UTURN[nx.n];
+    sig.L = { ...sig.L, ut: u == null ? '' : u ? 'ok' : 'no' };
+    return { name: this.LONGNAME || 'State St & ' + nx.n, n: nx.n, dstr, sig };
   }
   // Full screen: an alert takes the screen once it is close (or at once if sudden) and keeps it for its whole area,
   // approach, inside and ended, showing what is happening there. When the area is left, a short "clear" screen,
@@ -1124,7 +1130,7 @@ class Component extends DCLogic {
     // next intersection + its per-movement signals
     const nv = this.nextView(), dstr = nv.dstr, sig = nv.sig, nx = { n: nv.n };
     const word = { g: 'green', y: 'yellow', r: 'red', fy: 'flashing yellow' };
-    const sigLabel = `Left ${word[sig.L.c]}, straight ${word[sig.S.c]}, right ${word[sig.R.c]}`;
+    const sigLabel = `Left ${word[sig.L.c]}${sig.L.ut === 'ok' ? ' (U-turn allowed)' : sig.L.ut === 'no' ? ' (no U-turn)' : ''}, straight ${word[sig.S.c]}, right ${word[sig.R.c]}`;
     const p = this.prioState();
     const prio = p ? {
       show: true, req: p.st === 'req', ok: p.st === 'ok', no: p.st === 'no', cls: p.st,
