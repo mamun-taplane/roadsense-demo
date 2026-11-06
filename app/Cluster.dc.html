@@ -850,6 +850,7 @@ class Component extends DCLogic {
     this.alive = true;
     if (this.viewMount) this.viewMount();
     if (this.still) return;
+    if (this.props && this.props.app) window.__rsApp = this; // the demo page's phone controls (web/index.html) drive this instance
     this.last = performance.now();
     const loop = (ts) => {
       if (!this.alive) return;
