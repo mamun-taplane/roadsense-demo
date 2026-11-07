@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <title>Road Sense — cluster</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=dba9151-1793975525">
-<link rel="stylesheet" href="dash.css?v=dba9151-1793975525">
-<link rel="stylesheet" href="cluster.css?v=dba9151-1793975525">
+<link rel="stylesheet" href="rs2.css?v=c0b3676-1794061098">
+<link rel="stylesheet" href="dash.css?v=c0b3676-1794061098">
+<link rel="stylesheet" href="cluster.css?v=c0b3676-1794061098">
 </head>
 <body>
 <x-dc>
@@ -15,7 +15,7 @@
 <style>body{margin:0}</style>
 </helmet>
 <div class="dash cl {{ rootCls }} {{ walkCls }}">
-<div class="ph d-ph cl-ph {{ phoneCls }} {{ devCls }}" style="{{ phStyle }}">
+<div class="ph d-ph cl-ph {{ phoneCls }} {{ devCls }} {{ themeCls }}" style="{{ phStyle }}">
 
   <div class="d-sbar {{ sbarCls }}" aria-hidden="true">
     <span>9:41</span>
@@ -138,9 +138,11 @@
       <div class="cl-fs-dl">{{ fs.dl }}</div>
       <div class="cl-fs-also {{ also.cls }}" role="status">
         <div class="cl-fs-also-ic"><span class="icset ic-{{ also.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""><svg class="i i-turn-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-6.5a4.5 4.5 0 0 0-4.5-4.5H6"/><path d="M10 5 6 9l4 4"/></svg><svg class="i i-turn-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20v-6.5A4.5 4.5 0 0 1 12.5 9H18"/><path d="M14 5l4 4-4 4"/></svg><svg class="i i-go-s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5"/><path d="M7 10l5-5 5 5"/></svg></span></div>
-        <div class="cl-fs-also-txt"><div class="cl-fs-also-k">Also</div><div class="cl-fs-also-t">{{ also.title }}</div><div class="cl-fs-also-s">{{ also.sub }}</div></div>
+        <div class="cl-fs-also-txt"><div class="cl-fs-also-k">{{ also.kick }}</div><div class="cl-fs-also-t">{{ also.title }}</div><div class="cl-fs-also-s">{{ also.sub }}</div></div>
         <div class="cl-fs-also-d"><div class="cl-fs-also-dv">{{ also.dv }}</div><div class="cl-fs-also-dl">{{ also.dl }}</div></div>
       </div>
+      <!-- three or more at once (phone): every other alert is a row; the list scrolls (DU-2) -->
+      <div class="cl-fs-rows"><sc-for list="{{ alsoRows }}" as="r" hint-placeholder-count="0"><div class="cl-fs-row {{ r.cls }}"><div class="cl-fs-also-ic"><span class="icset ic-{{ r.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""><svg class="i i-turn-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-6.5a4.5 4.5 0 0 0-4.5-4.5H6"/><path d="M10 5 6 9l4 4"/></svg><svg class="i i-turn-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20v-6.5A4.5 4.5 0 0 1 12.5 9H18"/><path d="M14 5l4 4-4 4"/></svg><svg class="i i-go-s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5"/><path d="M7 10l5-5 5 5"/></svg></span></div><div class="cl-fs-also-txt"><div class="cl-fs-also-t">{{ r.title }}</div><div class="cl-fs-also-s">{{ r.sub }}</div></div><div class="cl-fs-also-d"><div class="cl-fs-also-dv">{{ r.dv }}</div><div class="cl-fs-also-dl">{{ r.dl }}</div></div></div></sc-for></div>
       <div class="cl-fs-you">
         <div class="cl-fs-spd {{ spdCls }}"><span>{{ mph }}</span><small>mph</small></div>
         <div class="d-lim cl-fs-lim {{ limCls }}"><div class="d-lim-sign"><span class="d-lim-w">SPEED</span><span class="d-lim-w">LIMIT</span><span class="d-lim-n">{{ limitText }}</span></div></div>
@@ -149,41 +151,103 @@
   </section>
   <div class="d-home" aria-hidden="true"></div>
 
-  <!-- Settings: a sheet over the drive. A full-screen alert still takes over while it is open -->
+  <!-- Settings: a sheet over the drive (a full-screen alert still takes over). A short list; each group opens its own page -->
   <div class="d-set {{ setCls }}">
     <div class="d-set-scrim" onClick="{{ closeSet }}"></div>
     <div class="d-set-sheet" role="dialog" aria-label="Settings">
       <div class="d-set-grab"></div>
-      <div class="d-set-h"><div class="d-set-t">Settings</div><button class="d-set-done" onClick="{{ closeSet }}">Done</button></div>
+      <div class="d-set-h"><sc-if value="{{ setSub }}" hint-placeholder-val="{{ false }}"><button class="d-set-back" onClick="{{ setBack }}" aria-label="Back to Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button></sc-if><div class="d-set-t">{{ setTitle }}</div><button class="d-set-done" onClick="{{ closeSet }}">Done</button></div>
       <div class="d-set-body">
-      <div class="d-set-sec">You are</div>
-      <div class="d-set-grp"><div class="d-set-row d-set-row-col"><div class="d-set-rt"><div class="d-set-l">{{ modeName }}</div><div class="d-set-d">Cyclists and pedestrians share their position with nearby vehicles</div></div>
-        <div class="d-set-seg"><button class="{{ mdDrive }}" onClick="{{ pickDrive }}">Driver</button><button class="{{ mdEv }}" onClick="{{ pickEv }}">Emergency</button><button class="{{ mdBike }}" onClick="{{ pickBike }}">Cyclist</button><button class="{{ mdWalk }}" onClick="{{ pickWalk }}">Pedestrian</button></div>
-      </div></div>
-      <div class="d-set-sec">Alerts</div>
+      <div class="d-set-pg d-set-pg-home" role="region" aria-label="Settings">
       <div class="d-set-grp">
-        <div class="d-set-row"><div class="d-set-rt"><div class="d-set-l">Voice alerts</div><div class="d-set-d">Read every alert out loud</div></div><button class="d-set-tg {{ tVoice }}" onClick="{{ fVoice }}" aria-label="Voice alerts"><i></i></button></div>
-        <div class="d-set-row"><div class="d-set-rt"><div class="d-set-l">Alert chime</div><div class="d-set-d">A short tone before critical alerts</div></div><button class="d-set-tg {{ tChime }}" onClick="{{ fChime }}" aria-label="Alert chime"><i></i></button></div>
-        <sc-if value="{{ notVru }}" hint-placeholder-val="{{ true }}"><div class="d-set-row d-set-row-col"><div class="d-set-rt"><div class="d-set-l">Speed warning</div><div class="d-set-d">Warn me when I am over the limit by</div></div>
-          <div class="d-set-seg"><button class="{{ ov0 }}" onClick="{{ setOv0 }}">Any amount</button><button class="{{ ov3 }}" onClick="{{ setOv3 }}">3 mph</button><button class="{{ ov5 }}" onClick="{{ setOv5 }}">5 mph</button></div>
-        </div></sc-if>
+        <button class="d-set-row d-set-btn" onClick="{{ fVoice }}" role="switch" aria-checked="{{ aVoice }}"><div class="d-set-rt"><div class="d-set-l">Voice alerts</div><div class="d-set-d">Speak alerts out loud</div></div><i class="d-set-tg {{ tVoice }}" aria-hidden="true"><i></i></i></button>
+        <div class="d-set-row d-set-row-col d-set-volrow"><div class="d-set-rt d-set-rt-v"><div class="d-set-l">Volume</div><span class="d-set-volv">{{ volPct }}</span></div><div class="d-set-vol"><button class="d-set-step {{ volDnCls }}" onClick="{{ volDn }}" aria-label="Volume down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 12h12"/></svg></button><div class="d-set-volbar" aria-hidden="true"><i style="{{ volFill }}"></i></div><button class="d-set-step {{ volUpCls }}" onClick="{{ volUp }}" aria-label="Volume up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 12h12M12 6v12"/></svg></button></div></div>
       </div>
-      <sc-if value="{{ notVru }}" hint-placeholder-val="{{ true }}">
-      <div class="d-set-sec">Vehicle</div>
+      <div class="d-set-sec" role="heading" aria-level="2">You are</div>
       <div class="d-set-grp">
-        <div class="d-set-row d-set-row-col"><div class="d-set-rt"><div class="d-set-l">Vehicle height</div><div class="d-set-d">Low-clearance alerts show only if you will not fit</div></div>
-          <div class="d-set-seg"><button class="{{ vh0 }}" onClick="{{ setVh0 }}">9 ft 6 in</button><button class="{{ vh1 }}" onClick="{{ setVh1 }}">11 ft 2 in</button><button class="{{ vh2 }}" onClick="{{ setVh2 }}">14 ft 0 in</button></div>
-        </div>
-        <div class="d-set-row"><div class="d-set-rt"><div class="d-set-l">Signal priority</div><div class="d-set-d">Requested when you approach</div></div><div class="d-set-v">Emergency</div><svg class="d-set-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div class="d-set-row d-set-row-col"><div class="d-set-rt"><div class="d-set-l">{{ modeName }}</div><div class="d-set-d">Cyclists and pedestrians share their position with nearby vehicles</div></div><div class="d-set-seg" role="group" aria-label="You are"><button class="{{ mdDrive }}" onClick="{{ pickDrive }}">Driver</button><button class="{{ mdEv }}" onClick="{{ pickEv }}">Emergency</button><button class="{{ mdBike }}" onClick="{{ pickBike }}">Cyclist</button><button class="{{ mdWalk }}" onClick="{{ pickWalk }}">Pedestrian</button></div></div>
       </div>
-      </sc-if>
-      <div class="d-set-sec">Display</div>
       <div class="d-set-grp">
-        <div class="d-set-row"><div class="d-set-rt"><div class="d-set-l">Background alerts</div><div class="d-set-d">See how alerts arrive while another app is open</div></div><button class="set-go" onClick="{{ goBg }}">Preview</button></div>
-        <div class="d-set-row"><div class="d-set-rt"><div class="d-set-l">Keep screen on</div><div class="d-set-d">While Road Sense is open</div></div><button class="d-set-tg {{ tAwake }}" onClick="{{ fAwake }}" aria-label="Keep screen on"><i></i></button></div>
-        <div class="d-set-row"><div class="d-set-rt"><div class="d-set-l">Text size</div><div class="d-set-d">Alerts and numbers</div></div><div class="d-set-v">Large</div><svg class="d-set-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+        <button class="d-set-row d-set-btn d-set-nav" onClick="{{ goAlerts }}"><div class="d-set-rt"><div class="d-set-l">Alerts</div><div class="d-set-d d-set-sum">{{ sumAlerts }}</div></div><svg class="d-set-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+        <button class="d-set-row d-set-btn d-set-nav" onClick="{{ goVoice }}"><div class="d-set-rt"><div class="d-set-l">Voice and sound</div><div class="d-set-d d-set-sum">{{ sumVoice }}</div></div><svg class="d-set-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+        <button class="d-set-row d-set-btn d-set-nav" onClick="{{ goMap }}"><div class="d-set-rt"><div class="d-set-l">Map and display</div><div class="d-set-d d-set-sum">{{ sumMap }}</div></div><svg class="d-set-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+        <div class="d-set-row d-set-nav d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">Units and language<span class="d-set-soon">Coming soon</span></div><div class="d-set-d">Miles or kilometres, app language</div></div><svg class="d-set-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+        <sc-if value="{{ notVru }}" hint-placeholder-val="{{ true }}"><button class="d-set-row d-set-btn d-set-nav" onClick="{{ goVehicle }}"><div class="d-set-rt"><div class="d-set-l">Vehicle and data</div><div class="d-set-d d-set-sum">{{ sumVeh }}</div></div><svg class="d-set-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></sc-if>
+        <button class="d-set-row d-set-btn d-set-nav" onClick="{{ goApp }}"><div class="d-set-rt"><div class="d-set-l">App behaviour</div><div class="d-set-d d-set-sum">{{ sumApp }}</div></div><svg class="d-set-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
       </div>
       <div class="d-set-foot">Connected Utah · Powered by Road Sense 1.0</div>
+      </div>
+      <div class="d-set-pg d-set-pg-alerts" role="region" aria-label="Alerts">
+      <div class="d-set-sec" role="heading" aria-level="2">Sounds</div>
+      <div class="d-set-grp">
+        <button class="d-set-row d-set-btn" onClick="{{ fChime }}" role="switch" aria-checked="{{ aChime }}"><div class="d-set-rt"><div class="d-set-l">Alert chime</div><div class="d-set-d">A short tone before critical alerts</div></div><i class="d-set-tg {{ tChime }}" aria-hidden="true"><i></i></i></button>
+        <sc-if value="{{ notVru }}" hint-placeholder-val="{{ true }}"><div class="d-set-row d-set-row-col"><div class="d-set-rt"><div class="d-set-l">Speed warning</div><div class="d-set-d">Warn me when I am over the limit by</div></div><div class="d-set-seg" role="group" aria-label="Speed warning"><button class="{{ ov0 }}" onClick="{{ setOv0 }}">Any amount</button><button class="{{ ov3 }}" onClick="{{ setOv3 }}">3 mph</button><button class="{{ ov5 }}" onClick="{{ setOv5 }}">5 mph</button></div></div></sc-if>
+      </div>
+      <div class="d-set-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span>Coming soon: choose for each alert whether it shows, and whether it is spoken.</span></div>
+      <div class="d-set-sec" role="heading" aria-level="2">Critical</div>
+      <div class="d-set-grp">
+        <div class="d-set-row d-set-row-col d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">Speed limit exceeded</div><div class="d-set-d">When you go over the speed limit</div></div><div class="d-set-seg" role="group" aria-label="Speed limit exceeded"><button class="" disabled>Off</button><button class="" disabled>Show</button><button class="on" disabled>Show + voice</button></div></div>
+        <div class="d-set-row d-set-row-col d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">Pedestrian in crosswalk</div><div class="d-set-d">When someone is in the crosswalk ahead</div></div><div class="d-set-seg" role="group" aria-label="Pedestrian in crosswalk"><button class="" disabled>Off</button><button class="" disabled>Show</button><button class="on" disabled>Show + voice</button></div></div>
+        <div class="d-set-row d-set-row-col d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">Red light runner</div><div class="d-set-d">When another vehicle may run the red light</div></div><div class="d-set-seg" role="group" aria-label="Red light runner"><button class="" disabled>Off</button><button class="on" disabled>Show</button><button class="" disabled>Show + voice</button></div></div>
+        <div class="d-set-row d-set-row-col d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">Stopped vehicle</div><div class="d-set-d">When a vehicle ahead has stopped</div></div><div class="d-set-seg" role="group" aria-label="Stopped vehicle"><button class="" disabled>Off</button><button class="" disabled>Show</button><button class="on" disabled>Show + voice</button></div></div>
+        <div class="d-set-row d-set-row-col d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">Emergency vehicle ahead</div><div class="d-set-d">When an emergency vehicle is ahead</div></div><div class="d-set-seg" role="group" aria-label="Emergency vehicle ahead"><button class="" disabled>Off</button><button class="" disabled>Show</button><button class="on" disabled>Show + voice</button></div></div>
+      </div>
+      <div class="d-set-sec" role="heading" aria-level="2">Warning</div>
+      <div class="d-set-grp">
+        <div class="d-set-row d-set-row-col d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">School zone ahead</div><div class="d-set-d">When you enter a school zone</div></div><div class="d-set-seg" role="group" aria-label="School zone ahead"><button class="" disabled>Off</button><button class="" disabled>Show</button><button class="on" disabled>Show + voice</button></div></div>
+        <div class="d-set-row d-set-row-col d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">Work zone ahead</div><div class="d-set-d">When you enter a work zone</div></div><div class="d-set-seg" role="group" aria-label="Work zone ahead"><button class="" disabled>Off</button><button class="on" disabled>Show</button><button class="" disabled>Show + voice</button></div></div>
+      </div>
+      <div class="d-set-sec" role="heading" aria-level="2">Info</div>
+      <div class="d-set-grp">
+        <div class="d-set-row d-set-row-col d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">Signal turning red soon</div><div class="d-set-d">When the light ahead is about to turn red</div></div><div class="d-set-seg" role="group" aria-label="Signal turning red soon"><button class="" disabled>Off</button><button class="" disabled>Show</button><button class="on" disabled>Show + voice</button></div></div>
+        <div class="d-set-row d-set-row-col d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">Low bridge ahead</div><div class="d-set-d">When a low bridge is ahead</div></div><div class="d-set-seg" role="group" aria-label="Low bridge ahead"><button class="" disabled>Off</button><button class="" disabled>Show</button><button class="on" disabled>Show + voice</button></div></div>
+      </div>
+      </div>
+      <div class="d-set-pg d-set-pg-voice" role="region" aria-label="Voice and sound">
+      <div class="d-set-grp">
+        <button class="d-set-row d-set-btn" onClick="{{ fVoice }}" role="switch" aria-checked="{{ aVoice }}"><div class="d-set-rt"><div class="d-set-l">Voice alerts</div><div class="d-set-d">Speak alerts out loud</div></div><i class="d-set-tg {{ tVoice }}" aria-hidden="true"><i></i></i></button>
+        <div class="d-set-row d-set-row-col d-set-volrow"><div class="d-set-rt d-set-rt-v"><div class="d-set-l">Volume</div><span class="d-set-volv">{{ volPct }}</span></div><div class="d-set-vol"><button class="d-set-step {{ volDnCls }}" onClick="{{ volDn }}" aria-label="Volume down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 12h12"/></svg></button><div class="d-set-volbar" aria-hidden="true"><i style="{{ volFill }}"></i></div><button class="d-set-step {{ volUpCls }}" onClick="{{ volUp }}" aria-label="Volume up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 12h12M12 6v12"/></svg></button></div></div>
+        <button class="d-set-row d-set-btn" onClick="{{ playSample }}"><div class="d-set-rt"><div class="d-set-l">Play a sample</div><div class="d-set-d">Hear how alerts sound</div></div><span class="d-set-v d-set-link">Play</span></button>
+      </div>
+      <div class="d-set-sec" role="heading" aria-level="2">Voice</div>
+      <div class="d-set-grp">
+        <div class="d-set-row d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">Voice<span class="d-set-soon">Coming soon</span></div><div class="d-set-d">The voice that reads alerts</div></div><span class="d-set-v">American English</span></div>
+        <div class="d-set-row d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">Voice language<span class="d-set-soon">Coming soon</span></div><div class="d-set-d">Language of spoken alerts</div></div><span class="d-set-v">English (US)</span></div>
+      </div>
+      </div>
+      <div class="d-set-pg d-set-pg-map" role="region" aria-label="Map and display">
+      <div class="d-set-sec" role="heading" aria-level="2">Look</div>
+      <div class="d-set-grp">
+        <div class="d-set-row d-set-row-col"><div class="d-set-rt"><div class="d-set-l">Theme</div><div class="d-set-d">System follows your phone</div></div><div class="d-set-seg" role="group" aria-label="Theme"><button class="{{ thS }}" onClick="{{ pickThS }}">System</button><button class="{{ thL }}" onClick="{{ pickThL }}">Light</button><button class="{{ thD }}" onClick="{{ pickThD }}">Dark</button></div></div>
+        <div class="d-set-row d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">Text size<span class="d-set-soon">Coming soon</span></div><div class="d-set-d">Follows your phone&#39;s font size</div></div></div>
+      </div>
+      </div>
+      <div class="d-set-pg d-set-pg-units" role="region" aria-label="Units and language">
+      <div class="d-set-grp">
+        <div class="d-set-row d-set-row-col d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">Units<span class="d-set-soon">Coming soon</span></div><div class="d-set-d">Distances and speeds</div></div><div class="d-set-seg" role="group" aria-label="Units"><button class="on" disabled>Miles</button><button class="" disabled>Kilometres</button></div></div>
+        <div class="d-set-row d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">App language<span class="d-set-soon">Coming soon</span></div><div class="d-set-d">Language of the app</div></div><span class="d-set-v">English (US)</span></div>
+      </div>
+      </div>
+      <div class="d-set-pg d-set-pg-vehicle" role="region" aria-label="Vehicle and data">
+      <div class="d-set-sec" role="heading" aria-level="2">Vehicle</div>
+      <div class="d-set-grp">
+        <div class="d-set-row d-set-row-col"><div class="d-set-rt"><div class="d-set-l">Vehicle height</div><div class="d-set-d">Low-clearance alerts show only if you will not fit</div></div><div class="d-set-seg" role="group" aria-label="Vehicle height"><button class="{{ vh0 }}" onClick="{{ setVh0 }}">9 ft 6 in</button><button class="{{ vh1 }}" onClick="{{ setVh1 }}">11 ft 2 in</button><button class="{{ vh2 }}" onClick="{{ setVh2 }}">14 ft 0 in</button></div></div>
+        <div class="d-set-row d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">Signal priority<span class="d-set-soon">Coming soon</span></div><div class="d-set-d">Requested when you approach</div></div><span class="d-set-v">Emergency</span></div>
+      </div>
+      <div class="d-set-sec" role="heading" aria-level="2">Vehicle data</div>
+      <div class="d-set-grp">
+        <div class="d-set-row d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">Nearby vehicle sensor<span class="d-set-soon">Coming soon</span></div><div class="d-set-d">A radar of the vehicles around you</div></div><i class="d-set-tg" aria-hidden="true"><i></i></i></div>
+        <div class="d-set-row d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">Basic Safety Messages<span class="d-set-soon">Coming soon</span></div><div class="d-set-d">Use the safety messages nearby vehicles send</div></div><i class="d-set-tg" aria-hidden="true"><i></i></i></div>
+      </div>
+      </div>
+      <div class="d-set-pg d-set-pg-app" role="region" aria-label="App behaviour">
+      <div class="d-set-grp">
+        <button class="d-set-row d-set-btn" onClick="{{ fAwake }}" role="switch" aria-checked="{{ aAwake }}"><div class="d-set-rt"><div class="d-set-l">Keep screen on</div><div class="d-set-d">While Road Sense is open</div></div><i class="d-set-tg {{ tAwake }}" aria-hidden="true"><i></i></i></button>
+        <button class="d-set-row d-set-btn" onClick="{{ goBg }}"><div class="d-set-rt"><div class="d-set-l">Background alerts</div><div class="d-set-d">See how alerts arrive while another app is open</div></div><span class="d-set-v d-set-link">Preview</span></button>
+        <div class="d-set-row d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">Auto start<span class="d-set-soon">Coming soon</span></div><div class="d-set-d">Open the app when the car starts moving</div></div><i class="d-set-tg" aria-hidden="true"><i></i></i></div>
+        <div class="d-set-row d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">Run in the background<span class="d-set-soon">Coming soon</span></div><div class="d-set-d">Keep alerts coming when the app is closed</div></div><i class="d-set-tg on" aria-hidden="true"><i></i></i></div>
+      </div>
+      </div>
       </div>
     </div>
   </div>
@@ -415,9 +479,13 @@ class Component extends DCLogic {
     this.spoken = {};
     this.lastSay = '';
     this.still = (props && props.still) || '';
-    this.state = { screen: this.still && !/^splash\b/.test(this.still) ? 'drive' : 'splash', playing: false, rate: 1, voice: true, tick: 0, done: false, set: false, sChime: true, sAwake: true, sOver: 0, zoom: 2, sVeh: 1, view: '3d', mode: 'drive' };
+    this.state = { screen: this.still && !/^splash\b/.test(this.still) ? 'drive' : 'splash', playing: false, rate: 1, voice: true, tick: 0, done: false, set: false, sChime: true, sAwake: true, sOver: 0, zoom: 2, sVeh: 1, view: '3d', mode: 'drive', vol: 0.8, setPg: 'home', theme: 'light' };
     // still boards can open Settings (",set") or pick a zoom step (",z0" … ",z4")
     if (/,set/.test(this.still)) this.state.set = true;
+    // ",setpg-alerts" opens one Settings page; ",dark" shows the dark theme (still boards and renders)
+    { const sp = this.still.match(/,setpg-(\w+)/); if (sp) this.state.setPg = sp[1]; }
+    if (/,dark(,|$)/.test(this.still)) this.state.theme = 'dark';
+    else if (!this.still) { try { const t = localStorage.getItem('rs-theme'); if (t === 'dark' || t === 'system') this.state.theme = t; } catch (e) {} }
     { const md = this.still.match(/,(ev|bike|walk)\b/); if (md) this.state.mode = md[1]; }
     // map view: 2.5D (tilted, default) or flat 2D (",2d" on a still board; the playable app remembers the viewer's pick)
     if (/,2d/.test(this.still)) this.state.view = '2d';
@@ -886,7 +954,7 @@ class Component extends DCLogic {
     this.lastSay = line;
     if (!this.state.voice || !this.isLive()) return;
     try {
-      const u = new SpeechSynthesisUtterance(line); u.rate = 1.05;
+      const u = new SpeechSynthesisUtterance(line); u.rate = 1.05; u.volume = this.state.vol == null ? 0.8 : this.state.vol;
       if (urgent) window.speechSynthesis.cancel();
       window.speechSynthesis.speak(u);
     } catch (e) {}
@@ -950,21 +1018,54 @@ class Component extends DCLogic {
   restart() { try { window.speechSynthesis.cancel(); } catch (e) {} this.reset(0); this.lastSay = ''; this.setState({ screen: 'splash', playing: false, done: false }); };
   toggleVoice() { const v = !this.state.voice; if (!v) { try { window.speechSynthesis.cancel(); } catch (e) {} } this.setState({ voice: v }); };
   openSet() { this.setState({ set: true }); }
-  closeSet() { this.setState({ set: false }); }
+  closeSet() { this.setState({ set: false, setPg: 'home' }); }
   zoomIn() { this.setState({ zoom: Math.min(this.ZOOMS.length - 1, this.state.zoom + 1) }); }
   zoomOut() { this.setState({ zoom: Math.max(0, this.state.zoom - 1) }); }
-  // values for the Settings sheet (hidden while a full-screen alert is up)
+  // Settings (DU-5, same structure as the Flutter app): a short list with the current value on each row, every
+  // group opens its own page (back arrow + Done). Controls with nothing behind them in the demo are greyed.
+  get SET_PAGES() { return { home: 'Settings', alerts: 'Alerts', voice: 'Voice and sound', map: 'Map and display', units: 'Units and language', vehicle: 'Vehicle and data', app: 'App behaviour' }; }
+  themeDark() {
+    const t = (this.state && this.state.theme) || 'light';
+    if (t === 'system') { try { return window.matchMedia('(prefers-color-scheme: dark)').matches; } catch (e) { return false; } }
+    return t === 'dark';
+  }
+  setTheme(t) { try { if (!this.still) localStorage.setItem('rs-theme', t); } catch (e) {} this.setState({ theme: t }); if (this.mapTheme) setTimeout(() => this.mapTheme(), 0); }
+  setVol(v) {
+    const vol = Math.round(Math.max(0, Math.min(1, v)) * 10) / 10;
+    this.setState({ vol });
+    // a short sample at the new volume (only when voice alerts are on)
+    if (!this.state.voice || this.still) return;
+    try { window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance('School zone ahead.'); u.rate = 1.05; u.volume = vol; window.speechSynthesis.speak(u); } catch (e) {}
+  }
   setVals(fsOn) {
-    const st = this.state, on = (v) => (v ? 'on' : '');
+    const st = this.state, on = (v) => (v ? 'on' : ''), yes = (v) => (v ? 'true' : 'false');
     const flip = (k) => () => this.setState({ [k]: !this.state[k] });
+    const pg = this.SET_PAGES[st.setPg] ? st.setPg : 'home';
+    const go = (k) => () => this.setState({ setPg: k });
+    const vol = st.vol == null ? 0.8 : st.vol, th = st.theme || 'light';
+    const thName = { light: 'Light', dark: 'Dark', system: 'System' }[th];
     return {
-      setCls: st.set && !fsOn ? 'on' : '', openSet: this.openSet, closeSet: this.closeSet,
+      setCls: `${st.set && !fsOn ? 'on' : ''} pg-${pg}`, openSet: this.openSet, closeSet: this.closeSet,
+      setTitle: this.SET_PAGES[pg], setSub: pg !== 'home', setBack: go('home'),
+      goAlerts: go('alerts'), goVoice: go('voice'), goMap: go('map'), goUnits: go('units'), goVehicle: go('vehicle'), goApp: go('app'),
       tVoice: on(st.voice), tChime: on(st.sChime), tAwake: on(st.sAwake),
+      aVoice: yes(st.voice), aChime: yes(st.sChime), aAwake: yes(st.sAwake),
       fVoice: this.toggleVoice, fChime: flip('sChime'), fAwake: flip('sAwake'),
       ov0: on(st.sOver === 0), ov3: on(st.sOver === 3), ov5: on(st.sOver === 5),
       setOv0: () => this.setState({ sOver: 0 }), setOv3: () => this.setState({ sOver: 3 }), setOv5: () => this.setState({ sOver: 5 }),
       vh0: on(st.sVeh === 0), vh1: on(st.sVeh === 1), vh2: on(st.sVeh === 2),
       setVh0: () => this.setState({ sVeh: 0 }), setVh1: () => this.setState({ sVeh: 1 }), setVh2: () => this.setState({ sVeh: 2 }),
+      volPct: Math.round(vol * 100) + '%', volFill: { width: Math.round(vol * 100) + '%' },
+      volDn: () => this.setVol(vol - 0.1), volUp: () => this.setVol(vol + 0.1), volDnCls: vol <= 0 ? 'dis' : '', volUpCls: vol >= 1 ? 'dis' : '',
+      playSample: () => this.setVol(vol),
+      thL: on(th === 'light'), thD: on(th === 'dark'), thS: on(th === 'system'),
+      pickThL: () => this.setTheme('light'), pickThD: () => this.setTheme('dark'), pickThS: () => this.setTheme('system'),
+      themeCls: this.themeDark() ? 'th-dark' : '',
+      sumAlerts: `${st.sChime ? 'Chime on' : 'Chime off'} · ${st.sOver === 0 ? 'warn over the limit' : 'warn at ' + st.sOver + ' mph over'}`,
+      sumVoice: st.voice ? `On · ${Math.round(vol * 100)}%` : 'Off',
+      sumMap: thName + (this.MS_NAME ? ' · ' + this.MS_NAME() : ''),
+      sumVeh: this.VEH && this.VEH[st.sVeh == null ? 1 : st.sVeh] ? this.VEH[st.sVeh == null ? 1 : st.sVeh].l : '',
+      sumApp: st.sAwake ? 'Screen stays on' : 'Screen can sleep',
     };
   }
   tooTall() { if (!this.on('bridge')) return false; const v = this.state && this.state.sVeh != null ? this.state.sVeh : 1; return this.VEH[v].h > this.CLEAR; }
@@ -1219,8 +1320,13 @@ class Component extends DCLogic {
     const a2 = fsA ? this.alsoView(okO || others.find(a => a.key !== 'hold'), mph, limit) : null;
     if (a2) this.alsoCache = a2;
     const al2 = a2 || this.alsoCache || { lv: 'adv', ic: 'info-w', title: '', sub: '', dv: '', dl: '' };
-    const also = { ...al2, cls: `lv-${al2.lv}${a2 ? '' : ' hide'}` };
+    // the second alert reads like the lead: its level word, not "Also" (DU-1)
+    const also = { ...al2, kick: KICK[al2.lv], cls: `lv-${al2.lv}${a2 ? '' : ' hide'}` };
     if (a2 && !okO) fs.cls += ' two'; // tablet landscape: two alerts side by side, one half each
+    // phone, 3+ at once: every other alert as a row under the number (DU-2)
+    const rest = fsA && !okO ? others.filter(a => a.key !== 'hold') : [];
+    const alsoRows = rest.length >= 2 && this.dev().k === 'phone' ? rest.map(a => { const v = this.alsoView(a, mph, limit); return { ...v, cls: 'lv-' + v.lv }; }) : [];
+    if (alsoRows.length) fs.cls += ' many';
     let lead = others[0] || null, slot = null;
     if (det && !(lead && rank[lead.lv] >= 2)) slot = this.routeStage();
     else if (lead) slot = { lv: lead.lv, ic: lead.ic, kick: KICK[lead.lv], title: lead.title, sub: lead.sub, dv: lead.dv, dl: lead.dl };
@@ -1245,7 +1351,7 @@ class Component extends DCLogic {
     const near = !dstr[1] || (dstr[1] === 'ft' && Number(dstr[0]) <= 400);
     const fsOn = drive && !!fsA;
     return {
-      also,
+      also, alsoRows,
       rootCls: full ? 'board' : '', ...this.devVals(),
       phoneCls: (full ? 'ph-frame ' : '') + (fsOn ? 'fs-on' : ''),
       showPanel: full,
