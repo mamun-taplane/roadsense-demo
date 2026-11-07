@@ -677,6 +677,48 @@
 .ph.th-dark .bgv-ban { background: rgba(38, 44, 53, .97); box-shadow: 0 0 0 1px #333B46; }
 .ph.th-dark .bgv-t { color: var(--ink); } .ph.th-dark .bgv-ban.lv-crit .bgv-t { color: var(--crit-t); }
 .ph.th-dark .bgv-sb { color: var(--ink-2); }
+/* Phone full screen, one card per alert (DU-6 / DU-7, same motion as the Flutter app's FullAlert). The JS gives each
+   card its place; CSS moves it there: 750 ms in all, the move starts a beat late (110 ms) and runs ease-in-out.
+   An ended card slides out right (first 75 %) and fades (35-75 %); a row that becomes a big card cross-fades its
+   two looks (500 ms) while the panel content scales with the card. */
+.fcs { display: none; }
+.ph:not(.tab) .fcs { display: block; position: absolute; inset: 0; }
+.ph:not(.tab) .tk > .tk-in, .ph:not(.tab) .tk > .tkr, .ph:not(.tab) .tk::before, .ph:not(.tab) .tk::after { display: none; }
+.ph:not(.tab) .tk:not(.okc) > .tk2 { display: none; }
+.ph:not(.tab) .tk.okc > .tk2 { z-index: 20; }
+.ph:not(.tab) .tk { padding: 0; }
+.fc { position: absolute; overflow: hidden; isolation: isolate; text-align: center;
+  transition: left .64s cubic-bezier(.65, 0, .35, 1) .11s, top .64s cubic-bezier(.65, 0, .35, 1) .11s, width .64s cubic-bezier(.65, 0, .35, 1) .11s,
+    height .64s cubic-bezier(.65, 0, .35, 1) .11s, border-radius .64s cubic-bezier(.65, 0, .35, 1) .11s,
+    transform .5s cubic-bezier(.33, 0, .2, 1), opacity .4s ease-in-out; }
+.fc.hide { display: none; }
+.fc.new { transition: none; opacity: 0; transform: scale(.94); }
+.fc.out { transform: translateX(110%); opacity: 0; pointer-events: none;
+  transition: transform .56s cubic-bezier(.65, 0, .35, 1), opacity .3s ease-in-out .26s; }
+.fc.lv-adv { --lv: var(--adv); --tint: #EAF1FE; } .fc.lv-warn { --lv: var(--warn); --tint: #FEF3DF; }
+.fc.lv-crit { --lv: var(--crit); --tint: #FDEBEC; } .fc.lv-ok { --lv: var(--ok); --tint: #E7F6EC; }
+.fc-p, .fc-r { position: absolute; inset: 0; border-radius: inherit; transition: opacity .5s ease-in-out; }
+.fc-p { background: var(--card); }
+.fc-p::before { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 4px var(--lv); opacity: 0; }
+.tk.on .fc.big .fc-p::before { animation: fs-edge 1.6s ease-in-out infinite; }
+.tk.on .fc.big.lv-crit .fc-p::before { animation-duration: 1s; }
+.fc.lv-ok .fc-p::before { display: none; }
+@media (prefers-reduced-motion: reduce) { .tk.on .fc.big .fc-p::before { animation: none; opacity: 1; } }
+.fc-c { position: absolute; left: 50%; display: flex; flex-direction: column; align-items: center; transform-origin: center;
+  transition: top .64s cubic-bezier(.65, 0, .35, 1) .11s, width .64s cubic-bezier(.65, 0, .35, 1) .11s, transform .64s cubic-bezier(.65, 0, .35, 1) .11s; }
+.fc .tk-t, .fc .tk-d { color: var(--ink); }
+.fc.lv-crit .tk-t, .fc.lv-crit .tk-d { color: var(--crit); }
+.fc.lv-ok .tk-t { color: var(--ok); }
+.tk.on .fc .rp { animation-duration: 4.2s; } .tk.on .fc .rp:nth-child(2) { animation-delay: 1.4s; } .tk.on .fc .rp:nth-child(3) { animation-delay: 2.8s; }
+.tk.on .fc.lv-crit .rp { animation-duration: 3s; } .tk.on .fc.lv-crit .rp:nth-child(2) { animation-delay: 1s; } .tk.on .fc.lv-crit .rp:nth-child(3) { animation-delay: 2s; }
+.fc-r { display: flex; align-items: center; gap: 12px; padding: 0 16px 0 12px; background: var(--tint); box-shadow: inset 0 0 0 2px var(--lv); text-align: left; opacity: 0; }
+.fc.row .fc-r { opacity: 1; } .fc.row .fc-p { opacity: 0; }
+.fc.lv-crit .tkr-t, .fc.lv-crit .tkr-dv { color: var(--crit); }
+.ph.th-dark .fc.lv-adv { --tint: #18223A; } .ph.th-dark .fc.lv-warn { --tint: #2A2416; }
+.ph.th-dark .fc.lv-crit { --tint: #2E1A1D; } .ph.th-dark .fc.lv-ok { --tint: #142A1D; }
+.ph.th-dark .fc.lv-crit .tk-t, .ph.th-dark .fc.lv-crit .tk-d, .ph.th-dark .fc.lv-crit .tkr-t, .ph.th-dark .fc.lv-crit .tkr-dv { color: var(--crit-t); }
+.ph.th-dark .fc.lv-ok .tk-t { color: var(--ok-t); }
+
 /* get started (the shared block below is synced from splash.css; these win by specificity) */
 .ph.th-dark .sp3, .ph.th-dark .spb, .ph.th-dark .spm { background: var(--bg); color: var(--ink); }
 .ph.th-dark .sp3-ring { border-color: #4F8BF0; }

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Road Sense — live drive</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=3a486b5-1794061560">
+<link rel="stylesheet" href="rs2.css?v=55f5d5c-1794076096">
 </head>
 <body>
 <x-dc>
@@ -164,6 +164,8 @@
     </div>
     <!-- three or more at once (phone): the lead stays big on top, every other alert as a row (scrolls) -->
     <div class="tkr"><sc-for list="{{ tkRows }}" as="r" hint-placeholder-count="0"><div class="tkr-row {{ r.cls }}"><div class="tkr-ic"><span class="icset ic-{{ r.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></div><div class="tkr-txt"><div class="tkr-t">{{ r.title }}</div><div class="tkr-s">{{ r.sub }}</div></div><div class="tkr-d"><div class="tkr-dv">{{ r.dv }}</div><div class="tkr-dl">{{ r.dl }}</div></div></div></sc-for></div>
+    <!-- phone (DU-6 / DU-7): one card per alert, keyed; moves / resizes into its place, slides out right when it ends -->
+    <div class="fcs"><sc-for list="{{ fsCards }}" as="c" hint-placeholder-count="0"><div class="fc {{ c.cls }}" style="{{ c.style }}"><div class="fc-p"><div class="fc-c" style="{{ c.cStyle }}"><div class="tk-ic"><i class="rp"></i><i class="rp"></i><i class="rp"></i><div class="tk-disc"><span class="icset ic-{{ c.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></div></div><div class="tk-t">{{ c.title }}</div><div class="tk-s">{{ c.sub }}</div><div class="tk-d">{{ c.dv }}<small>{{ c.du }}</small></div><div class="tk-l">{{ c.dl }}</div></div></div><div class="fc-r"><div class="tkr-ic"><span class="icset ic-{{ c.ric }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></div><div class="tkr-txt"><div class="tkr-t">{{ c.rTitle }}</div><div class="tkr-s">{{ c.rSub }}</div></div><div class="tkr-d"><div class="tkr-dv">{{ c.rdv }}</div><div class="tkr-dl">{{ c.dl }}</div></div></div></div></sc-for></div>
   </div>
 
   <!-- You: connection, voice, speed, limit, heading -->
@@ -1603,6 +1605,46 @@ class Component extends DCLogic {
     if (!this.still) { try { localStorage.setItem('rs-map-view', v); } catch (e) {} }
     this.setState({ view: v });
   }
+  // Phone full screen (DU-6 / DU-7, same as the Flutter app's FullAlert): a fixed pool of card slots, one per
+  // alert, so each alert keeps its element and CSS moves / resizes it. 1 alert = the whole screen; 2 = two inset
+  // cards above the bottom bar; 3+ = the lead card on top and a row for every other one. An alert that ends slides
+  // out to the right where it is; a new one grows in. When the last one goes, the screen fades with the cards as
+  // they were.
+  fcCards(fsA, others) {
+    const N = 6, W = 390, H = 844, now = performance.now();
+    if (this.dev().k !== 'phone') { this.fc = null; return []; }
+    const P = this.fc || (this.fc = { slots: new Array(N).fill(null), on: false });
+    if (fsA) {
+      if (!P.on) { P.slots = new Array(N).fill(null); P.on = true; }
+      const live = [fsA, ...others].slice(0, N);
+      const n = live.length, half = (H - 144) / 2;
+      const rect = (i) => n === 1 ? { x: 0, y: 0, w: W, h: H, r: 44, big: 1, pb: 120 }
+        : n === 2 ? { x: 10, y: 10 + i * (half + 10), w: W - 20, h: half, r: 34, big: 1, pb: 0 }
+        : i === 0 ? { x: 10, y: 10, w: W - 20, h: 412, r: 34, big: 1, pb: 0 }
+        : { x: 12, y: 434 + (i - 1) * 84, w: W - 24, h: 74, r: 22, big: 0, pb: 0 };
+      const keys = new Set(live.map(a => a.key));
+      P.slots.forEach((s, j) => { if (s && !s.out && !keys.has(s.key)) s.out = now; if (s && s.out && now - s.out > 760) P.slots[j] = null; });
+      live.forEach((a, i) => {
+        let s = P.slots.find(q => q && !q.out && q.key === a.key);
+        if (!s) { let j = P.slots.findIndex(q => !q); if (j < 0) j = P.slots.findIndex(q => q && q.out); if (j < 0) return; s = P.slots[j] = { key: a.key, born: now }; }
+        s.a = a; s.rc = rect(i); s.z = n - i;
+      });
+    } else P.on = false;
+    // a new card needs one frame as "new" before it grows in; an ended one is freed after its slide
+    const pend = P.slots.some(s => s && ((now - s.born < 80) || (s.out && now - s.out <= 760)));
+    if (pend && !this.fcTimer) this.fcTimer = setTimeout(() => { this.fcTimer = null; if (this.alive !== false) this.setState({ fcT: performance.now() }); }, 70);
+    return P.slots.map(s => {
+      if (!s) return { cls: 'hide', style: {}, cStyle: {}, ic: 'info-w', ric: 'info-w', title: '', sub: '', dv: '', du: '', dl: '', rTitle: '', rSub: '', rdv: '' };
+      const a = s.a, R = s.rc, sc = Math.max(.2, Math.min(1, (R.h - R.pb - 70) / 360)), dp = String(a.dv || '').split(' ');
+      return {
+        cls: `lv-${a.lv} ${R.big ? 'big' : 'row'}${now - s.born < 50 ? ' new' : ''}${s.out ? ' out' : ''}`,
+        style: { left: R.x + 'px', top: R.y + 'px', width: R.w + 'px', height: R.h + 'px', borderRadius: R.r + 'px', zIndex: s.out ? 1 : 2 + s.z },
+        cStyle: { top: (R.h - R.pb) / 2 + 'px', width: Math.round((R.w - 40) / sc) + 'px', transform: `translate(-50%, -50%) scale(${sc.toFixed(3)})` },
+        ic: this.icOn(a.lv, a.ic), ric: this.icOn(a.lv, a.ic), title: a.fsTitle || a.title, sub: a.fsSub || a.sub, dv: dp[0], du: dp[1] || '', dl: a.dl || '',
+        rTitle: a.title, rSub: a.sub, rdv: a.dv || '',
+      };
+    });
+  }
   tiltNow() {
     const to = this.state.view === '2d' ? 0 : 1, A = this.tiltA;
     if (!A || A.to !== to) return to;
@@ -1755,7 +1797,10 @@ class Component extends DCLogic {
     // the second half looks exactly like the lead (DU-1): its full-screen title, message and distance
     const d2 = String(t2.dv || '').split(' ');
     const tk2 = { cls: `lv-${t2.lv}${second ? '' : ' hide'}`, ic: this.icOn(t2.lv, t2.ic), title: t2.fsTitle || t2.title, sub: t2.fsSub || t2.sub, dv: d2[0], du: d2[1] || '', dl: t2.dl };
-    const tk = { cls: `lv-${tc.lv}${fsA ? ' on' : ''}${split ? ' two' : ''}${many ? ' many' : ''}`, ic: this.icOn(tc.lv, tc.ic), title: tc.fsTitle || tc.title, sub: tc.fsSub || tc.sub, dv: dparts[0], du: dparts[1] || '', dl: tc.dl };
+    // phone (DU-6 / DU-7): every full-screen alert is its own card that moves and resizes into its place
+    const phoneFs = this.dev().k === 'phone';
+    const fsCards = this.fcCards(fsA, okO ? [] : others);
+    const tk = { cls: `lv-${tc.lv}${fsA ? ' on' : ''}${split && !phoneFs ? ' two' : ''}${many && !phoneFs ? ' many' : ''}${okO ? ' okc' : ''}`, ic: this.icOn(tc.lv, tc.ic), title: tc.fsTitle || tc.title, sub: tc.fsSub || tc.sub, dv: dparts[0], du: dparts[1] || '', dl: tc.dl };
 
     // map markers, projected from the road plane to the screen
     // 2D shows the road from straight above, so it zooms out (x0.45) to see about as far ahead as 2.5D
@@ -1829,7 +1874,7 @@ class Component extends DCLogic {
       toggleView: () => this.toggleView(),
       viewBtn: st.view === '2d' ? '2.5D' : '2D', viewLabel: st.view === '2d' ? 'Tilt the map (2.5D view)' : 'Flat map (2D view)',
       puckStyle: { transform: `rotate(${(((S.hdg - (free ? this.map.getBearing() : S.rot)) % 360) + 540) % 360 - 180}deg)` },
-      pins, tk, tk2, sigCls: '',
+      pins, tk, tk2, fsCards, sigCls: '',
       ...this.setVals(!!fsA), ...this.styleVals(),
       // free look: + / − zoom the map itself; following: the app's zoom steps
       // live map: + / − one zoom level, from the whole city to as close as Mapbox goes (free look: the map
