@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <title>Road Sense — cluster</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=7ae32f4-1794158170">
-<link rel="stylesheet" href="dash.css?v=7ae32f4-1794158170">
-<link rel="stylesheet" href="cluster.css?v=7ae32f4-1794158170">
+<link rel="stylesheet" href="rs2.css?v=6ef4a28-1794160541">
+<link rel="stylesheet" href="dash.css?v=6ef4a28-1794160541">
+<link rel="stylesheet" href="cluster.css?v=6ef4a28-1794160541">
 </head>
 <body>
 <x-dc>
@@ -152,7 +152,7 @@
   <div class="d-home" aria-hidden="true"></div>
   <!-- Car screens (Android Auto / CarPlay, v42): a list template, as a non-navigation app may show (no map, no
        custom drawing): header with the voice button, up to four rows (image + two lines of text), updated at most
-       every 10 s unless something changes (CarPlay rule); a close alert as the platform's alert / message screen. -->
+       every 10 s unless something changes (CarPlay rule); a close alert as the platform's alert / message screen (no buttons, as on the phone). -->
   <sc-if value="{{ carOn }}" hint-placeholder-val="{{ false }}">
   <div class="car-ui ct">
     <div class="car-sys" aria-hidden="true">
@@ -184,7 +184,6 @@
           <div class="ct-m-ic"><span class="icset ic-{{ cm.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""><svg class="i i-turn-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-6.5a4.5 4.5 0 0 0-4.5-4.5H6"/><path d="M10 5 6 9l4 4"/></svg><svg class="i i-turn-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20v-6.5A4.5 4.5 0 0 1 12.5 9H18"/><path d="M14 5l4 4-4 4"/></svg><svg class="i i-go-s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5"/><path d="M7 10l5-5 5 5"/></svg></span></div>
           <div class="ct-m-t">{{ cm.title }}</div>
           <div class="ct-m-s">{{ cm.sub }}</div>
-          <sc-if value="{{ cm.canOk }}" hint-placeholder-val="{{ true }}"><button class="ct-m-b" onClick="{{ cm.ok }}">OK</button></sc-if>
         </div>
       </div>
     </sc-if>
@@ -1127,9 +1126,9 @@ class Component extends DCLogic {
   dev() {
     const d = (this.props && this.props.device) || ((this.still || '').match(/,(tl|tp|aa|cp)\b/) || [])[1] || 'phone';
     // car screens (v42, docs/CAR-SCREENS.md): 800×480, the most common CarPlay / Android Auto size. x0 = where the
-    // system rail / dock ends; the car sits in the middle of the map area right of the guidance card (cx), low (cy)
+    // system rail / dock ends; the car sits in the middle of the map area (cx), low (cy)
     return { phone: { k: 'phone', w: 390, h: 844, cx: 195, cy: 560 }, tl: { k: 'tl', w: 1194, h: 834, cx: 597, cy: 520 }, tp: { k: 'tp', w: 641, h: 918, cx: 320, cy: 610 },
-      aa: { k: 'aa', car: true, w: 800, h: 480, x0: 80, cx: 576, cy: 330 }, cp: { k: 'cp', car: true, w: 800, h: 480, x0: 76, cx: 574, cy: 330 } }[d] || { k: 'phone', w: 390, h: 844, cx: 195, cy: 560 };
+      aa: { k: 'aa', car: true, w: 800, h: 480, x0: 80, cx: 440, cy: 330 }, cp: { k: 'cp', car: true, w: 800, h: 480, x0: 76, cx: 438, cy: 330 } }[d] || { k: 'phone', w: 390, h: 844, cx: 195, cy: 560 };
   }
   // ---- car screens (v42): what the templates show. docs/CAR-SCREENS.md has the rules behind each choice ----
   // Guidance card = the next signal, as a navigation app's "next maneuver": distance, the intersection, one image
@@ -1139,22 +1138,20 @@ class Component extends DCLogic {
     const lamp = (k) => { const m = sig[k] || { c: 'g', n: '' }, n = String(m.n == null ? '' : m.n); return { cls: 'cl-' + m.c + (/^[A-Z ]{5,}$/.test(n) ? ' cl-w' : ''), n }; };
     const s = sig.S || { c: 'g', n: '' }, num = /^\d/.test(String(s.n));
     return {
-      dist: nv.dstr[0], unit: nv.dstr[1], name: nv.name,
+      dist: nv.dstr[0], unit: nv.dstr[1], dCls: nv.dstr[1] ? '' : 'word', name: nv.name,
       L: lamp('L'), S: lamp('S'), R: lamp('R'),
       st: word[s.c] + (num ? ' · ' + s.n + (/:/.test(String(s.n)) ? '' : ' s') : ''), stCls: 'cs-' + s.c,
     };
   }
-  // Navigation alert = the single most urgent alert (both platforms show one at a time: title, subtitle, image,
-  // up to two buttons). The rest is spoken. A dismissed alert stays away until it changes (new key / level).
+  // Navigation alert = the single most urgent alert (both platforms show one at a time: title, subtitle, image).
+  // The rest is spoken. No buttons: the phone app has none either (user, v42.1).
   carAlert(order) {
-    this.carGone = this.carGone || {};
-    const a = order.find(x => !this.carGone[x.key + '|' + x.lv]);
-    if (!a) return { show: false, ic: 'info-w', cls: '', title: '', sub: '', canDismiss: false, dismiss: () => {} };
+    const a = order[0];
+    if (!a) return { show: false, ic: 'info-w', cls: '', title: '', sub: '' };
     const dist = [a.dv, a.dl].filter(Boolean).join(' ');
     return {
       show: true, ic: a.ic, cls: 'lv-' + a.lv, title: a.fsTitle || a.title,
-      sub: [a.fsSub || a.sub, dist].filter(Boolean).join(' · '), canDismiss: a.lv !== 'crit',
-      dismiss: () => { this.carGone[a.key + '|' + a.lv] = 1; this.setState({ tick: this.state.tick + 1 }); },
+      sub: [a.fsSub || a.sub, dist].filter(Boolean).join(' · '),
     };
   }
   devVals() {
@@ -1374,13 +1371,11 @@ class Component extends DCLogic {
       this.ctSnap = rows.slice(0, 4); this.ctEvent = event; this.ctT = now;
     }
     // the close / critical alert: CarPlay alert template (text + buttons) · Android Auto message template
-    this.cmGone = this.cmGone || {};
-    const k = fsA ? fsA.key + '|' + fsA.lv : '';
-    const cm = fsA && !this.cmGone[k] ? {
+    // no OK / dismiss: the phone's full screen has none either; it closes when the hazard is passed (user, v42.1)
+    const cm = fsA ? {
       show: true, cls: 'lv-' + fsA.lv, ic: fsA.ic, title: fsA.fsTitle || fsA.title,
-      sub: [fsA.fsSub || fsA.sub, [fsA.dv, fsA.dl].filter(Boolean).join(' ')].filter(Boolean).join(' · '), canOk: fsA.lv !== 'crit',
-      ok: () => { this.cmGone[k] = 1; this.setState({ tick: this.state.tick + 1 }); },
-    } : { show: false, cls: '', ic: 'info-w', title: '', sub: '', canOk: false, ok: () => {} };
+      sub: [fsA.fsSub || fsA.sub, [fsA.dv, fsA.dl].filter(Boolean).join(' ')].filter(Boolean).join(' · '),
+    } : { show: false, cls: '', ic: 'info-w', title: '', sub: '' };
     return { carOn: true, ctRows: this.ctSnap, cm };
   }
   renderVals() {

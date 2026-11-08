@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Road Sense — live drive</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=7ae32f4-1794158170">
+<link rel="stylesheet" href="rs2.css?v=6ef4a28-1794160541">
 </head>
 <body>
 <x-dc>
@@ -88,26 +88,22 @@
       <div class="cs-home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/></svg></div>
     </div>
     <section class="car-guide" aria-label="{{ sigLabel }}">
-      <div class="cg-top"><div class="cg-dist">{{ cg.dist }}<small class="cg-unit">{{ cg.unit }}</small></div><div class="cg-lamps" aria-hidden="true"><div class="cg-l {{ cg.L.cls }}"><i class="cg-lens"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-6.5a4.5 4.5 0 0 0-4.5-4.5H6"/><path d="M10 5 6 9l4 4"/></svg></i><span class="cg-n">{{ cg.L.n }}</span></div><div class="cg-l {{ cg.S.cls }}"><i class="cg-lens"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5"/><path d="M7 10l5-5 5 5"/></svg></i><span class="cg-n">{{ cg.S.n }}</span></div><div class="cg-l {{ cg.R.cls }}"><i class="cg-lens"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20v-6.5A4.5 4.5 0 0 1 12.5 9H18"/><path d="M14 5l4 4-4 4"/></svg></i><span class="cg-n">{{ cg.R.n }}</span></div></div></div>
-      <div class="cg-name">{{ cg.name }}</div>
-      <div class="cg-st {{ cg.stCls }}"><i class="cg-dot"></i>Straight · {{ cg.st }}</div>
+      <div class="cg-dist {{ cg.dCls }}">{{ cg.dist }}<small class="cg-unit">{{ cg.unit }}</small></div>
+      <div class="cg-mid"><div class="cg-name">{{ cg.name }}</div><div class="cg-st {{ cg.stCls }}"><i class="cg-dot"></i>Straight · {{ cg.st }}</div></div>
+      <div class="cg-lamps" aria-hidden="true"><div class="cg-l {{ cg.L.cls }}"><i class="cg-lens"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-6.5a4.5 4.5 0 0 0-4.5-4.5H6"/><path d="M10 5 6 9l4 4"/></svg></i><span class="cg-n">{{ cg.L.n }}</span></div><div class="cg-l {{ cg.S.cls }}"><i class="cg-lens"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5"/><path d="M7 10l5-5 5 5"/></svg></i><span class="cg-n">{{ cg.S.n }}</span></div><div class="cg-l {{ cg.R.cls }}"><i class="cg-lens"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20v-6.5A4.5 4.5 0 0 1 12.5 9H18"/><path d="M14 5l4 4-4 4"/></svg></i><span class="cg-n">{{ cg.R.n }}</span></div></div>
     </section>
     <sc-if value="{{ ca.show }}" hint-placeholder-val="{{ false }}">
       <div class="car-alert {{ ca.cls }}" role="alert">
         <div class="ca-ic"><span class="icset ic-{{ ca.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></div>
         <div class="ca-tx"><div class="ca-t">{{ ca.title }}</div><div class="ca-s">{{ ca.sub }}</div></div>
-        <sc-if value="{{ ca.canDismiss }}" hint-placeholder-val="{{ true }}"><button class="ca-btn" onClick="{{ ca.dismiss }}">Dismiss</button></sc-if>
       </div>
     </sc-if>
-    <div class="car-nav" role="group" aria-label="Map options">
+    <div class="car-ctl" role="group" aria-label="Map options">
       <button class="cn-b" onClick="{{ toggleVoice }}" aria-label="{{ voiceLabel }}"><sc-if value="{{ voiceOn }}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></sc-if><sc-if value="{{ voiceOff }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9l5 6M21 9l-5 6"/></svg></sc-if></button>
       <button class="cn-b cn-t" onClick="{{ toggleView }}" aria-label="{{ viewLabel }}"><span class="cn-tx">{{ viewBtn }}</span></button>
+      <div class="car-zoom"><button class="zb {{ zInCls }}" onClick="{{ zoomIn }}" aria-label="Zoom in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></button><i class="zsep"></i><button class="zb {{ zOutCls }}" onClick="{{ zoomOut }}" aria-label="Zoom out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg></button></div>
     </div>
-    <div class="car-mapb" role="group" aria-label="Map zoom">
-      <button class="cm-b {{ zInCls }}" onClick="{{ zoomIn }}" aria-label="Zoom in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></button>
-      <button class="cm-b {{ zOutCls }}" onClick="{{ zoomOut }}" aria-label="Zoom out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg></button>
-      <sc-if value="{{ freeOn }}" hint-placeholder-val="{{ false }}"><button class="cm-b" onClick="{{ recenter }}" aria-label="Re-center the map on your vehicle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3.5 19.5 20 12 15.8 4.5 20Z"/></svg></button></sc-if>
-    </div>
+    <sc-if value="{{ freeOn }}" hint-placeholder-val="{{ false }}"><button class="car-rec" onClick="{{ recenter }}" aria-label="{{ recAria }}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3.5 19.5 20 12 15.8 4.5 20Z"/></svg><span>{{ recLabel }}</span></button></sc-if>
     <sc-if value="{{ carAA }}" hint-placeholder-val="{{ false }}">
       <div class="car-spd {{ carSpd.cls }}" role="img" aria-label="{{ carSpd.label }}"><div class="csp-n"><b class="csp-v">{{ carSpd.mph }}</b><span class="csp-u">mph</span></div><div class="csp-lim {{ carSpd.limCls }}"><span class="csp-w">SPEED</span><span class="csp-w">LIMIT</span><b class="csp-ln">{{ carSpd.lim }}</b></div></div>
     </sc-if>
@@ -1203,9 +1199,9 @@ class Component extends DCLogic {
   dev() {
     const d = (this.props && this.props.device) || ((this.still || '').match(/,(tl|tp|aa|cp)\b/) || [])[1] || 'phone';
     // car screens (v42, docs/CAR-SCREENS.md): 800×480, the most common CarPlay / Android Auto size. x0 = where the
-    // system rail / dock ends; the car sits in the middle of the map area right of the guidance card (cx), low (cy)
+    // system rail / dock ends; the car sits in the middle of the map area (cx), low (cy)
     return { phone: { k: 'phone', w: 390, h: 844, cx: 195, cy: 560 }, tl: { k: 'tl', w: 1194, h: 834, cx: 597, cy: 520 }, tp: { k: 'tp', w: 641, h: 918, cx: 320, cy: 610 },
-      aa: { k: 'aa', car: true, w: 800, h: 480, x0: 80, cx: 576, cy: 330 }, cp: { k: 'cp', car: true, w: 800, h: 480, x0: 76, cx: 574, cy: 330 } }[d] || { k: 'phone', w: 390, h: 844, cx: 195, cy: 560 };
+      aa: { k: 'aa', car: true, w: 800, h: 480, x0: 80, cx: 440, cy: 330 }, cp: { k: 'cp', car: true, w: 800, h: 480, x0: 76, cx: 438, cy: 330 } }[d] || { k: 'phone', w: 390, h: 844, cx: 195, cy: 560 };
   }
   // ---- car screens (v42): what the templates show. docs/CAR-SCREENS.md has the rules behind each choice ----
   // Guidance card = the next signal, as a navigation app's "next maneuver": distance, the intersection, one image
@@ -1215,22 +1211,20 @@ class Component extends DCLogic {
     const lamp = (k) => { const m = sig[k] || { c: 'g', n: '' }, n = String(m.n == null ? '' : m.n); return { cls: 'cl-' + m.c + (/^[A-Z ]{5,}$/.test(n) ? ' cl-w' : ''), n }; };
     const s = sig.S || { c: 'g', n: '' }, num = /^\d/.test(String(s.n));
     return {
-      dist: nv.dstr[0], unit: nv.dstr[1], name: nv.name,
+      dist: nv.dstr[0], unit: nv.dstr[1], dCls: nv.dstr[1] ? '' : 'word', name: nv.name,
       L: lamp('L'), S: lamp('S'), R: lamp('R'),
       st: word[s.c] + (num ? ' · ' + s.n + (/:/.test(String(s.n)) ? '' : ' s') : ''), stCls: 'cs-' + s.c,
     };
   }
-  // Navigation alert = the single most urgent alert (both platforms show one at a time: title, subtitle, image,
-  // up to two buttons). The rest is spoken. A dismissed alert stays away until it changes (new key / level).
+  // Navigation alert = the single most urgent alert (both platforms show one at a time: title, subtitle, image).
+  // The rest is spoken. No buttons: the phone app has none either (user, v42.1).
   carAlert(order) {
-    this.carGone = this.carGone || {};
-    const a = order.find(x => !this.carGone[x.key + '|' + x.lv]);
-    if (!a) return { show: false, ic: 'info-w', cls: '', title: '', sub: '', canDismiss: false, dismiss: () => {} };
+    const a = order[0];
+    if (!a) return { show: false, ic: 'info-w', cls: '', title: '', sub: '' };
     const dist = [a.dv, a.dl].filter(Boolean).join(' ');
     return {
       show: true, ic: a.ic, cls: 'lv-' + a.lv, title: a.fsTitle || a.title,
-      sub: [a.fsSub || a.sub, dist].filter(Boolean).join(' · '), canDismiss: a.lv !== 'crit',
-      dismiss: () => { this.carGone[a.key + '|' + a.lv] = 1; this.setState({ tick: this.state.tick + 1 }); },
+      sub: [a.fsSub || a.sub, dist].filter(Boolean).join(' · '),
     };
   }
   devVals() {
@@ -1906,7 +1900,7 @@ class Component extends DCLogic {
       // zoomed out to the city (live map below zoom 14.5) the hazards would all sit on the car: hide them
       // above the top card's bottom edge (152 px + the pin's height) a marker is hidden, as the map is (fade)
       // car screens: only inside the map area (right of the system rail), never under the guidance card / alert
-      const carOk = !DV.car || (q.x > DV.x0 + 14 && q.y > 14 && q.y < DV.h - 8 && !(q.x < DV.x0 + 300 && q.y < 330));
+      const carOk = !DV.car || (q.x > DV.x0 + 14 && q.y > 112 && q.y < DV.h - 8 && !(q.x < DV.x0 + 316 && q.y < 340) && q.x < DV.w - 84);
       const vis = on && carOk && near(Y) && q.y > (DV.car ? 0 : DV.k === 'tl' && q.x > 430 ? 30 : 205) && q.y < DV.h + 60 && q.x > -60 && q.x < DV.w + 60 && q.f > 0 && !(live && this.map.getZoom() < 14.5);
       return { cls: vis ? (act ? 'act' : '') : 'off', style: { transform: `translate(${q.x.toFixed(1)}px, ${q.y.toFixed(1)}px) scale(${Math.max(0.6, Math.min(1, q.f * 1.25)).toFixed(3)})` } };
     };
