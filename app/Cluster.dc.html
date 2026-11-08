@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <title>Road Sense — cluster</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=55f5d5c-1794076096">
-<link rel="stylesheet" href="dash.css?v=55f5d5c-1794076096">
-<link rel="stylesheet" href="cluster.css?v=55f5d5c-1794076096">
+<link rel="stylesheet" href="rs2.css?v=7ae32f4-1794158170">
+<link rel="stylesheet" href="dash.css?v=7ae32f4-1794158170">
+<link rel="stylesheet" href="cluster.css?v=7ae32f4-1794158170">
 </head>
 <body>
 <x-dc>
@@ -150,6 +150,46 @@
     </div>
   </section>
   <div class="d-home" aria-hidden="true"></div>
+  <!-- Car screens (Android Auto / CarPlay, v42): a list template, as a non-navigation app may show (no map, no
+       custom drawing): header with the voice button, up to four rows (image + two lines of text), updated at most
+       every 10 s unless something changes (CarPlay rule); a close alert as the platform's alert / message screen. -->
+  <sc-if value="{{ carOn }}" hint-placeholder-val="{{ false }}">
+  <div class="car-ui ct">
+    <div class="car-sys" aria-hidden="true">
+      <div class="cs-time">9:41</div>
+      <div class="cs-apps"><img class="cs-app on" src="img/roadsense-icon.svg" alt=""><i class="cs-app"></i><i class="cs-app"></i></div>
+      <div class="cs-home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/></svg></div>
+    </div>
+    <header class="ct-h">
+      <img class="ct-app" src="img/roadsense-icon.svg" alt="">
+      <div class="ct-title">Road Sense</div>
+      <button class="cn-b ct-hb" onClick="{{ toggleVoice }}" aria-label="{{ voiceLabel }}"><sc-if value="{{ voiceOn }}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></sc-if><sc-if value="{{ voiceOff }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9l5 6M21 9l-5 6"/></svg></sc-if></button>
+    </header>
+    <div class="ct-list" role="list">
+      <sc-for list="{{ ctRows }}" as="r" hint-placeholder-count="3">
+      <div class="ct-row {{ r.cls }}" role="listitem">
+        <div class="ct-img" aria-hidden="true">
+          <div class="ct-head"><i class="ct-lp lp-r"></i><i class="ct-lp lp-y"></i><i class="ct-lp lp-g"></i></div>
+          <div class="ct-ic"><span class="icset ic-{{ r.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""><svg class="i i-turn-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-6.5a4.5 4.5 0 0 0-4.5-4.5H6"/><path d="M10 5 6 9l4 4"/></svg><svg class="i i-turn-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20v-6.5A4.5 4.5 0 0 1 12.5 9H18"/><path d="M14 5l4 4-4 4"/></svg><svg class="i i-go-s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5"/><path d="M7 10l5-5 5 5"/></svg></span></div>
+          <div class="ct-lim"><span class="ct-lim-w">SPEED</span><span class="ct-lim-w">LIMIT</span><span class="ct-lim-n">{{ r.lim }}</span></div>
+        </div>
+        <div class="ct-tx"><div class="ct-t">{{ r.title }}</div><div class="ct-s">{{ r.sub }}</div></div>
+        <div class="ct-d">{{ r.d }}</div>
+      </div>
+      </sc-for>
+    </div>
+    <sc-if value="{{ cm.show }}" hint-placeholder-val="{{ false }}">
+      <div class="ct-modal {{ cm.cls }}" role="alertdialog" aria-label="{{ cm.title }}">
+        <div class="ct-m-card">
+          <div class="ct-m-ic"><span class="icset ic-{{ cm.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""><svg class="i i-turn-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-6.5a4.5 4.5 0 0 0-4.5-4.5H6"/><path d="M10 5 6 9l4 4"/></svg><svg class="i i-turn-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20v-6.5A4.5 4.5 0 0 1 12.5 9H18"/><path d="M14 5l4 4-4 4"/></svg><svg class="i i-go-s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5"/><path d="M7 10l5-5 5 5"/></svg></span></div>
+          <div class="ct-m-t">{{ cm.title }}</div>
+          <div class="ct-m-s">{{ cm.sub }}</div>
+          <sc-if value="{{ cm.canOk }}" hint-placeholder-val="{{ true }}"><button class="ct-m-b" onClick="{{ cm.ok }}">OK</button></sc-if>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+  </sc-if>
 
   <!-- Settings: a sheet over the drive (a full-screen alert still takes over). A short list; each group opens its own page -->
   <div class="d-set {{ setCls }}">
@@ -487,6 +527,13 @@ class Component extends DCLogic {
     if (/,dark(,|$)/.test(this.still)) this.state.theme = 'dark';
     else if (!this.still) { try { const t = localStorage.getItem('rs-theme'); if (t === 'dark' || t === 'system') this.state.theme = t; } catch (e) {} }
     { const md = this.still.match(/,(ev|bike|walk)\b/); if (md) this.state.mode = md[1]; }
+    // car screens open straight on the drive: no get-started page or permission screens in the car (those happen
+    // on the phone, before driving — CarPlay HIG, Android VI-1); driver / emergency vehicle only
+    if (this.dev().car) {
+      if (!this.still) { this.state.screen = 'drive'; this.state.playing = true; }
+      this.permDone = true;
+      if (this.state.mode === 'bike' || this.state.mode === 'walk') this.state.mode = 'drive';
+    }
     // map view: 2.5D (tilted, default) or flat 2D (",2d" on a still board; the playable app remembers the viewer's pick)
     if (/,2d/.test(this.still)) this.state.view = '2d';
     // the playable app starts in 2D (client meeting 2026-11-05: 3D isn't feasible in the SDK yet, 2D zoomed-out
@@ -923,7 +970,9 @@ class Component extends DCLogic {
         while (k > 1e-6) { const h = Math.min(k, 1 / 60); this.step(h); k -= h; }
         this.voiceTick();
         const done = (this.sim.s > this.END - 40 && this.sim.v < 0.5) || !!this.sim.walkDone;
-        this.setState({ tick: this.state.tick + 1, playing: !done, done });
+        // functional update: a pause from outside React (demo pane, Space key) is applied later than this frame's
+        // update was queued; writing playing from the stale this.state undid it ("pause needs several clicks")
+        this.setState(s => (s.playing ? { tick: s.tick + 1, playing: !done, done } : { tick: s.tick + 1 }));
       }
       this.raf = requestAnimationFrame(loop);
     };
@@ -1013,7 +1062,7 @@ class Component extends DCLogic {
     if (this.state.screen !== 'drive') return this.start();
     if (this.state.done) { this.claim(); this.reset(0); return this.setState({ playing: true, done: false }); }
     if (!this.state.playing) this.claim();
-    this.setState({ playing: !this.state.playing });
+    this.setState(s => ({ playing: !s.playing }));
   };
   restart() { try { window.speechSynthesis.cancel(); } catch (e) {} this.reset(0); this.lastSay = ''; this.setState({ screen: 'splash', playing: false, done: false }); };
   toggleVoice() { const v = !this.state.voice; if (!v) { try { window.speechSynthesis.cancel(); } catch (e) {} } this.setState({ voice: v }); };
@@ -1076,12 +1125,41 @@ class Component extends DCLogic {
   // blocks side by side), tablet portrait 'tp' (834×1194 drawn as 641×918 and scaled ×1.3 by the page).
   // From the `device` prop (demo page) or a still flag ",tl" / ",tp". cx / cy = where the car sits.
   dev() {
-    const d = (this.props && this.props.device) || ((this.still || '').match(/,(tl|tp)\b/) || [])[1] || 'phone';
-    return { phone: { k: 'phone', w: 390, h: 844, cx: 195, cy: 560 }, tl: { k: 'tl', w: 1194, h: 834, cx: 597, cy: 520 }, tp: { k: 'tp', w: 641, h: 918, cx: 320, cy: 610 } }[d] || { k: 'phone', w: 390, h: 844, cx: 195, cy: 560 };
+    const d = (this.props && this.props.device) || ((this.still || '').match(/,(tl|tp|aa|cp)\b/) || [])[1] || 'phone';
+    // car screens (v42, docs/CAR-SCREENS.md): 800×480, the most common CarPlay / Android Auto size. x0 = where the
+    // system rail / dock ends; the car sits in the middle of the map area right of the guidance card (cx), low (cy)
+    return { phone: { k: 'phone', w: 390, h: 844, cx: 195, cy: 560 }, tl: { k: 'tl', w: 1194, h: 834, cx: 597, cy: 520 }, tp: { k: 'tp', w: 641, h: 918, cx: 320, cy: 610 },
+      aa: { k: 'aa', car: true, w: 800, h: 480, x0: 80, cx: 576, cy: 330 }, cp: { k: 'cp', car: true, w: 800, h: 480, x0: 76, cx: 574, cy: 330 } }[d] || { k: 'phone', w: 390, h: 844, cx: 195, cy: 560 };
+  }
+  // ---- car screens (v42): what the templates show. docs/CAR-SCREENS.md has the rules behind each choice ----
+  // Guidance card = the next signal, as a navigation app's "next maneuver": distance, the intersection, one image
+  // with the three lamps (and their countdowns), and the straight-ahead state in words for a 1-second glance.
+  carGuide(nv) {
+    const word = { g: 'Green', y: 'Yellow', r: 'Red', fy: 'Flashing yellow' }, sig = nv.sig;
+    const lamp = (k) => { const m = sig[k] || { c: 'g', n: '' }, n = String(m.n == null ? '' : m.n); return { cls: 'cl-' + m.c + (/^[A-Z ]{5,}$/.test(n) ? ' cl-w' : ''), n }; };
+    const s = sig.S || { c: 'g', n: '' }, num = /^\d/.test(String(s.n));
+    return {
+      dist: nv.dstr[0], unit: nv.dstr[1], name: nv.name,
+      L: lamp('L'), S: lamp('S'), R: lamp('R'),
+      st: word[s.c] + (num ? ' · ' + s.n + (/:/.test(String(s.n)) ? '' : ' s') : ''), stCls: 'cs-' + s.c,
+    };
+  }
+  // Navigation alert = the single most urgent alert (both platforms show one at a time: title, subtitle, image,
+  // up to two buttons). The rest is spoken. A dismissed alert stays away until it changes (new key / level).
+  carAlert(order) {
+    this.carGone = this.carGone || {};
+    const a = order.find(x => !this.carGone[x.key + '|' + x.lv]);
+    if (!a) return { show: false, ic: 'info-w', cls: '', title: '', sub: '', canDismiss: false, dismiss: () => {} };
+    const dist = [a.dv, a.dl].filter(Boolean).join(' ');
+    return {
+      show: true, ic: a.ic, cls: 'lv-' + a.lv, title: a.fsTitle || a.title,
+      sub: [a.fsSub || a.sub, dist].filter(Boolean).join(' · '), canDismiss: a.lv !== 'crit',
+      dismiss: () => { this.carGone[a.key + '|' + a.lv] = 1; this.setState({ tick: this.state.tick + 1 }); },
+    };
   }
   devVals() {
     const D = this.dev();
-    return { phStyle: D.k === 'phone' ? {} : { width: D.w + 'px', height: D.h + 'px' }, devCls: D.k === 'phone' ? '' : 'tab tab-' + D.k.slice(1) };
+    return { phStyle: D.k === 'phone' ? {} : { width: D.w + 'px', height: D.h + 'px' }, devCls: D.k === 'phone' ? '' : D.car ? 'car car-' + D.k : 'tab tab-' + D.k.slice(1) };
   }
   // which events each mode has. Driver: today's drive; EV: signal priority at 700 S, 400 S, 200 S (granted)
   // and 100 S (denied), vehicles ahead pulling over (their BSM), a vehicle not yielding at 400 S;
@@ -1101,6 +1179,7 @@ class Component extends DCLogic {
   vru() { return this.mode() === 'bike' || this.mode() === 'walk'; }
   setMode(m) {
     if (m === this.mode()) return;
+    if (this.dev().car && (m === 'bike' || m === 'walk')) return; // car screens: driver and emergency vehicle only
     try { window.speechSynthesis.cancel(); } catch (e) {}
     this.state.mode = m; this.snaps = null; this.lz = null; this.lzT = null;
     this.reset(0); this.lastSay = '';
@@ -1275,6 +1354,35 @@ class Component extends DCLogic {
     }
     return { lv: 'ok', ic: 'go-s', kick: 'Overpass avoided', title: 'Back on State St', sub: 'Carry on north', dv: this.dist(D.L - D.d), dl: 'to go' };
   }
+  // ---- car screens (v42, docs/CAR-SCREENS.md): the list template + the alert / message screen ----
+  // Rows: the next signal, the most urgent alerts, the speed limit, signal priority (EV). CarPlay: "do not refresh
+  // more than once every 10 seconds" — so no countdowns or live speed; a row changes at once only when something
+  // happens (new signal, new color, new alert, new limit), otherwise its distance updates every 10 s.
+  carTpl({ nv, sig, ranked, fsA, limit, p, word }) {
+    const al = ranked.filter(a => a.key !== 'hold').slice(0, p ? 1 : 2);
+    const lit = { g: 'g', y: 'y', fy: 'y', r: 'r', x: 'r' }[sig.S.c] || 'g';
+    const sigSub = ['Straight ' + word[sig.S.c]].concat(sig.L.c === 'x' ? ['no left turn'] : sig.L.c !== sig.S.c ? ['left ' + word[sig.L.c]] : []).join(' · ');
+    const event = [nv.name, sig.S.c, sig.L.c, al.map(a => a.key + a.lv).join(','), limit, p && p.st].join('|');
+    const now = performance.now();
+    if (this.still || !this.ctSnap || event !== this.ctEvent || now - this.ctT >= 10000) {
+      const rows = [{ cls: 'k-sig lp-' + lit, title: nv.name, sub: sigSub, d: nv.dstr.join(' '), ic: 'info-w', lim: '' }];
+      if (!al.length) rows.push({ cls: 'k-al lv-ok', title: 'No alerts ahead', sub: 'Connected to UDOT signals', d: '', ic: 'check-w', lim: '' });
+      for (const a of al) rows.push({ cls: 'k-al lv-' + a.lv, title: a.title, sub: a.sub, d: [a.dv, a.dl].filter(Boolean).join(' '), ic: a.ic, lim: '' });
+      if (p) rows.push({ cls: 'k-al lv-' + (p.st === 'ok' ? 'ok' : p.st === 'no' ? 'crit' : 'adv'), title: p.st === 'req' ? 'Requesting priority' : p.st === 'ok' ? 'Priority granted' : 'Priority denied',
+        sub: p.st === 'req' ? 'Sent automatically' : p.st === 'ok' ? 'Green held for you' : 'Signal stays red', d: '', ic: p.st === 'ok' ? 'check-w' : p.st === 'no' ? 'info-w' : 'siren-w', lim: '' });
+      rows.push({ cls: 'k-lim' + (limit == null ? ' none' : ''), title: limit == null ? 'No speed limit data' : `Speed limit ${limit} mph`, sub: limit == null ? 'Drive to the posted limit' : 'Voice warns when you go over', d: '', ic: 'info-w', lim: limit == null ? '--' : String(limit) });
+      this.ctSnap = rows.slice(0, 4); this.ctEvent = event; this.ctT = now;
+    }
+    // the close / critical alert: CarPlay alert template (text + buttons) · Android Auto message template
+    this.cmGone = this.cmGone || {};
+    const k = fsA ? fsA.key + '|' + fsA.lv : '';
+    const cm = fsA && !this.cmGone[k] ? {
+      show: true, cls: 'lv-' + fsA.lv, ic: fsA.ic, title: fsA.fsTitle || fsA.title,
+      sub: [fsA.fsSub || fsA.sub, [fsA.dv, fsA.dl].filter(Boolean).join(' ')].filter(Boolean).join(' · '), canOk: fsA.lv !== 'crit',
+      ok: () => { this.cmGone[k] = 1; this.setState({ tick: this.state.tick + 1 }); },
+    } : { show: false, cls: '', ic: 'info-w', title: '', sub: '', canOk: false, ok: () => {} };
+    return { carOn: true, ctRows: this.ctSnap, cm };
+  }
   renderVals() {
     const S = this.sim, st = this.state;
     const drive = st.screen === 'drive';
@@ -1350,8 +1458,10 @@ class Component extends DCLogic {
     const full = !this.still && !(this.props && this.props.app); // app: just the phone screen (live page on a phone)
     const near = !dstr[1] || (dstr[1] === 'ft' && Number(dstr[0]) <= 400);
     const fsOn = drive && !!fsA;
+    const car = this.dev().car ? this.carTpl({ nv, sig, ranked, fsA, limit, p, word }) : { carOn: false, ctRows: [], cm: { show: false } };
     return {
       also, alsoRows,
+      ...car,
       rootCls: full ? 'board' : '', ...this.devVals(),
       phoneCls: (full ? 'ph-frame ' : '') + (fsOn ? 'fs-on' : ''),
       showPanel: full,

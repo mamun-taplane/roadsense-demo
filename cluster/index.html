@@ -55,6 +55,8 @@
   body.app:not(.dsh-on) #demo-open { display: flex; }
   body.app.wide.dsh-on #root { right: var(--pane); }
   html.actual, html.actual body { overflow: auto; height: auto; }
+  html.actual { background: #EEF0F3; } /* the page under a short device (car screens) keeps the same grey */
+  body.car-dev #dsh-mode [data-m="bike"], body.car-dev #dsh-mode [data-m="walk"] { display: none; } /* car screens: driver modes only */
   body.app.actual #root { position: relative; top: auto; left: auto; right: auto; margin: var(--barh, var(--bar)) 0 0; overflow: visible; }
   body.app.actual.wide.dsh-on { padding-right: var(--pane); }
   body.app.actual.wide.dsh-on #root { right: auto; }
@@ -79,6 +81,7 @@
   .dsh-btn { width: 44px; height: 44px; border-radius: 22px; border: 1px solid var(--line); background: #fff; display: grid; place-items: center; cursor: pointer; color: var(--ink); flex: none; }
   .dsh-btn.pri { background: var(--ink); color: #fff; border-color: var(--ink); }
   .dsh-btn svg { width: 18px; height: 18px; }
+  #dsh button svg, #dsh button i, #dsh button span, #dsh button b { pointer-events: none; } /* the press always lands on the button */ #dsh button, .demo-bar a, #demo-open { touch-action: manipulation; } /* no double-tap-zoom wait on phones */
   .dsh-rate { display: flex; padding: 3px; border-radius: 12px; background: #EEF0F3; }
   .dsh-rate button { height: 38px; padding: 0 14px; border: 0; border-radius: 9px; background: transparent; font: 600 13px/1 Inter, sans-serif; color: var(--ink2); cursor: pointer; }
   .dsh-rate button.on { background: #fff; color: var(--ink); }
@@ -111,6 +114,8 @@
     <a id="d-phone" title="Phone" aria-label="Phone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg><span class="dv-t">Phone</span></a>
     <a id="d-tl" title="Tablet, landscape" aria-label="Tablet, landscape"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M18.5 11v2"/></svg><span class="dv-t">Tablet landscape</span></a>
     <a id="d-tp" title="Tablet, portrait" aria-label="Tablet, portrait"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M11 18.5h2"/></svg><span class="dv-t">Tablet portrait</span></a>
+    <a id="d-aa" title="Android Auto (car screen)" aria-label="Android Auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4.5 20l7.5-4 7.5 4z"/></svg><span class="dv-t">Android Auto</span></a>
+    <a id="d-cp" title="Apple CarPlay (car screen)" aria-label="Apple CarPlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M8.5 15.5 12 8l3.5 7.5"/></svg><span class="dv-t">CarPlay</span></a>
   </div></div>
   <button id="demo-open" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5z"/></svg>Controls</button>
 </nav>
@@ -131,22 +136,23 @@
   <div class="dsh-sec" style="padding-bottom:0"><div class="dsh-k">Jump to</div></div>
   <div class="dsh-list" id="dsh-list"></div>
 </aside>
-<script src="_dc.js?v=55f5d5c-1794076096"></script>
+<script src="_dc.js?v=7ae32f4-1794158170"></script>
 <script>
 // Which app: /cluster/ (demo) or ?cluster (local) = the no-map cluster; else the map app.
 const q = new URLSearchParams(location.search);
 const local = /\/web\/?$/.test(location.pathname.replace(/cluster\/?$/, ''));
 const cluster = /\/cluster\/?$/.test(location.pathname) || q.has('cluster');
 const root = location.origin + location.pathname.replace(/cluster\/?$/, '');
-// device: phone, tablet landscape (tl, 1194×834) or tablet portrait (tp, drawn 641×918)
-const device = ['tl', 'tp'].includes(q.get('device')) ? q.get('device') : 'phone';
-const SIZE = { phone: [390, 844], tl: [1194, 834], tp: [641, 918] }[device];
+// device: phone, tablet landscape (tl, 1194×834), tablet portrait (tp, drawn 641×918), Android Auto (aa) or CarPlay (cp) car screen (800×480)
+const device = ['tl', 'tp', 'aa', 'cp'].includes(q.get('device')) ? q.get('device') : 'phone';
+const SIZE = { phone: [390, 844], tl: [1194, 834], tp: [641, 918], aa: [800, 480], cp: [800, 480] }[device];
 const keep = ['app', 'board'].filter(k => q.has(k)).concat(device !== 'phone' ? ['device=' + device] : []).join('&');
 const link = (c) => (c ? (local ? root + '?cluster' + (keep ? '&' + keep : '') : root + 'cluster/' + (keep ? '?' + keep : '')) : root + (keep ? '?' + keep : ''));
 const toMap = document.getElementById('to-map'), toCl = document.getElementById('to-cluster');
 toMap.href = link(false); toCl.href = link(true);
+if (device === 'aa' || device === 'cp') document.body.classList.add('car-dev');
 (cluster ? toCl : toMap).className = 'on'; (cluster ? toCl : toMap).setAttribute('aria-current', 'page');
-for (const d of ['phone', 'tl', 'tp']) {
+for (const d of ['phone', 'tl', 'tp', 'aa', 'cp']) {
   const a = document.getElementById('d-' + d), u = new URL(location.href);
   if (d === 'phone') u.searchParams.delete('device'); else u.searchParams.set('device', d);
   a.href = u.toString(); if (d === device) { a.className = 'on'; a.setAttribute('aria-current', 'true'); }
@@ -170,7 +176,7 @@ if (app) {
     const vw = document.documentElement.clientWidth - pane, vh = (window.visualViewport && visualViewport.height) || innerHeight;
     const G = wide ? 28 : 0; // space around the framed device on a computer
     const k = actual ? 1 : Math.min((vw - 2 * G) / SIZE[0], (vh - bar - 2 * G) / SIZE[1]);
-    document.documentElement.style.setProperty('--rad', (device === 'phone' ? 44 : 30) + 'px');
+    document.documentElement.style.setProperty('--rad', (device === 'phone' ? 44 : device === 'aa' || device === 'cp' ? 16 : 30) + 'px');
     const r = document.getElementById('root');
     r.style.transform = `scale(${k})`; // centered by margins: never widens the page
     // 100%: the page scrolls to show the whole device (and centres it when it fits one way)
@@ -182,7 +188,7 @@ if (app) {
 }
 (async () => {
   try {
-    const Root = await DC.load(cluster ? 'Cluster.dc.html?v=55f5d5c-1794076096' : 'LiveDrive.dc.html?v=55f5d5c-1794076096');
+    const Root = await DC.load(cluster ? 'Cluster.dc.html?v=7ae32f4-1794158170' : 'LiveDrive.dc.html?v=7ae32f4-1794158170');
     ReactDOM.createRoot(document.getElementById('root')).render(DC.h(Root, { ...(app ? { app: '1' } : {}), ...(device !== 'phone' ? { device } : {}) }));
   } catch (e) { document.getElementById('root').innerHTML = '<pre style="padding:16px;color:#B91C1C">Could not load the app: ' + e.message + '</pre>'; }
 })();
@@ -209,7 +215,10 @@ if (app) {
     const st = a.state, drive = st.screen === 'drive';
     for (const b of $('dsh-mode').children) b.className = b.dataset.m === a.mode() ? 'on' : '';
     for (const b of document.querySelectorAll('.dsh-rate button')) b.className = +b.dataset.r === st.rate ? 'on' : '';
-    const playing = drive && st.playing; $('dsh-play').innerHTML = playing ? PAUSE : PLAY; $('dsh-play').setAttribute('aria-label', playing ? 'Pause' : 'Play');
+    // Only touch the button when its state really changes: replacing its icon every 300 ms removed the
+    // element under the pointer between press and release, so the click was lost ("pause needs several clicks").
+    const playing = drive && st.playing, pb = $('dsh-play');
+    if (pb.dataset.p !== String(playing)) { pb.dataset.p = String(playing); pb.innerHTML = playing ? PAUSE : PLAY; pb.setAttribute('aria-label', playing ? 'Pause' : 'Play'); }
     const tl = $('dsh-tl'); tl.max = a.END; if (!dragging) tl.value = Math.round(Math.min(a.END, a.sim ? a.sim.s : 0));
     const list = sceneList(a), idx = drive ? a.sceneIdx() : -1;
     $('dsh-now').textContent = !drive ? 'Get started screen' : st.done ? 'Drive complete' : (list.find(o => o.k === idx) || { sc: { name: '' } }).sc.name;

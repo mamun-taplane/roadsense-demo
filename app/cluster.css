@@ -485,3 +485,57 @@
 .cl-ph.th-dark .d-set-soon { color: var(--d-ink2); }
 .cl-ph.th-dark .d-set-volbar { background: #2E3640; }
 .cl-ph.th-dark .d-set-link, .cl-ph.th-dark .d-set-note svg { color: var(--d-adv-tx); }
+
+/* ---------- Car screens: Android Auto + CarPlay, no map (v42, docs/CAR-SCREENS.md) ----------
+   A non-navigation app gets only the system's templates: here a list (header + up to four rows with an image and
+   two lines) and, for a close alert, CarPlay's alert template / Android Auto's message template. The system rail,
+   no-animation rule and the voice button styles come from rs2.css (.car-sys, .cn-b). */
+.cl-ph.car .d-sbar, .cl-ph.car .d-top, .cl-ph.car .cl-sig, .cl-ph.car .cl-spd, .cl-ph.car .cl-al, .cl-ph.car .cl-fs, .cl-ph.car .d-home { display: none !important; }
+.cl-ph.car { background: var(--bg); }
+.ct { background: var(--bg); }
+.ct-h { position: absolute; left: var(--cx0); right: 0; top: 0; height: 76px; display: flex; align-items: center; gap: 12px; padding: 0 12px 0 20px; }
+.ct-app { width: 36px; height: 36px; border-radius: 9px; }
+.ct-title { flex: 1; font-size: 22px; font-weight: 700; color: var(--ink); }
+.car-cp .ct-app { display: none; }
+.car-cp .ct-title { text-align: center; padding-left: 60px; font-size: 19px; }
+.ct-hb { box-shadow: none; background: var(--card); }
+.ct-list { position: absolute; left: calc(var(--cx0) + 12px); right: 12px; top: 76px; bottom: 12px; border-radius: 18px; background: var(--card); overflow: hidden; display: flex; flex-direction: column; }
+.car-cp .ct-list { border-radius: 14px; }
+.ct-row { flex: 0 0 98px; display: flex; align-items: center; gap: 16px; padding: 0 20px 0 16px; box-shadow: inset 0 -1px 0 var(--line); }
+.ct-row:last-child { box-shadow: none; }
+.ct-img { width: 60px; height: 60px; flex: none; display: grid; place-items: center; }
+.ct-img > * { display: none; }
+.k-sig .ct-head, .k-al .ct-ic, .k-lim .ct-lim { display: flex; }
+.ct-head { width: 28px; height: 60px; border-radius: 9px; background: #0C0E11; flex-direction: column; align-items: center; justify-content: space-evenly; }
+.ct-lp { width: 15px; height: 15px; border-radius: 50%; background: #2A2F37; display: block; }
+.lp-r .ct-lp.lp-r { background: var(--sig-r); } .lp-y .ct-lp.lp-y { background: var(--sig-y); } .lp-g .ct-lp.lp-g { background: var(--sig-g); }
+.ct-ic { width: 56px; height: 56px; border-radius: 15px; background: var(--adv); align-items: center; justify-content: center; }
+.ct-ic .icset img, .ct-ic .icset svg { width: 32px; height: 32px; }
+.ct-row.lv-warn .ct-ic { background: var(--warn); } .ct-row.lv-crit .ct-ic { background: var(--crit); } .ct-row.lv-ok .ct-ic { background: var(--ok); }
+.ct-lim { width: 46px; height: 58px; border-radius: 6px; background: #fff; color: #111; box-shadow: inset 0 0 0 2.5px #111; flex-direction: column; align-items: center; justify-content: center; }
+.ct-lim .ct-lim-w { font-size: 7px; font-weight: 800; letter-spacing: .3px; line-height: 8px; }
+.ct-lim .ct-lim-n { font-size: 24px; font-weight: 800; line-height: 1; margin-top: 2px; }
+.ct-tx { flex: 1; min-width: 0; }
+.ct-t { font-size: 22px; font-weight: 700; line-height: 1.2; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ct-s { margin-top: 4px; font-size: 17px; font-weight: 500; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ct-d { flex: none; max-width: 210px; overflow: hidden; text-overflow: ellipsis; font-size: 20px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* close alert: Android Auto message template (icon, title, message, action) · CarPlay alert template (text, button) */
+.ct-modal { position: absolute; left: var(--cx0); right: 0; top: 0; bottom: 0; z-index: 5; display: grid; place-items: center; background: var(--bg); }
+.car-cp .ct-modal { background: rgba(16, 24, 40, .5); }
+.ct-m-card { width: 520px; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 8px 24px; }
+.car-cp .ct-m-card { width: 440px; padding: 26px 24px 18px; border-radius: 22px; background: var(--card); }
+.ct-m-ic { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; background: var(--adv); }
+.ct-m-ic .icset img { width: 46px; height: 46px; }
+.ct-modal.lv-warn .ct-m-ic { background: var(--warn); } .ct-modal.lv-crit .ct-m-ic { background: var(--crit); } .ct-modal.lv-ok .ct-m-ic { background: var(--ok); }
+.ct-m-t { margin-top: 18px; font-size: 34px; font-weight: 800; letter-spacing: -.6px; line-height: 1.15; color: var(--ink); }
+.ct-modal.lv-crit .ct-m-t { color: var(--crit); }
+.ph.th-dark .ct-modal.lv-crit .ct-m-t { color: var(--crit-t); }
+.ct-m-s { margin-top: 10px; font-size: 20px; font-weight: 500; line-height: 1.3; color: var(--ink-2); }
+.ct-m-b { margin-top: 24px; min-width: 200px; height: 60px; padding: 0 28px; border: 0; border-radius: 14px; background: var(--ink); color: var(--card); font: 700 20px/1 Inter, sans-serif; cursor: pointer; }
+.car-cp .ct-m-ic { display: none; }
+.car-cp .ct-m-s { margin-top: 6px; font-size: 18px; } /* the alert template has one text: title + a second line */
+.car-cp .ct-m-t { margin-top: 0; font-size: 26px; }
+.car-cp .ct-m-b { width: 100%; height: 56px; border-radius: 12px; background: var(--bg); color: var(--accent); }
+.ph.th-dark.car-cp .ct-modal { background: rgba(0, 0, 0, .62); }
+.ph.th-dark.car-cp .ct-m-card { background: var(--raise); box-shadow: 0 0 0 1px #343C47; }
+.ph.th-dark.car-cp .ct-m-b { background: #2C333D; color: var(--accent-t); }
