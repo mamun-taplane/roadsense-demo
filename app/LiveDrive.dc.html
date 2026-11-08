@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Road Sense — live drive</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=6ef4a28-1794160541">
+<link rel="stylesheet" href="rs2.css?v=385c105-1794160883">
 </head>
 <body>
 <x-dc>
@@ -1900,7 +1900,7 @@ class Component extends DCLogic {
       // zoomed out to the city (live map below zoom 14.5) the hazards would all sit on the car: hide them
       // above the top card's bottom edge (152 px + the pin's height) a marker is hidden, as the map is (fade)
       // car screens: only inside the map area (right of the system rail), never under the guidance card / alert
-      const carOk = !DV.car || (q.x > DV.x0 + 14 && q.y > 112 && q.y < DV.h - 8 && !(q.x < DV.x0 + 316 && q.y < 340) && q.x < DV.w - 84);
+      const carOk = !DV.car || (q.x > DV.x0 + 14 && q.y > 150 && q.y < DV.h - 8 && !(q.x < DV.x0 + 316 && q.y < 340) && q.x < DV.w - 84);
       const vis = on && carOk && near(Y) && q.y > (DV.car ? 0 : DV.k === 'tl' && q.x > 430 ? 30 : 205) && q.y < DV.h + 60 && q.x > -60 && q.x < DV.w + 60 && q.f > 0 && !(live && this.map.getZoom() < 14.5);
       return { cls: vis ? (act ? 'act' : '') : 'off', style: { transform: `translate(${q.x.toFixed(1)}px, ${q.y.toFixed(1)}px) scale(${Math.max(0.6, Math.min(1, q.f * 1.25)).toFixed(3)})` } };
     };

@@ -55,7 +55,7 @@
   body.app:not(.dsh-on) #demo-open { display: flex; }
   body.app.wide.dsh-on #root { right: var(--pane); }
   html.actual, html.actual body { overflow: auto; height: auto; }
-  html.actual { background: #EEF0F3; } /* the page under a short device (car screens) keeps the same grey */
+  html.actual, html.actual body.app { background: #EEF0F3; min-height: 100vh; } /* the page under a short device (car screens) keeps the same grey */
   body.car-dev #dsh-mode [data-m="bike"], body.car-dev #dsh-mode [data-m="walk"] { display: none; } /* car screens: driver modes only */
   body.app.actual #root { position: relative; top: auto; left: auto; right: auto; margin: var(--barh, var(--bar)) 0 0; overflow: visible; }
   body.app.actual.wide.dsh-on { padding-right: var(--pane); }
@@ -88,6 +88,11 @@
   .dsh-now { margin-left: auto; min-width: 0; font-size: 13px; font-weight: 600; color: var(--ink2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .dsh-tl { width: 100%; margin: 4px 0 0; accent-color: #2563EB; height: 28px; }
   .dsh-list { padding: 0 8px 16px; }
+  .dsh-note { display: none; margin: 0 16px 20px; padding: 14px 14px 12px; border-radius: 12px; background: #F3F4F6; font: 500 12.5px/1.45 Inter, sans-serif; color: #3B424C; }
+  body.car-dev .dsh-note { display: block; }
+  .dsh-note b { display: block; margin-bottom: 6px; font-size: 13px; color: #15181D; }
+  .dsh-note ul { margin: 0; padding-left: 16px; } .dsh-note li { margin-bottom: 6px; }
+  .dsh-note a { color: #2563EB; }
   .dsh-sc { width: 100%; display: flex; align-items: center; gap: 10px; padding: 11px 8px; border: 0; border-radius: 12px; background: transparent; text-align: left; cursor: pointer; font: 500 15px/1.25 Inter, sans-serif; color: var(--ink); }
   .dsh-sc.on { background: #EEF2FF; }
   .dsh-sc i { font-style: normal; font-size: 12px; font-weight: 600; color: #98A0AA; width: 20px; flex: none; }
@@ -135,8 +140,14 @@
   <input class="dsh-tl" id="dsh-tl" type="range" min="0" max="100" step="1" value="0" aria-label="Timeline: drag to move along the drive"></div>
   <div class="dsh-sec" style="padding-bottom:0"><div class="dsh-k">Jump to</div></div>
   <div class="dsh-list" id="dsh-list"></div>
+  <div class="dsh-note" role="note"><b>Why the car screens differ from the phone</b><ul>
+    <li><b style="display:inline">No full-screen alert.</b> On CarPlay the app has no screen of its own: a navigation app only gets the map (the "base view"), which "cannot be used to draw alerts, overlays, or other UI"; everything else is the system's templates. Android Auto: the app "draws only map content" (speed limit and obstructions allowed); alerts use the system's alert.</li>
+    <li><b style="display:inline">No animation.</b> Android Auto SA-1: "must not display animated elements". The same design is used on CarPlay.</li>
+    <li><b style="display:inline">Map needs navigation.</b> Both platforms allow a custom map only for navigation apps with turn-by-turn directions; otherwise only lists and alert screens (CarPlay: refresh at most every 10 s).</li>
+    <li>Sources: <a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf" target="_blank" rel="noopener">Apple CarPlay Developer Guide</a> · <a href="https://developer.apple.com/design/human-interface-guidelines/carplay" target="_blank" rel="noopener">Apple HIG: CarPlay</a> · <a href="https://developer.android.com/docs/quality-guidelines/car-app-quality" target="_blank" rel="noopener">Android for Cars app quality</a> · <a href="https://developer.android.com/training/cars/apps/navigation" target="_blank" rel="noopener">Android Auto navigation apps</a></li>
+  </ul></div>
 </aside>
-<script src="_dc.js?v=6ef4a28-1794160541"></script>
+<script src="_dc.js?v=385c105-1794160883"></script>
 <script>
 // Which app: /cluster/ (demo) or ?cluster (local) = the no-map cluster; else the map app.
 const q = new URLSearchParams(location.search);
@@ -188,7 +199,7 @@ if (app) {
 }
 (async () => {
   try {
-    const Root = await DC.load(cluster ? 'Cluster.dc.html?v=6ef4a28-1794160541' : 'LiveDrive.dc.html?v=6ef4a28-1794160541');
+    const Root = await DC.load(cluster ? 'Cluster.dc.html?v=385c105-1794160883' : 'LiveDrive.dc.html?v=385c105-1794160883');
     ReactDOM.createRoot(document.getElementById('root')).render(DC.h(Root, { ...(app ? { app: '1' } : {}), ...(device !== 'phone' ? { device } : {}) }));
   } catch (e) { document.getElementById('root').innerHTML = '<pre style="padding:16px;color:#B91C1C">Could not load the app: ' + e.message + '</pre>'; }
 })();
