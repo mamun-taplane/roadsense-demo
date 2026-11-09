@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <title>Road Sense — cluster</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=b88e5cd-1794204517">
-<link rel="stylesheet" href="dash.css?v=b88e5cd-1794204517">
-<link rel="stylesheet" href="cluster.css?v=b88e5cd-1794204517">
+<link rel="stylesheet" href="rs2.css?v=08fc905-1794205041">
+<link rel="stylesheet" href="dash.css?v=08fc905-1794205041">
+<link rel="stylesheet" href="cluster.css?v=08fc905-1794205041">
 </head>
 <body>
 <x-dc>
@@ -1158,7 +1158,7 @@ class Component extends DCLogic {
   // Car alert dialog (v43, user): EVERY alert opens a full-screen dialog over our own app on the car screen (never
   // over Apple / Google Maps or any other app: when another app is in front we only notify + speak). One at a time,
   // the most urgent; the next opens when it ends. CarPlay = alert template: one text, "a title and one or more
-  // buttons" (Apple guide p. 16), fixed once shown, so no live distance; OK hides it for that alert, which then
+  // buttons" (Apple guide p. 16), fixed once shown, so no live distance; no icon; OK (in the alert color) hides it for that alert, which then
   // stays as the navigation alert / list row and is still spoken. Android Auto = message template (icon, title,
   // message, no button needed); it stays until the alert ends. docs/CAR-SCREENS.md §5b.
   carDlg(order, cp) {
@@ -1168,8 +1168,12 @@ class Component extends DCLogic {
     if (!a) return { cd: { show: false, cls: '', ic: 'info-w', title: '', sub: '', ok: false }, cdOk: () => {} };
     const dist = [a.dv, a.dl].filter(Boolean).join(' ');
     return {
-      cd: { show: true, cls: 'lv-' + a.lv, ic: a.ic, title: a.fsTitle || a.title, ok: !!cp,
-        sub: cp ? (a.fsSub || a.sub || '') : [a.fsSub || a.sub, dist].filter(Boolean).join(' · ') },
+      // CarPlay: CPAlertTemplate has only title variants + actions (no icon, no second text, text in system
+      // colors); the OK button may take a custom color (CPAlertAction init(title:color:handler:)) = the alert color
+      cd: cp ? { show: true, cls: 'lv-' + a.lv, ic: a.ic, ok: true, sub: '',
+        title: [a.fsTitle || a.title, a.fsSub || a.sub].filter(Boolean).join(' · ') }
+        : { show: true, cls: 'lv-' + a.lv, ic: a.ic, ok: false, title: a.fsTitle || a.title,
+          sub: [a.fsSub || a.sub, dist].filter(Boolean).join(' · ') },
       cdOk: () => { seen[a.key] = true; this.setState({ tick: this.state.tick + 1 }); },
     };
   }
