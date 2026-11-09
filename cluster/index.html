@@ -147,7 +147,7 @@
     <li><b style="display:inline">Another app in front:</b> only a notification + voice (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=29" target="_blank" rel="noopener">p. 28</a>); iOS 26 Live Activities in CarPlay Dashboard (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=12" target="_blank" rel="noopener">p. 11</a>).</li>
   </ul></div>
 </aside>
-<script src="_dc.js?v=08fc905-1794205041"></script>
+<script src="_dc.js?v=c8ffa1a-1794205220"></script>
 <script>
 // Which app: /cluster/ (demo) or ?cluster (local) = the no-map cluster; else the map app.
 const q = new URLSearchParams(location.search);
@@ -199,7 +199,7 @@ if (app) {
 }
 (async () => {
   try {
-    const Root = await DC.load(cluster ? 'Cluster.dc.html?v=08fc905-1794205041' : 'LiveDrive.dc.html?v=08fc905-1794205041');
+    const Root = await DC.load(cluster ? 'Cluster.dc.html?v=c8ffa1a-1794205220' : 'LiveDrive.dc.html?v=c8ffa1a-1794205220');
     ReactDOM.createRoot(document.getElementById('root')).render(DC.h(Root, { ...(app ? { app: '1' } : {}), ...(device !== 'phone' ? { device } : {}) }));
   } catch (e) { document.getElementById('root').innerHTML = '<pre style="padding:16px;color:#B91C1C">Could not load the app: ' + e.message + '</pre>'; }
 })();

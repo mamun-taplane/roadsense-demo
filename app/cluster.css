@@ -534,13 +534,9 @@
 .ct-m-b { margin-top: 24px; min-width: 200px; height: 60px; padding: 0 28px; border: 0; border-radius: 14px; background: var(--ink); color: var(--card); font: 700 20px/1 Inter, sans-serif; cursor: pointer; }
 .car-cp .ct-m-ic { display: none; }
 .car-cp .ct-m-s { display: none; } /* one text only (title variants) */
-.car-cp .ct-modal .ct-m-b { color: #fff; background: var(--adv); } /* the button may take our color (CPAlertAction color) */
-.car-cp .ct-modal.lv-warn .ct-m-b { background: var(--warn); color: #1C2026; }
-.car-cp .ct-modal.lv-crit .ct-m-b { background: var(--crit); }
-.car-cp .ct-modal.lv-ok .ct-m-b { background: var(--ok); }
 .car-cp .ct-m-t { margin-top: 0; font-size: 26px; line-height: 1.2; }
 .ph.car-cp .ct-modal .ct-m-t, .ph.th-dark.car-cp .ct-modal.lv-crit .ct-m-t { color: var(--ink); } /* the system draws the alert template: no alert colors of ours */
 .car-cp .ct-m-b { width: 100%; height: 56px; border-radius: 12px; background: var(--bg); color: var(--accent); }
 .ph.th-dark.car-cp .ct-modal { background: rgba(0, 0, 0, .62); }
 .ph.th-dark.car-cp .ct-m-card { background: var(--raise); box-shadow: 0 0 0 1px #343C47; }
-/* dark: the button keeps the alert color */
+.ph.th-dark.car-cp .ct-m-b { background: #2C333D; color: var(--accent-t); }
