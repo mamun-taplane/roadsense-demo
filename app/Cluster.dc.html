@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <title>Road Sense — cluster</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=6c54add-1794203994">
-<link rel="stylesheet" href="dash.css?v=6c54add-1794203994">
-<link rel="stylesheet" href="cluster.css?v=6c54add-1794203994">
+<link rel="stylesheet" href="rs2.css?v=b88e5cd-1794204517">
+<link rel="stylesheet" href="dash.css?v=b88e5cd-1794204517">
+<link rel="stylesheet" href="cluster.css?v=b88e5cd-1794204517">
 </head>
 <body>
 <x-dc>
@@ -152,7 +152,7 @@
   <div class="d-home" aria-hidden="true"></div>
   <!-- Car screens (Android Auto / CarPlay, v42): a list template, as a non-navigation app may show (no map, no
        custom drawing): header with the voice button, up to four rows (image + two lines of text), updated at most
-       every 10 s unless something changes (CarPlay rule); a close alert as the platform's alert / message screen (no buttons, as on the phone). -->
+       every 10 s unless something changes (CarPlay rule); every alert as the platform's full-screen dialog (CarPlay alert + OK, Android Auto message; v43). -->
   <sc-if value="{{ carOn }}" hint-placeholder-val="{{ false }}">
   <div class="car-ui ct">
     <div class="car-sys" aria-hidden="true">
@@ -184,6 +184,7 @@
           <div class="ct-m-ic"><span class="icset ic-{{ cm.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""><svg class="i i-turn-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-6.5a4.5 4.5 0 0 0-4.5-4.5H6"/><path d="M10 5 6 9l4 4"/></svg><svg class="i i-turn-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20v-6.5A4.5 4.5 0 0 1 12.5 9H18"/><path d="M14 5l4 4-4 4"/></svg><svg class="i i-go-s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5"/><path d="M7 10l5-5 5 5"/></svg></span></div>
           <div class="ct-m-t">{{ cm.title }}</div>
           <div class="ct-m-s">{{ cm.sub }}</div>
+          <sc-if value="{{ cm.ok }}" hint-placeholder-val="{{ false }}"><button class="ct-m-b" onClick="{{ cdOk }}">OK</button></sc-if>
         </div>
       </div>
     </sc-if>
@@ -1154,6 +1155,24 @@ class Component extends DCLogic {
       sub: [a.fsSub || a.sub, dist].filter(Boolean).join(' · '),
     };
   }
+  // Car alert dialog (v43, user): EVERY alert opens a full-screen dialog over our own app on the car screen (never
+  // over Apple / Google Maps or any other app: when another app is in front we only notify + speak). One at a time,
+  // the most urgent; the next opens when it ends. CarPlay = alert template: one text, "a title and one or more
+  // buttons" (Apple guide p. 16), fixed once shown, so no live distance; OK hides it for that alert, which then
+  // stays as the navigation alert / list row and is still spoken. Android Auto = message template (icon, title,
+  // message, no button needed); it stays until the alert ends. docs/CAR-SCREENS.md §5b.
+  carDlg(order, cp) {
+    const seen = this.carSeen || (this.carSeen = {});
+    for (const k in seen) if (!order.some(a => a.key === k)) delete seen[k];
+    const a = order.find(x => x.key !== 'hold' && !(cp && seen[x.key]));
+    if (!a) return { cd: { show: false, cls: '', ic: 'info-w', title: '', sub: '', ok: false }, cdOk: () => {} };
+    const dist = [a.dv, a.dl].filter(Boolean).join(' ');
+    return {
+      cd: { show: true, cls: 'lv-' + a.lv, ic: a.ic, title: a.fsTitle || a.title, ok: !!cp,
+        sub: cp ? (a.fsSub || a.sub || '') : [a.fsSub || a.sub, dist].filter(Boolean).join(' · ') },
+      cdOk: () => { seen[a.key] = true; this.setState({ tick: this.state.tick + 1 }); },
+    };
+  }
   devVals() {
     const D = this.dev();
     return { phStyle: D.k === 'phone' ? {} : { width: D.w + 'px', height: D.h + 'px' }, devCls: D.k === 'phone' ? '' : D.car ? 'car car-' + D.k : 'tab tab-' + D.k.slice(1) };
@@ -1370,13 +1389,11 @@ class Component extends DCLogic {
       rows.push({ cls: 'k-lim' + (limit == null ? ' none' : ''), title: limit == null ? 'No speed limit data' : `Speed limit ${limit} mph`, sub: limit == null ? 'Drive to the posted limit' : 'Voice warns when you go over', d: '', ic: 'info-w', lim: limit == null ? '--' : String(limit) });
       this.ctSnap = rows.slice(0, 4); this.ctEvent = event; this.ctT = now;
     }
-    // the close / critical alert: CarPlay alert template (text + buttons) · Android Auto message template
-    // no OK / dismiss: the phone's full screen has none either; it closes when the hazard is passed (user, v42.1)
-    const cm = fsA ? {
-      show: true, cls: 'lv-' + fsA.lv, ic: fsA.ic, title: fsA.fsTitle || fsA.title,
-      sub: [fsA.fsSub || fsA.sub, [fsA.dv, fsA.dl].filter(Boolean).join(' ')].filter(Boolean).join(' · '),
-    } : { show: false, cls: '', ic: 'info-w', title: '', sub: '' };
-    return { carOn: true, ctRows: this.ctSnap, cm };
+    // every alert: full-screen dialog over our car screen (shared carDlg: CarPlay alert template + OK, Android Auto
+    // message template); the list rows stay underneath and keep updating by the 10 s rule
+    const { cd, cdOk } = this.carDlg(ranked, this.dev().k === 'cp');
+    const cm = cd;
+    return { carOn: true, ctRows: this.ctSnap, cm, cdOk };
   }
   renderVals() {
     const S = this.sim, st = this.state;
@@ -1453,7 +1470,7 @@ class Component extends DCLogic {
     const full = !this.still && !(this.props && this.props.app); // app: just the phone screen (live page on a phone)
     const near = !dstr[1] || (dstr[1] === 'ft' && Number(dstr[0]) <= 400);
     const fsOn = drive && !!fsA;
-    const car = this.dev().car ? this.carTpl({ nv, sig, ranked, fsA, limit, p, word }) : { carOn: false, ctRows: [], cm: { show: false } };
+    const car = this.dev().car ? this.carTpl({ nv, sig, ranked, fsA, limit, p, word }) : { carOn: false, ctRows: [], cm: { show: false }, cdOk: () => {} };
     return {
       also, alsoRows,
       ...car,

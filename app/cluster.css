@@ -535,6 +535,7 @@
 .car-cp .ct-m-ic { display: none; }
 .car-cp .ct-m-s { margin-top: 6px; font-size: 18px; } /* the alert template has one text: title + a second line */
 .car-cp .ct-m-t { margin-top: 0; font-size: 26px; }
+.ph.car-cp .ct-modal .ct-m-t { color: var(--ink); } /* the system draws the alert template: no alert colors of ours */
 .car-cp .ct-m-b { width: 100%; height: 56px; border-radius: 12px; background: var(--bg); color: var(--accent); }
 .ph.th-dark.car-cp .ct-modal { background: rgba(0, 0, 0, .62); }
 .ph.th-dark.car-cp .ct-m-card { background: var(--raise); box-shadow: 0 0 0 1px #343C47; }

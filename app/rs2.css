@@ -830,6 +830,30 @@
 .ph.th-dark .csp-n .csp-v { color: var(--ok-t); }
 .ph.th-dark .car-spd.over .csp-n .csp-v { color: var(--crit-t); }
 
+/* car alert dialog (v43): every alert, full screen over our car screen only. Android Auto = message template
+   (opaque, icon + title + message); CarPlay = alert template (dimmed map, one card, text + OK). Same classes as cluster.css. */
+.ct-modal { position: absolute; left: var(--cx0); right: 0; top: 0; bottom: 0; z-index: 5; display: grid; place-items: center; background: var(--bg); }
+.car-cp .ct-modal { background: rgba(16, 24, 40, .5); }
+.ct-m-card { width: 520px; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 8px 24px; }
+.car-cp .ct-m-card { width: 440px; padding: 26px 24px 18px; border-radius: 22px; background: var(--card); }
+.ct-m-ic { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; background: var(--adv); }
+.ct-m-ic .icset img { width: 46px; height: 46px; }
+.ct-modal.lv-warn .ct-m-ic { background: var(--warn); } .ct-modal.lv-crit .ct-m-ic { background: var(--crit); } .ct-modal.lv-ok .ct-m-ic { background: var(--ok); }
+.ct-m-t { margin-top: 18px; font-size: 34px; font-weight: 800; letter-spacing: -.6px; line-height: 1.15; color: var(--ink); }
+.ct-modal.lv-crit .ct-m-t { color: var(--crit); }
+.ph.th-dark .ct-modal.lv-crit .ct-m-t { color: var(--crit-t); }
+.ct-m-s { margin-top: 10px; font-size: 20px; font-weight: 500; line-height: 1.3; color: var(--ink-2); }
+.ct-m-b { margin-top: 24px; min-width: 200px; height: 60px; padding: 0 28px; border: 0; border-radius: 14px; background: var(--ink); color: var(--card); font: 700 20px/1 Inter, sans-serif; cursor: pointer; }
+.car-cp .ct-m-ic { display: none; }
+.car-cp .ct-m-s { margin-top: 6px; font-size: 18px; } /* the alert template has one text: title + a second line */
+.car-cp .ct-m-t { margin-top: 0; font-size: 26px; }
+.ph.car-cp .ct-modal .ct-m-t { color: var(--ink); } /* the system draws the alert template: no alert colors of ours */
+.car-cp .ct-m-b { width: 100%; height: 56px; border-radius: 12px; background: var(--bg); color: var(--accent); }
+.ph.th-dark.car-cp .ct-modal { background: rgba(0, 0, 0, .62); }
+.ph.th-dark.car-cp .ct-m-card { background: var(--raise); box-shadow: 0 0 0 1px #343C47; }
+.ph.th-dark.car-cp .ct-m-b { background: #2C333D; color: var(--accent-t); }
+.car-ui .ct-modal { pointer-events: auto; }
+
 /* ==== get started (from splash.css) ==== */
 /* Get started: shared by every version. Plain white page, the Road Sense mark in a few faint rings,
    the Connected Utah wordmark, one line, one button. */
