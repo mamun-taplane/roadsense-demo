@@ -141,13 +141,13 @@
   <div class="dsh-sec" style="padding-bottom:0"><div class="dsh-k">Jump to</div></div>
   <div class="dsh-list" id="dsh-list"></div>
   <div class="dsh-note" role="note"><b>Why the car screens differ from the phone</b><ul>
-    <li><b style="display:inline">No full-screen alert.</b> On CarPlay the app has no screen of its own: a navigation app only gets the map (the "base view"), which "cannot be used to draw alerts, overlays, or other UI"; everything else is the system's templates. Android Auto: the app "draws only map content" (speed limit and obstructions allowed); alerts use the system's alert.</li>
-    <li><b style="display:inline">No animation.</b> Android Auto SA-1: "must not display animated elements". The same design is used on CarPlay.</li>
-    <li><b style="display:inline">Map needs navigation.</b> Both platforms allow a custom map only for navigation apps with turn-by-turn directions; otherwise only lists and alert screens (CarPlay: refresh at most every 10 s).</li>
-    <li>Sources: <a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf" target="_blank" rel="noopener">Apple CarPlay Developer Guide</a> · <a href="https://developer.apple.com/design/human-interface-guidelines/carplay" target="_blank" rel="noopener">Apple HIG: CarPlay</a> · <a href="https://developer.android.com/docs/quality-guidelines/car-app-quality" target="_blank" rel="noopener">Android for Cars app quality</a> · <a href="https://developer.android.com/training/cars/apps/navigation" target="_blank" rel="noopener">Android Auto navigation apps</a></li>
+    <li><b style="display:inline">No full-screen design of our own.</b> CarPlay: the map "cannot be used to draw alerts, overlays, or other UI" (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=37" target="_blank" rel="noopener">Apple guide p. 36</a>). Android Auto: "only map content" on the map (<a href="https://developer.android.com/docs/quality-guidelines/car-app-quality#NF-2" target="_blank" rel="noopener">NF-2</a>). A plain system full-screen alert is allowed: CarPlay alert template, title + at least one button (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=17" target="_blank" rel="noopener">p. 16</a>); Android Auto message template (<a href="https://developer.android.com/design/ui/cars/guides/templates/overview#:~:text=Brief%20or%20longer%20full-screen%20message" target="_blank" rel="noopener">templates</a>).</li>
+    <li><b style="display:inline">No animation.</b> Android Auto: "must not display animated elements" (<a href="https://developer.android.com/docs/quality-guidelines/car-app-quality#SA-1" target="_blank" rel="noopener">SA-1</a>). The same design is used on CarPlay.</li>
+    <li><b style="display:inline">Map needs navigation.</b> A custom map only for navigation apps with turn-by-turn directions (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=8" target="_blank" rel="noopener">Apple p. 7</a>, <a href="https://developer.android.com/docs/quality-guidelines/car-app-quality#NF-1" target="_blank" rel="noopener">NF-1</a>); otherwise lists and alert screens, refreshed at most every 10 s on CarPlay (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=7" target="_blank" rel="noopener">p. 6</a>).</li>
+    <li><b style="display:inline">Another app in front:</b> only a notification + voice (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=29" target="_blank" rel="noopener">p. 28</a>); iOS 26 Live Activities in CarPlay Dashboard (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=12" target="_blank" rel="noopener">p. 11</a>).</li>
   </ul></div>
 </aside>
-<script src="_dc.js?v=385c105-1794160883"></script>
+<script src="_dc.js?v=6c54add-1794203994"></script>
 <script>
 // Which app: /cluster/ (demo) or ?cluster (local) = the no-map cluster; else the map app.
 const q = new URLSearchParams(location.search);
@@ -199,7 +199,7 @@ if (app) {
 }
 (async () => {
   try {
-    const Root = await DC.load(cluster ? 'Cluster.dc.html?v=385c105-1794160883' : 'LiveDrive.dc.html?v=385c105-1794160883');
+    const Root = await DC.load(cluster ? 'Cluster.dc.html?v=6c54add-1794203994' : 'LiveDrive.dc.html?v=6c54add-1794203994');
     ReactDOM.createRoot(document.getElementById('root')).render(DC.h(Root, { ...(app ? { app: '1' } : {}), ...(device !== 'phone' ? { device } : {}) }));
   } catch (e) { document.getElementById('root').innerHTML = '<pre style="padding:16px;color:#B91C1C">Could not load the app: ' + e.message + '</pre>'; }
 })();
