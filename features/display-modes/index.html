@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Display Modes — Road Sense</title>
+<!-- Feature design: "Display Modes: Minimalist Alert View & Enhanced Map View" (FRD, Nov 11 2026). Built on the feature-page blueprint
+     (docs/features/FEATURE-PAGE-TEMPLATE.md). Screens are pictures of the demo apps (img/), one phone per screen.
+     Local: http://localhost:5178/web/features/display-modes/  ·  demo: <demo>/features/display-modes/ -->
+<base href="../../app/">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+  /* ---------- Features nav (same as the demo page) ---------- */
+  .fn { position: fixed; z-index: 160; left: 0; top: 0; bottom: 0; width: 248px; background: #fff; border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: calc(12px + env(safe-area-inset-top, 0px)) 10px 12px; transform: translateX(-102%); transition: transform .26s cubic-bezier(.2, .8, .2, 1); }
+  .fn-h { display: flex; align-items: center; gap: 10px; padding: 4px 8px 14px; }
+  .fn-h img { width: 30px; height: 30px; }
+  .fn-h b { font-size: 15px; font-weight: 700; flex: 1; }
+  .fn-k { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #98A0AA; padding: 6px 10px 6px; }
+  .fn-i { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 8px 10px; border-radius: 12px; color: var(--ink2); text-decoration: none; font-size: 14px; font-weight: 600; line-height: 1.25; }
+  .fn-i:hover { background: #F3F4F6; color: var(--ink); }
+  .fn-i.on { background: #EEF2FF; color: #1D4ED8; }
+  .fn-i svg { width: 20px; height: 20px; flex: none; }
+  .fn-i span { min-width: 0; }
+  .fn-i small { display: block; font-size: 12px; font-weight: 500; color: #98A0AA; margin-top: 2px; }
+  .fn-x { width: 36px; height: 36px; border: 0; border-radius: 18px; background: #EEF0F3; color: var(--ink); font-size: 16px; cursor: pointer; }
+  .fn-back { position: fixed; inset: 0; z-index: 159; background: rgba(16, 24, 40, .28); opacity: 0; pointer-events: none; transition: opacity .25s; }
+  body.fn-on .fn { transform: none; } body.fn-on .fn-back { opacity: 1; pointer-events: auto; }
+  .fn-open { width: 40px; height: 40px; border: 0; border-radius: 12px; background: #EEF0F3; color: var(--ink); display: grid; place-items: center; cursor: pointer; flex: none; }
+  .fn-open svg { width: 20px; height: 20px; }
+  @media (min-width: 900px) {
+    :root { --navw: 248px; }
+    .fn { transform: none; transition: none; } .fn-x, .fn-back, .fn-open { display: none; }
+  }
+
+  /* =====================================================================================================
+     FEATURE PAGE BLUEPRINT (docs/features/FEATURE-PAGE-TEMPLATE.md). Every feature page uses these blocks:
+     .hero (title, one line, facts) · .ov (overview table + blocker) · .rq (one per UI requirement:
+     header → screens → limits → how we build it) · .rq.noui (all requirements without UI, one list) ·
+     .rq try (prototype) · .rq open (team decisions). Screens: .scrn = title + variant tabs + CarPlay | Android Auto.
+     ===================================================================================================== */
+  :root { --ink: #15181D; --ink2: #5B636E; --ink3: #8A929C; --line: #E3E6EA; --bg: #F5F6F8; --bar: 56px; --r: 20px; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; }
+  body { overflow-x: hidden; }
+  a { color: #2563EB; text-underline-offset: 2px; }
+
+  /* top bar + section tabs */
+  .top { position: sticky; top: 0; z-index: 100; margin-left: var(--navw); background: rgba(255, 255, 255, .97); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top, 0px); }
+  .top-r { min-height: var(--bar); display: flex; align-items: center; gap: 12px; padding: 0 24px; }
+  .top-t { font-size: 15px; font-weight: 700; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .jump { display: flex; gap: 4px; padding: 0 24px; overflow-x: auto; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; height: 40px; padding: 0 12px; display: flex; align-items: center; font-size: 13.5px; font-weight: 600; color: var(--ink2); text-decoration: none; border-bottom: 2px solid transparent; white-space: nowrap; cursor: pointer; }
+  .jump a:hover { color: var(--ink); }
+  .jump a.on { color: var(--ink); border-bottom-color: var(--ink); }
+  .seg { display: flex; gap: 2px; padding: 3px; border-radius: 12px; background: #EEF0F3; flex: none; }
+  .seg button { height: 32px; padding: 0 12px; border: 0; border-radius: 9px; background: transparent; font: 600 13px/1 Inter, sans-serif; color: var(--ink2); cursor: pointer; white-space: nowrap; }
+  .seg button.on { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(16, 24, 40, .14); }
+
+  main { margin-left: var(--navw); padding: 40px 24px 96px; }
+  .wrap { max-width: 1120px; margin: 0 auto; }
+  section { scroll-margin-top: 112px; }
+
+  /* hero */
+  .hero h1 { font-size: 36px; line-height: 1.1; letter-spacing: -.8px; margin: 0 0 10px; }
+  .hero p { font-size: 17px; line-height: 1.5; color: var(--ink2); margin: 0; max-width: 720px; }
+  .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .facts span { height: 28px; padding: 0 12px; border-radius: 14px; background: #fff; border: 1px solid var(--line); font-size: 12.5px; font-weight: 600; color: var(--ink2); display: flex; align-items: center; }
+
+  /* status chip: the only status vocabulary on the page */
+  .st { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 12px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+  .st::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .st.ok { background: #E8F6EE; color: #15803D; } .st.part { background: #FEF3DF; color: #9A5B00; } .st.no { background: #FDEBEC; color: #C62828; } .st.na { background: #EEF0F3; color: var(--ink2); }
+
+  /* overview */
+  .ov { margin-top: 32px; }
+  .tbl { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; font-size: 14.5px; }
+  .tbl th { text-align: left; font-size: 11.5px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--ink3); padding: 12px 18px; border-bottom: 1px solid var(--line); }
+  .tbl td { padding: 14px 18px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  .tbl tr:last-child td { border-bottom: 0; }
+  .tbl tr[data-go] { cursor: pointer; } .tbl tr[data-go]:hover td { background: #FAFBFC; }
+  .tbl .id { font-weight: 800; white-space: nowrap; width: 1%; } .tbl .ui { color: var(--ink2); width: 1%; white-space: nowrap; }
+  .alert { margin-top: 16px; display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; border-radius: 16px; background: #FDEBEC; font-size: 14.5px; line-height: 1.5; color: #5B1A1B; }
+  .alert b { color: #8E1F21; }
+  .alert i { flex: none; width: 24px; height: 24px; border-radius: 12px; background: #E5383B; color: #fff; font: 800 14px/24px Inter, sans-serif; text-align: center; font-style: normal; }
+
+  /* requirement section */
+  .rq { margin-top: 48px; background: #fff; border: 1px solid var(--line); border-radius: 28px; padding: 40px; }
+  .rq-h { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 32px; padding-bottom: 28px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
+  .rq-id { grid-column: 1 / -1; justify-self: start; height: 28px; padding: 0 12px; border-radius: 8px; background: var(--ink); color: #fff; font-size: 13px; font-weight: 800; letter-spacing: .6px; display: flex; align-items: center; }
+  .rq-h h2 { font-size: 30px; line-height: 1.15; letter-spacing: -.6px; margin: 6px 0 0; }
+  .rq-h p { grid-column: 1; font-size: 16px; line-height: 1.5; color: var(--ink2); margin: 0; max-width: 680px; }
+  .rq-st { grid-column: 2; grid-row: 2 / span 2; align-self: start; display: grid; grid-template-columns: auto auto; gap: 8px 10px; align-items: center; margin-top: 10px; }
+  .rq-st span.k { font-size: 12px; font-weight: 700; color: var(--ink3); }
+  .rq.try .rq-id { background: #2563EB; } .rq.open .rq-id, .rq.noui .rq-id { background: #6B7380; }
+
+  /* screen block: title + variant tabs, then CarPlay | Android Auto, same size, then one caption line */
+  .scrn { padding-top: 32px; }
+  .scrn-h { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+  .scrn-h h3 { font-size: 19px; letter-spacing: -.2px; margin: 0; flex: 1; min-width: 160px; }
+  .tabs { display: flex; gap: 2px; padding: 3px; border-radius: 12px; background: #EEF0F3; overflow-x: auto; scrollbar-width: none; max-width: 100%; }
+  .tabs button { height: 32px; padding: 0 14px; border: 0; border-radius: 9px; background: transparent; font: 600 13px/1 Inter, sans-serif; color: var(--ink2); cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 7px; }
+  .tabs button.on { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(16, 24, 40, .14); }
+  .tabs i { width: 8px; height: 8px; border-radius: 50%; }
+  .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  .ph-w { max-width: 320px; margin: 0 auto; }
+  .plat { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--ink2); margin-bottom: 10px; }
+  .plat svg { width: 16px; height: 16px; }
+  .fr { position: relative; width: 100%; overflow: hidden; border-radius: 14px; box-shadow: 0 0 0 1px rgba(16, 24, 40, .08); background: #000; }
+  .fr.ph { border-radius: 28px 28px 14px 14px; }
+  .fr > .scr { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+  .scrn-c { margin: 14px 0 0; font-size: 14px; color: var(--ink2); text-align: center; }
+
+  /* limits: every "can't" or "only if" of the requirement, one short line + its rule link */
+  .lim { margin-top: 40px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; }
+  .lim-k, .how summary { font-size: 12px; font-weight: 800; letter-spacing: .8px; text-transform: uppercase; color: var(--ink3); }
+  .lim-k { grid-column: 1 / -1; margin-bottom: 12px; }
+  .lim ul { list-style: none; margin: 0; padding: 0; }
+  .lim li { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 12px; align-items: start; padding: 10px 0; border-top: 1px solid var(--line); font-size: 14px; line-height: 1.45; color: var(--ink); }
+  .lim li .st { justify-self: start; }
+  .lim li small { display: block; color: var(--ink2); font-size: 13px; margin-top: 2px; }
+  .lim .plat { margin: 0 0 4px; }
+
+  /* how we build it: closed by default */
+  .how { margin-top: 24px; border-top: 1px solid var(--line); }
+  .how summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 18px 0 0; }
+  .how summary::-webkit-details-marker { display: none; }
+  .how summary::after { content: ""; width: 8px; height: 8px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); margin: -4px 0 0 4px; }
+  .how[open] summary::after { transform: rotate(225deg); margin-top: 4px; }
+  .how-g { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 16px; }
+  .how ul { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.55; color: var(--ink2); }
+  .how li + li { margin-top: 6px; }
+  .how li b { color: var(--ink); }
+  .how code { overflow-wrap: anywhere; font: 600 12.5px/1.5 ui-monospace, Menlo, monospace; background: #F3F4F6; padding: 1px 5px; border-radius: 5px; color: var(--ink); }
+
+  /* requirements without UI: one list */
+  .nu { list-style: none; margin: 8px 0 0; padding: 0; }
+  .nu li { display: grid; grid-template-columns: 96px minmax(0, 1fr) auto; gap: 8px 20px; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .nu li:last-child { border-bottom: 0; }
+  .nu b { font-size: 14px; font-weight: 800; }
+  .nu h4 { margin: 0; font-size: 16px; } .nu p { margin: 2px 0 0; font-size: 14px; color: var(--ink2); line-height: 1.45; }
+  .nu .rq-st { grid-column: 3; grid-row: 1; margin: 0; }
+
+  /* team decisions */
+  .dec { list-style: none; counter-reset: d; margin: 8px 0 0; padding: 0; }
+  .dec li { counter-increment: d; display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--line); font-size: 14.5px; line-height: 1.5; color: var(--ink2); }
+  .dec li:last-child { border-bottom: 0; }
+  .dec li::before { content: counter(d); width: 28px; height: 28px; border-radius: 14px; background: #EEF0F3; color: var(--ink); font-weight: 800; font-size: 13px; display: grid; place-items: center; }
+  .dec b { color: var(--ink); display: block; }
+
+  /* try it */
+  .try-g { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; align-items: start; padding-top: 32px; }
+  .ctl { background: #F8F9FA; border: 1px solid var(--line); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 14px; }
+  .ctl-k { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--ink3); margin-bottom: 6px; }
+  .ctl .seg { width: 100%; } .ctl .seg button { flex: 1; padding: 0 6px; }
+  .ctl-row { display: flex; align-items: center; gap: 8px; }
+  .pbtn { width: 44px; height: 44px; border-radius: 22px; border: 1px solid var(--line); background: #fff; display: grid; place-items: center; cursor: pointer; color: var(--ink); flex: none; }
+  .pbtn.pri { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .pbtn svg { width: 18px; height: 18px; }
+  .now { font-size: 13px; font-weight: 600; color: var(--ink2); min-width: 0; flex: 1; }
+  .say { font-size: 13px; line-height: 1.4; color: var(--ink2); padding: 10px 12px; border-radius: 12px; background: #fff; border: 1px solid var(--line); min-height: 40px; }
+  .say b { color: var(--ink); }
+  .tg-row { display: flex; align-items: center; gap: 12px; min-height: 48px; cursor: pointer; border: 0; background: none; padding: 0; text-align: left; width: 100%; font: inherit; color: inherit; }
+  .tg-row + .tg-row { border-top: 1px solid var(--line); }
+  .tg-row span { flex: 1; font-size: 14px; font-weight: 600; } .tg-row small { display: block; font-size: 12px; font-weight: 500; color: var(--ink2); }
+  .tg { width: 50px; height: 30px; border-radius: 15px; background: #D5D9DF; position: relative; flex: none; }
+  .tg i { position: absolute; left: 3px; top: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(16, 24, 40, .25); }
+  .tg.on { background: #16A34A; } .tg.on i { transform: translateX(20px); }
+  .scn { display: flex; flex-direction: column; gap: 2px; }
+  .scn button { display: flex; align-items: center; gap: 10px; padding: 9px 8px; border: 0; border-radius: 10px; background: transparent; text-align: left; cursor: pointer; font: 500 14px/1.25 Inter, sans-serif; color: var(--ink); }
+  .scn button.on { background: #EEF2FF; }
+  .scn i { width: 10px; height: 10px; border-radius: 50%; flex: none; background: #CBD1D8; }
+  .scn .lv-adv i { background: #2563EB; } .scn .lv-warn i { background: #F5A524; } .scn .lv-crit i { background: #E5383B; } .scn .lv-ok i { background: #16A34A; }
+  .cap { margin-top: 10px; font-size: 14px; color: var(--ink2); text-align: center; }
+
+  @media (max-width: 1100px) { .try-g { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 760px) {
+    main { padding: 28px 16px 72px; } .top-r, .jump { padding-left: 16px; padding-right: 16px; }
+    .hero h1 { font-size: 28px; } .hero p { font-size: 16px; }
+    .rq { padding: 24px 16px; border-radius: 22px; margin-top: 32px; }
+    .rq-h { grid-template-columns: minmax(0, 1fr); } .rq-h h2 { font-size: 24px; } .rq-st { grid-column: 1; grid-row: auto; justify-self: start; }
+    .pair, .lim, .how-g { grid-template-columns: minmax(0, 1fr); } .pair { gap: 20px; } .lim .plat { margin-top: 16px; }
+    .scrn-h { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .tabs { width: 100%; } .tabs button { flex: 1; justify-content: center; padding: 0 6px; gap: 5px; font-size: 12.5px; }
+    .tbl:not(.mt) thead { display: none; } .tbl:not(.mt), .tbl:not(.mt) tbody, .tbl:not(.mt) tr { display: block; } .tbl:not(.mt) tr { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 12px; padding: 14px 16px; border-bottom: 1px solid var(--line); } .tbl:not(.mt) tr:last-child { border-bottom: 0; }
+    .tbl:not(.mt) td { border: 0; padding: 0; } .tbl:not(.mt) td.ui { display: none; } .tbl:not(.mt) td[data-k] { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; } .tbl:not(.mt) td[data-k]::before { content: attr(data-k); width: 96px; font-size: 12px; font-weight: 700; color: var(--ink3); }
+    .nu li { grid-template-columns: minmax(0, 1fr); } .nu .rq-st { grid-column: 1; grid-row: auto; }
+  }
+  .tbl.mt { margin-top: 4px; } .tbl.mt td, .tbl.mt th { padding: 11px 18px; } .tbl .c { text-align: center; width: 18%; }
+  .tbl i.yes { font-style: normal; font-weight: 800; color: #15803D; } .tbl i.no { font-style: normal; color: #C3C8CF; }
+  @media (max-width: 760px) { .tbl.mt td, .tbl.mt th { padding: 10px 8px; font-size: 13px; } .tbl.mt th { font-size: 10.5px; letter-spacing: .3px; } }
+  /* ================= screens: pictures of the apps, one phone per screen ================= */
+  .ph-w { max-width: 320px; margin: 0 auto; }
+  .fr.ph.shot { border-radius: 36px; overflow: hidden; box-shadow: 0 0 0 1px rgba(16, 24, 40, .12); background: #F3F4F6; }
+  .fr.ph.shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+  .one { display: grid; } .one .ph-w { width: 100%; }
+  .src { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 99px; background: #EEF2FF; color: #3730A3; font-size: 11.5px; font-weight: 600; white-space: nowrap; }
+  .try-b { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .try-b a { display: grid; gap: 14px; padding: 16px; border: 1px solid var(--line); border-radius: 18px; color: inherit; text-decoration: none; }
+  .try-b a:hover { border-color: #93A4C3; }
+  .try-b img { width: 100%; max-width: 220px; margin: 0 auto; border-radius: 22px; box-shadow: 0 0 0 1px rgba(16, 24, 40, .12); }
+  .try-b b { display: block; font-size: 16px; } .try-b span { color: var(--ink2); font-size: 14px; }
+  .try-b em { font-style: normal; font-weight: 700; color: #1D4ED8; font-size: 14px; }
+  @media (max-width: 760px) { .try-b { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body>
+<!-- Features nav: same markup and links as the demo page (web/index.html) -->
+<div class="fn-back" id="fn-back"></div>
+<nav class="fn" id="fn" aria-label="Features">
+  <div class="fn-h"><img src="img/roadsense-icon.svg" alt=""><b>Road Sense</b><button class="fn-x" id="fn-x" type="button" aria-label="Close the features menu">✕</button></div>
+  <div class="fn-k">Demo</div>
+  <a class="fn-i" data-fn="demo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg><span>Road Sense demo<small>Map and no-map apps</small></span></a>
+  <div class="fn-k" style="margin-top:10px">Features</div>
+  <a class="fn-i" data-fn="car-alerts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M8.5 15.5 12 8l3.5 7.5"/></svg><span>CarPlay &amp; Android Auto Alerts<small>FRD · Nov 11, 2026</small></span></a>
+  <a class="fn-i" data-fn="ped-modes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13" cy="4.5" r="1.8"/><path d="M9 21l2.5-6.5L14 17v4M7.5 11l3-3.5h3l2.5 3.5M11.5 14.5l1-4"/></svg><span>Pedestrian &amp; Cyclist Modes<small>FRD · Nov 11, 2026</small></span></a>
+  <a class="fn-i" data-fn="display-modes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 10h18M10 10v10"/></svg><span>Display Modes<small>FRD · Nov 11, 2026</small></span></a>
+</nav>
+
+<header class="top">
+  <div class="top-r">
+    <button class="fn-open" id="fn-open" type="button" aria-label="Open the features menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <div class="top-t">Display Modes</div>
+    <div class="seg" id="theme" role="group" aria-label="Screen theme"><button data-t="light" class="on" type="button">Light</button><button data-t="dark" type="button">Dark</button></div>
+  </div>
+  <nav class="jump" id="jump" aria-label="Sections"></nav>
+</header>
+<main><div class="wrap">
+  <section class="hero" id="overview">
+    <h1>Display Modes</h1>
+    <p>A glanceable dashboard by default, a polished map for demos, and developer tools kept out of sight. Shown with the demo as it is today.</p>
+    <div class="facts"><span>FRD · Nov 11, 2026</span><span>iPhone · Android</span><span>390×844 phone</span><span>Light and dark</span></div>
+    <div class="ov">
+      <table class="tbl" aria-label="Requirements">
+        <thead><tr><th>Req</th><th>Requirement</th><th>Work</th><th id="ov-a"></th><th id="ov-b"></th></tr></thead>
+        <tbody id="ov"></tbody>
+      </table>
+      <div class="alert"><i>!</i><span><b>Dependency.</b> Lane-level detail (REQ-004) needs a map provider licence (Mapbox or HERE). Everything else is built or drawn here.</span></div>
+    </div>
+  </section>
+  <div id="reqs"></div>
+</div></main>
+<script>
+// ---------- Features nav ----------
+(() => {
+  const root = location.pathname.split('/features/')[0] + '/';
+  for (const a of document.querySelectorAll('.fn-i')) {
+    a.href = location.origin + root + (a.dataset.fn === 'demo' ? '' : 'features/' + a.dataset.fn + '/');
+    if (a.dataset.fn === 'display-modes') { a.classList.add('on'); a.setAttribute('aria-current', 'page'); }
+  }
+  const B = document.body, open = (on) => B.classList.toggle('fn-on', on);
+  document.getElementById('fn-open').onclick = () => open(true);
+  document.getElementById('fn-x').onclick = () => open(false);
+  document.getElementById('fn-back').onclick = () => open(false);
+})();
+
+
+// ---------- sources (each opens at the rule) ----------
+const L = {
+  prefs: ['https://pub.dev/packages/shared_preferences', 'shared_preferences'],
+  mbx: ['https://pub.dev/packages/mapbox_maps_flutter', 'mapbox_maps_flutter'],
+  devopt: ['https://developer.android.com/studio/debug/dev-options', 'Android developer options (the same 7-tap unlock)'],
+};
+const ln = (k) => `<a href="${L[k][0]}" target="_blank" rel="noopener">${L[k][1]}</a>`;
+const ST = { ok: 'Possible', part: 'With limits', no: 'Not possible', na: 'No UI' };
+const st = (s, t) => `<span class="st ${s}">${t || ST[s]}</span>`;
+let DARK = false;
+
+// ---------- screens: pictures of the demo apps (and of the team's app for the developer tools) ----------
+// The page has a <base href> to the app folder, so pictures next to this page use an absolute path.
+const HERE = location.pathname.replace(/[^/]*$/, '');
+const IMG = (v) => HERE + 'img/' + v.img + (DARK && !v.team ? '-d' : '') + '.webp';
+const SHOT = (v) => `<div class="ph-w"><div class="fr ph shot" style="aspect-ratio:390/844"><img src="${IMG(v)}" alt="${v.alt || v.k}"></div></div>`;
+const ro = { observe() {} }; const fitFrame = () => {};   // pictures scale by themselves (no drawn frames on this page)
+
+const LV = { adv: '#2563EB', warn: '#F5A524', crit: '#E5383B', ok: '#16A34A' };
+const APL = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.6c0-2.4 2-3.6 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.1 1-4 2.4-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8s1.9.8 3.2.8 2.1-1.2 2.9-2.4c.9-1.3 1.3-2.6 1.3-2.7 0 0-2.4-1-2.4-4.1zM14 5.5c.7-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.2 1.8-1 2.9 1 .1 2.1-.6 2.8-1.4z"/></svg>';
+const AND = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 9.5 19.4 6.4a.4.4 0 0 0-.7-.4l-1.8 3.1A11 11 0 0 0 12 8a11 11 0 0 0-4.9 1.1L5.3 6a.4.4 0 0 0-.7.4l1.8 3.1A10.4 10.4 0 0 0 1 18h22a10.4 10.4 0 0 0-5.4-8.5zM7 15.3a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm10 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>';
+const TEAM = ' <span class="src">Team app · Android emulator</span>';
+
+const F = {
+  plat: { a: [APL, 'iPhone'], b: [AND, 'Android'] },
+  reqs: [
+    { id: 'REQ-001', t: 'Minimalist alert view', goal: 'The dashboard: the active alert at a glance, no map. New users start here.', st: { a: 'ok', b: 'ok' },
+      screens: [{ t: 'Dashboard', v: [
+        { k: 'Driving', img: 'c-drive', c: 'No alert: next signal, speed and limit. The alert slot says "No alerts ahead".' },
+        { k: 'Alert ahead', lv: 'adv', img: 'c-slot', c: 'Far away: the alert fills its slot. Nothing else moves.' },
+        { k: 'Full screen', lv: 'crit', img: 'c-full', c: 'Close or sudden: the alert takes the whole screen, icon and message first.' }] }],
+      how: { one: ['The demo\'s no-map app as it is. One column of fixed blocks; an alert fills the slot or opens as a full-screen route.', 'No saved view yet → Dashboard (FRD: default for new users).'] } },
+    { id: 'REQ-002', t: 'Enhanced map view', goal: 'For demos: your position and heading, nearby alerts on the road, the active alert on top.', st: { a: 'ok', b: 'ok' },
+      screens: [{ t: 'Map', v: [
+        { k: 'Driving', img: 'm-drive', c: 'Blue arrow = you and your heading. Alerts ahead sit on the road as icons.' },
+        { k: 'Active alert', lv: 'adv', img: 'm-card', c: 'The active alert as a card on top; its marker stays on the road ahead.' },
+        { k: 'Full screen', lv: 'crit', img: 'm-full', c: 'Same full-screen rule as the dashboard.' }] }],
+      how: { one: [`The demo's map app as it is. Flutter: ${ln('mbx')} with our puck, a symbol layer for alert icons and the shared alert cards.`] } },
+    { id: 'REQ-003', t: 'View mode setting', goal: 'Settings → Map and display → Main screen: Dashboard or Map. Remembered next time.', st: { a: 'ok', b: 'ok' },
+      screens: [{ t: 'Main screen', v: [
+        { k: 'In the map', img: 'm-set', c: 'New first row of Map and display. Map is picked here.' },
+        { k: 'In the dashboard', img: 'c-set', c: 'Same row in the dashboard. Dashboard is the default.' }] }],
+      how: { one: [`Save the choice (${ln('prefs')}) and read it before the first frame, so the app opens on the saved view.`, 'Switching swaps the home screen only: the drive, alerts and voice keep running.', 'The row is drawn on the demo\'s settings here; the demo apps don\'t switch yet.'] } },
+    { id: 'REQ-004', t: 'Lane-level map detail', goal: 'Lanes on the map once a provider and licence are in place (Could have).', st: { a: 'part', b: 'part' },
+      screens: [{ t: 'Map today', v: [
+        { k: '2.5D', img: 'm-drive', c: 'Road-level today: streets, names and buildings, no lanes yet.' },
+        { k: '2D', img: 'm-2d', c: 'Flat view, same data.' }] }],
+      lim: { a: [['part', 'Needs lane data and a licence', 'Mapbox or HERE lane-level maps are licensed separately (FRD dependency).']],
+             b: [['part', 'Needs lane data and a licence', 'Same on Android: one provider for both.']] },
+      how: { one: ['When licensed: lane lines as one more map layer under the alert icons. Nothing else on the screen changes.', 'Intersections could also draw lanes from the V2X MAP messages (the "MAP lane geometry" developer overlay, REQ-007).'] } },
+    { id: 'REQ-005', t: 'Visual polish', goal: 'Map style, your marker and alert icons from one clean set, in light and dark.', st: { a: 'ok', b: 'ok' },
+      screens: [{ t: 'Markers and icons', v: [
+        { k: 'On the map', img: 'm-mark', c: 'Alert icons on the road ahead; the same icons as the cards.' },
+        { k: 'On the dashboard', img: 'c-slot', c: 'The same icon and colors in the dashboard\'s alert slot.' }] }],
+      how: { one: ['Icons, colors and type from DESIGN-LANGUAGE.md; one SVG set for map, cards and full screen.', 'Road Sense map style (Mapbox) in light and dark.'] } },
+    { id: 'REQ-006', t: 'Debug & developer settings', goal: 'Developer tools stay out of sight until they are turned on.', st: { a: 'ok', b: 'ok' },
+      screens: [{ t: 'Developer tools', v: [
+        { k: 'Settings', img: 'dev-settings', team: true, c: 'Last row of Settings, shown only once unlocked.' + TEAM },
+        { k: 'Developer tools', img: 'dev-tools', team: true, c: 'Fake GPS and fake SPaT, for testing.' + TEAM }] }],
+      how: { one: [`Hidden by default; unlock with 7 taps on the version in About, like ${ln('devopt')}. Saved on the phone.`, 'Demo builds can ship with it unlocked.'] } },
+    { id: 'REQ-007', t: 'SPaT & debug data view', goal: 'SPaT and other debug data on the map, each turned on from Developer tools.', st: { a: 'ok', b: 'ok' },
+      screens: [{ t: 'Map overlays', v: [
+        { k: 'Overlays', img: 'dev-overlays', team: true, c: 'SPaT locations, MAP lanes, alert geometry, geohashes: one toggle each.' + TEAM }] }],
+      how: { one: ['Each overlay is one map layer, off by default, drawn in the map style\'s colors.', 'Signal timing itself already shows in the signal card on both views (REQ-001, REQ-002).'] } },
+  ],
+  decide: [
+    ['How developer tools unlock', 'Recommended: 7 taps on the version in About. Today the row always shows (REQ-006 screenshot).'],
+    ['Where the view choice lives', '"Main screen" at the top of Map and display (shown), or its own row on the first Settings page.'],
+    ['Lane-level provider', 'Mapbox or HERE, and its licence (FRD dependency). Until then the map stays road-level.'],
+    ['Debug look on the map', 'The overlays need a design pass before demos (Nov 2 UDOT prep). A screenshot with them on is next.'],
+  ],
+};
+
+const VAR = {};   // chosen variant per screen block
+const sid = (id) => id.toLowerCase();
+const PN = (k) => F.plat[k][1];
+const statusCell = (s) => `<div class="rq-st"><span class="k">${PN('a')}</span>${st(s.a)}<span class="k">${PN('b')}</span>${st(s.b)}</div>`;
+const plat = (k) => `<div class="plat">${F.plat[k][0]}${F.plat[k][1]}</div>`;
+const pair = (v) => `<div class="one">${SHOT(v)}</div>`;   // one phone: the screen is the same on both
+function table(t) {
+  return `<table class="tbl mt">
+    <thead><tr><th>Alert</th>${t.cols.map(c => `<th class="c">${c}</th>`).join('')}</tr></thead>
+    <tbody>${t.rows.map(([n, ...on]) => `<tr><td>${n}</td>${on.map(x => `<td class="c">${x ? '<i class="yes">✓</i>' : '<i class="no">–</i>'}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+}
+function screenBlock(r, i) {
+  const s = r.screens[i], key = r.id + ':' + i;
+  if (s.table) return `<div class="scrn"><div class="scrn-h"><h3>${s.t}</h3></div>${table(s.table)}</div>`;
+  const j = VAR[key] || 0, v = s.v[j];
+  const tabs = s.v.length > 1 ? `<div class="tabs" role="tablist">${s.v.map((x, n) => `<button type="button" role="tab" data-key="${key}" data-n="${n}" class="${n === j ? 'on' : ''}" aria-selected="${n === j}">${x.lv ? `<i style="background:${LV[x.lv]}"></i>` : ''}${x.k}</button>`).join('')}</div>` : '';
+  return `<div class="scrn" data-block="${key}"><div class="scrn-h"><h3>${s.t}</h3>${tabs}</div><div class="scrn-b">${pair(v)}</div><p class="scrn-c">${v.c}</p></div>`;
+}
+const limList = (a) => `<ul>${(a || []).map(([s, t, w]) => `<li>${st(s)}<span>${t}<small>${w}</small></span></li>`).join('')}</ul>`;
+const limits = (r) => r.lim ? `<div class="lim"><div class="lim-k">Limits</div><div>${plat('a')}${limList(r.lim.a)}</div><div>${plat('b')}${limList(r.lim.b)}</div></div>` : '';
+const ul = (a) => `<ul>${a.map(x => `<li>${x}</li>`).join('')}</ul>`;
+function how(h) {
+  if (!h) return '';
+  const g = h.one ? `<div class="how-g" style="grid-template-columns:minmax(0,1fr)">${ul(h.one)}</div>`
+    : `<div class="how-g"><div>${plat('a')}${ul(h.a)}</div><div>${plat('b')}${ul(h.b)}</div></div>`;
+  return `<details class="how"><summary>How we build it</summary>${g}</details>`;
+}
+const rqHead = (id, t, goal, s) => `<header class="rq-h"><div class="rq-id">${id}</div><h2>${t}</h2><p>${goal}</p>${s ? statusCell(s) : ''}</header>`;
+
+function board() {
+  const ui = F.reqs.filter(r => !r.noui), nu = F.reqs.filter(r => r.noui);
+  document.getElementById('ov-a').textContent = PN('a'); document.getElementById('ov-b').textContent = PN('b');
+  document.getElementById('ov').innerHTML = F.reqs.map(r => `<tr data-go="${r.noui ? 'no-ui' : sid(r.id)}"><td class="id">${r.id}</td><td>${r.t}</td><td class="ui">${r.noui ? 'No UI' : 'Screens'}</td><td data-k="${PN('a')}">${st(r.st.a)}</td><td data-k="${PN('b')}">${st(r.st.b)}</td></tr>`).join('');
+  let h = ui.map(r => `<section class="rq" id="${sid(r.id)}">${rqHead(r.id, r.t, r.goal, r.st)}${r.screens.map((_, i) => screenBlock(r, i)).join('')}${limits(r)}${how(r.how)}</section>`).join('');
+  if (nu.length) h += `<section class="rq noui" id="no-ui">${rqHead('NO UI', 'Requirements without screens', 'Engineering work only. What the user sees of them is shown above.')}
+    <ul class="nu">${nu.map(r => `<li><b>${r.id}</b><div><h4>${r.t}</h4><p>${r.goal}</p></div>${statusCell(r.st)}</li>`).join('')}</ul>
+    <details class="how"><summary>How we build it</summary><div class="how-g" style="grid-template-columns:minmax(0,1fr)">${ul(nu.map(r => `<b>${r.id}:</b> ` + r.how.one.join(' ')))}</div></details></section>`;
+  h += `<section class="rq try" id="try">${rqHead('PROTOTYPE', 'Try it', F.tryGoal)}${bodyTry()}</section>`;
+  h += `<section class="rq open" id="decide">${rqHead('OPEN', 'For the team to decide', 'Answers change the screens above.')}<ol class="dec">${F.decide.map(([t, d]) => `<li><span><b>${t}</b>${d}</span></li>`).join('')}</ol></section>`;
+  const el = document.getElementById('reqs'); el.innerHTML = h;
+  for (const f of document.querySelectorAll('.fr')) { ro.observe(f); fitFrame(f); }
+  el.onclick = (e) => {
+    const b = e.target.closest('[data-key]'); if (!b) return;
+    VAR[b.dataset.key] = +b.dataset.n;
+    const [rid, i] = b.dataset.key.split(':'), r = F.reqs.find(x => x.id === rid);
+    const blk = el.querySelector(`[data-block="${b.dataset.key}"]`); blk.outerHTML = screenBlock(r, +i);
+    for (const f of el.querySelectorAll(`[data-block="${b.dataset.key}"] .fr`)) { ro.observe(f); fitFrame(f); }
+  };
+  wireTry();
+  const J = [['overview', 'Overview']].concat(ui.map(r => [sid(r.id), r.id.slice(4) + ' · ' + r.t]), (nu.length ? [['no-ui', 'No UI']] : []).concat([['try', 'Try it'], ['decide', 'To decide']]));
+  document.getElementById('jump').innerHTML = J.map(([id, t]) => `<a data-id="${id}" role="link" tabindex="0">${t}</a>`).join('');
+  watchJump();
+}
+
+// in-page links: the page has a <base href> (to load the app's images), so "#id" links would leave the page. Scroll in JS.
+function goTo(id) { const s = document.getElementById(id); if (s) { s.scrollIntoView({ behavior: 'smooth', block: 'start' }); history.replaceState(null, '', location.pathname + location.search + '#' + id); } }
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('#jump a[data-id], tr[data-go]'); if (!a) return;
+  e.preventDefault(); goTo(a.dataset.id || a.dataset.go);
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.matches('#jump a[data-id]')) goTo(e.target.dataset.id); });
+let io;
+function watchJump() {
+  if (io) io.disconnect();
+  const links = [...document.querySelectorAll('#jump a')];
+  const set = (id) => { for (const a of links) { const on = a.dataset.id === id; a.classList.toggle('on', on); if (on) { const j = document.getElementById('jump'); j.scrollTo({ left: a.offsetLeft - 24, behavior: 'smooth' }); } } };
+  io = new IntersectionObserver((es) => { const v = es.filter(e => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0]; if (v) set(v.target.id); }, { rootMargin: '-120px 0px -60% 0px' });
+  for (const a of links) { const s = document.getElementById(a.dataset.id); if (s) io.observe(s); }
+  set('overview');
+}
+
+// ---------- try it: the real demo apps ----------
+F.tryGoal = 'The demo apps themselves. Play the drive, open Settings, switch light and dark.';
+function bodyTry() {
+  const root = location.pathname.split('/features/')[0] + '/';
+  const card = (href, img, t, s) => `<a href="${href}" target="_blank" rel="noopener"><img src="${HERE}img/${img}${DARK ? '-d' : ''}.webp" alt=""><div><b>${t}</b><span>${s}</span></div><em>Open ↗</em></a>`;
+  return `<div class="try-b">${card(root + 'cluster/', 'c-drive', 'Dashboard', 'Minimalist alert view (REQ-001)')}${card(root, 'm-drive', 'Map', 'Enhanced map view (REQ-002)')}</div>`;
+}
+function wireTry() {}
+
+// ---------- theme ----------
+document.getElementById('theme').onclick = (e) => {
+  const t = e.target.dataset.t; if (!t) return; DARK = t === 'dark';
+  try { localStorage.setItem('rs-feat-theme', t); } catch (er) {}
+  for (const b of document.getElementById('theme').children) b.className = b.dataset.t === t ? 'on' : '';
+  const y = scrollY; board(); scrollTo(0, y);
+};
+try { if (localStorage.getItem('rs-feat-theme') === 'dark') { DARK = true; for (const b of document.getElementById('theme').children) b.className = b.dataset.t === 'dark' ? 'on' : ''; } } catch (e) {}
+board();
+if (location.hash) setTimeout(() => goTo(location.hash.slice(1)), 300);
+</script>
+</body>
+</html>
