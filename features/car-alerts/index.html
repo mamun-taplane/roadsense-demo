@@ -7,18 +7,11 @@
 <!-- Feature design: "CarPlay & Android Auto Alerts" (FRD, Nov 11 2026). Its own page next to the review demo; it
      changes nothing in the demo apps. Car screens are drawn as the platforms' templates (no map, no animation), with
      one look on both platforms. Every requirement that can't be built as written says why, with a link to the rule.
-     Order: summary → REQ-001…006 (each: what it looks like, CarPlay | Android Auto side by side) → Try it.
+     Built on the feature-page blueprint (docs/features/FEATURE-PAGE-TEMPLATE.md): content lives in the F object.
      Local: http://localhost:5178/web/features/car-alerts/  ·  demo: <demo>/features/car-alerts/ (tools/demo/build.sh) -->
 <base href="../../app/">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <style>
-  :root { --ink: #15181D; --ink2: #5B636E; --ink3: #6B7380; --line: #E3E6EA; --navw: 0px; --bar: 56px; }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; background: #F6F7F9; color: var(--ink); font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; }
-  html { scroll-behavior: smooth; }
-  body { overflow-x: hidden; }
-  a { color: #2563EB; }
-
   /* ---------- Features nav (same as the demo page) ---------- */
   .fn { position: fixed; z-index: 160; left: 0; top: 0; bottom: 0; width: 248px; background: #fff; border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: calc(12px + env(safe-area-inset-top, 0px)) 10px 12px; transform: translateX(-102%); transition: transform .26s cubic-bezier(.2, .8, .2, 1); }
   .fn-h { display: flex; align-items: center; gap: 10px; padding: 4px 8px 14px; }
@@ -41,119 +34,126 @@
     .fn { transform: none; transition: none; } .fn-x, .fn-back, .fn-open { display: none; }
   }
 
-  /* ---------- page ---------- */
-  .top { position: sticky; top: 0; z-index: 100; margin-left: var(--navw); background: rgba(255, 255, 255, .97); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top, 0px); }
-  .top-r { min-height: var(--bar); display: flex; align-items: center; gap: 12px; padding: 0 16px; }
-  .top-t { font-size: 15px; font-weight: 700; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  /* section jump bar: always visible, the section you are in is highlighted */
-  .jump { display: flex; gap: 6px; padding: 0 16px 10px; overflow-x: auto; scrollbar-width: none; }
-  .jump::-webkit-scrollbar { display: none; }
-  .jump a { flex: none; height: 32px; padding: 0 12px; border-radius: 16px; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--ink2); text-decoration: none; background: #F1F3F5; white-space: nowrap; }
-  .jump a b { font-weight: 800; color: var(--ink); }
-  .jump a.on { background: #15181D; color: #fff; } .jump a.on b { color: #fff; }
-  .jump a.mute { opacity: .6; }
-  .seg { display: flex; gap: 2px; padding: 3px; border-radius: 12px; background: #EEF0F3; flex: none; }
-  .seg button { height: 34px; padding: 0 12px; border: 0; border-radius: 9px; background: transparent; font: 600 13px/1 Inter, sans-serif; color: var(--ink2); cursor: pointer; white-space: nowrap; }
-  .seg button.on { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(16, 24, 40, .14); }
-  main { margin-left: var(--navw); padding: 28px 16px 80px; }
-  .wrap { max-width: 1120px; margin: 0 auto; }
-  h1 { font-size: 32px; line-height: 1.15; letter-spacing: -.7px; margin: 0 0 8px; }
-  .lede { font-size: 16px; line-height: 1.5; color: var(--ink2); margin: 0 0 6px; max-width: 760px; }
-  .meta { font-size: 13px; color: var(--ink3); margin: 0 0 22px; }
+  /* =====================================================================================================
+     FEATURE PAGE BLUEPRINT (docs/features/FEATURE-PAGE-TEMPLATE.md). Every feature page uses these blocks:
+     .hero (title, one line, facts) · .ov (overview table + blocker) · .rq (one per UI requirement:
+     header → screens → limits → how we build it) · .rq.noui (all requirements without UI, one list) ·
+     .rq try (prototype) · .rq open (team decisions). Screens: .scrn = title + variant tabs + CarPlay | Android Auto.
+     ===================================================================================================== */
+  :root { --ink: #15181D; --ink2: #5B636E; --ink3: #8A929C; --line: #E3E6EA; --bg: #F5F6F8; --navw: 0px; --bar: 56px; --r: 20px; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; }
+  body { overflow-x: hidden; }
+  a { color: #2563EB; text-underline-offset: 2px; }
 
-  /* status chips */
-  .st { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 13px; font-size: 12.5px; font-weight: 700; white-space: nowrap; }
-  .st::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  /* top bar + section tabs */
+  .top { position: sticky; top: 0; z-index: 100; margin-left: var(--navw); background: rgba(255, 255, 255, .97); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top, 0px); }
+  .top-r { min-height: var(--bar); display: flex; align-items: center; gap: 12px; padding: 0 24px; }
+  .top-t { font-size: 15px; font-weight: 700; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .jump { display: flex; gap: 4px; padding: 0 24px; overflow-x: auto; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; height: 40px; padding: 0 12px; display: flex; align-items: center; font-size: 13.5px; font-weight: 600; color: var(--ink2); text-decoration: none; border-bottom: 2px solid transparent; white-space: nowrap; cursor: pointer; }
+  .jump a:hover { color: var(--ink); }
+  .jump a.on { color: var(--ink); border-bottom-color: var(--ink); }
+  .seg { display: flex; gap: 2px; padding: 3px; border-radius: 12px; background: #EEF0F3; flex: none; }
+  .seg button { height: 32px; padding: 0 12px; border: 0; border-radius: 9px; background: transparent; font: 600 13px/1 Inter, sans-serif; color: var(--ink2); cursor: pointer; white-space: nowrap; }
+  .seg button.on { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(16, 24, 40, .14); }
+
+  main { margin-left: var(--navw); padding: 40px 24px 96px; }
+  .wrap { max-width: 1120px; margin: 0 auto; }
+  section { scroll-margin-top: 112px; }
+
+  /* hero */
+  .hero h1 { font-size: 36px; line-height: 1.1; letter-spacing: -.8px; margin: 0 0 10px; }
+  .hero p { font-size: 17px; line-height: 1.5; color: var(--ink2); margin: 0; max-width: 720px; }
+  .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .facts span { height: 28px; padding: 0 12px; border-radius: 14px; background: #fff; border: 1px solid var(--line); font-size: 12.5px; font-weight: 600; color: var(--ink2); display: flex; align-items: center; }
+
+  /* status chip: the only status vocabulary on the page */
+  .st { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 12px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+  .st::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
   .st.ok { background: #E8F6EE; color: #15803D; } .st.part { background: #FEF3DF; color: #9A5B00; } .st.no { background: #FDEBEC; color: #C62828; } .st.na { background: #EEF0F3; color: var(--ink2); }
 
-  /* coverage table */
-  .cov { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; font-size: 14px; }
-  .cov th { text-align: left; font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: #98A0AA; padding: 12px 14px; border-bottom: 1px solid var(--line); background: #FAFBFC; }
-  .cov td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.4; }
-  .cov tr:last-child td { border-bottom: 0; }
-  .cov td:first-child { white-space: nowrap; } .cov td:first-child a { font-weight: 800; color: var(--ink); text-decoration: none; }
-  .cov td:first-child small { display: block; color: var(--ink2); font-size: 13px; white-space: normal; }
-  .cov .st { margin-bottom: 4px; } .cov .why { display: block; font-size: 13px; color: var(--ink2); }
-  @media (max-width: 760px) {
-    .cov, .cov tbody, .cov tr, .cov td { display: block; } .cov thead { display: none; }
-    .cov tr { border-bottom: 1px solid var(--line); padding: 6px 0; } .cov tr:last-child { border-bottom: 0; } .cov td { border: 0; padding: 6px 14px; }
-    .cov td[data-k]::before { content: attr(data-k); display: block; font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: #98A0AA; margin-bottom: 4px; }
-  }
+  /* overview */
+  .ov { margin-top: 32px; }
+  .tbl { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; font-size: 14.5px; }
+  .tbl th { text-align: left; font-size: 11.5px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--ink3); padding: 12px 18px; border-bottom: 1px solid var(--line); }
+  .tbl td { padding: 14px 18px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  .tbl tr:last-child td { border-bottom: 0; }
+  .tbl tr[data-go] { cursor: pointer; } .tbl tr[data-go]:hover td { background: #FAFBFC; }
+  .tbl .id { font-weight: 800; white-space: nowrap; width: 1%; } .tbl .ui { color: var(--ink2); width: 1%; white-space: nowrap; }
+  .alert { margin-top: 16px; display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; border-radius: 16px; background: #FDEBEC; font-size: 14.5px; line-height: 1.5; color: #5B1A1B; }
+  .alert b { color: #8E1F21; }
+  .alert i { flex: none; width: 24px; height: 24px; border-radius: 12px; background: #E5383B; color: #fff; font: 800 14px/24px Inter, sans-serif; text-align: center; font-style: normal; }
 
-  /* callout */
-  .blk { margin: 18px 0 0; padding: 16px 18px; border-radius: 16px; background: #FDEBEC; color: #5B1A1B; font-size: 14.5px; line-height: 1.5; }
-  .blk b { color: #8E1F21; }
-  .blk.info { background: #EAF1FE; color: #1E3A6E; } .blk.info b { color: #1D4ED8; }
+  /* requirement section */
+  .rq { margin-top: 48px; background: #fff; border: 1px solid var(--line); border-radius: 28px; padding: 40px; }
+  .rq-h { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 32px; padding-bottom: 28px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
+  .rq-id { grid-column: 1 / -1; justify-self: start; height: 28px; padding: 0 12px; border-radius: 8px; background: var(--ink); color: #fff; font-size: 13px; font-weight: 800; letter-spacing: .6px; display: flex; align-items: center; }
+  .rq-h h2 { font-size: 30px; line-height: 1.15; letter-spacing: -.6px; margin: 6px 0 0; }
+  .rq-h p { grid-column: 1; font-size: 16px; line-height: 1.5; color: var(--ink2); margin: 0; max-width: 680px; }
+  .rq-st { grid-column: 2; grid-row: 2 / span 2; align-self: start; display: grid; grid-template-columns: auto auto; gap: 8px 10px; align-items: center; margin-top: 10px; }
+  .rq-st span.k { font-size: 12px; font-weight: 700; color: var(--ink3); }
+  .rq.try .rq-id { background: #2563EB; } .rq.open .rq-id, .rq.noui .rq-id { background: #6B7380; }
 
-  /* ---------- requirement sections: one big panel each ---------- */
-  .req { margin-top: 56px; background: #fff; border: 1px solid var(--line); border-radius: 28px; padding: 32px; scroll-margin-top: 120px; }
-  .req-h { display: flex; align-items: flex-start; gap: 18px; flex-wrap: wrap; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
-  .req-n { flex: none; min-width: 112px; height: 64px; padding: 0 16px; border-radius: 18px; background: #15181D; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-  .req-n small { font-size: 10.5px; font-weight: 700; letter-spacing: 1.4px; opacity: .7; }
-  .req-n b { font-size: 24px; font-weight: 800; letter-spacing: -.3px; line-height: 1.05; }
-  .req-tx { flex: 1; min-width: 240px; }
-  .req-tx h2 { font-size: 30px; line-height: 1.15; letter-spacing: -.6px; margin: 2px 0 6px; }
-  .req-tx p { margin: 0; font-size: 15.5px; line-height: 1.5; color: var(--ink2); max-width: 760px; }
-  .req-st { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
-  .req-st span.k { font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: #98A0AA; margin-right: 6px; }
-  .req-st div { display: flex; align-items: center; }
-  .req.na { padding: 24px 32px; background: #FAFBFC; }
-  .req.na .req-h { border: 0; padding: 0; align-items: center; }
-  .req.na .req-n { background: #CBD1D8; }
-  .req.na h2 { font-size: 22px; color: var(--ink2); }
-  .req.try .req-n { background: #2563EB; }
-  @media (max-width: 760px) { .req { padding: 20px 16px; border-radius: 22px; margin-top: 40px; } .req-tx h2 { font-size: 24px; } .req-n { min-width: 92px; height: 56px; } .req-n b { font-size: 20px; } }
-
-  /* sub-sections: one question each, CarPlay | Android Auto side by side */
-  .sub { padding-top: 28px; }
-  .sub + .sub { margin-top: 8px; border-top: 1px dashed var(--line); }
-  .sub-h { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
-  .sub-h i { font-style: normal; font-size: 13px; font-weight: 800; color: #2563EB; }
-  .sub-h h3 { font-size: 19px; margin: 0; letter-spacing: -.2px; }
-  .sub-p { font-size: 14.5px; line-height: 1.5; color: var(--ink2); margin: 0 0 16px; max-width: 780px; }
-  .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
-  @media (max-width: 760px) { .pair { grid-template-columns: minmax(0, 1fr); } }
-  .col-k { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; letter-spacing: .8px; text-transform: uppercase; color: var(--ink2); margin-bottom: 8px; }
-  .col-k svg { width: 16px; height: 16px; }
-  .fr { position: relative; width: 100%; overflow: hidden; border-radius: 12px; box-shadow: 0 0 0 1px rgba(16, 24, 40, .08), 0 12px 28px -14px rgba(16, 24, 40, .3); background: #000; }
-  .fr.ph { max-width: 300px; border-radius: 26px 26px 12px 12px; }
+  /* screen block: title + variant tabs, then CarPlay | Android Auto, same size, then one caption line */
+  .scrn { padding-top: 32px; }
+  .scrn-h { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+  .scrn-h h3 { font-size: 19px; letter-spacing: -.2px; margin: 0; flex: 1; min-width: 160px; }
+  .tabs { display: flex; gap: 2px; padding: 3px; border-radius: 12px; background: #EEF0F3; overflow-x: auto; scrollbar-width: none; max-width: 100%; }
+  .tabs button { height: 32px; padding: 0 14px; border: 0; border-radius: 9px; background: transparent; font: 600 13px/1 Inter, sans-serif; color: var(--ink2); cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 7px; }
+  .tabs button.on { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(16, 24, 40, .14); }
+  .tabs i { width: 8px; height: 8px; border-radius: 50%; }
+  .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  .ph-w { max-width: 320px; margin: 0 auto; }
+  .plat { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--ink2); margin-bottom: 10px; }
+  .plat svg { width: 16px; height: 16px; }
+  .fr { position: relative; width: 100%; overflow: hidden; border-radius: 14px; box-shadow: 0 0 0 1px rgba(16, 24, 40, .08); background: #000; }
+  .fr.ph { border-radius: 28px 28px 14px 14px; }
   .fr > .scr { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
-  .cap { margin-top: 8px; font-size: 13.5px; line-height: 1.45; color: var(--ink2); }
-  .note { margin-top: 8px; display: flex; gap: 8px; align-items: flex-start; font-size: 13px; line-height: 1.45; color: var(--ink2); }
-  .note .st { flex: none; height: 22px; font-size: 11.5px; padding: 0 8px; }
-  /* matrix: rows = platform, columns = state (alert levels, settings) */
-  .mx { display: grid; grid-template-columns: 110px repeat(var(--n), minmax(0, 1fr)); gap: 12px 14px; align-items: center; }
-  .mx-h { font-size: 12px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: var(--ink2); }
-  .mx-h small { display: block; text-transform: none; letter-spacing: 0; font-weight: 500; font-size: 12px; color: var(--ink3); margin-top: 2px; }
-  .mx-r { font-size: 12px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: var(--ink2); display: flex; align-items: center; gap: 6px; }
-  .mx-r svg { width: 16px; height: 16px; flex: none; }
-  .mx .fr { border-radius: 8px; }
-  @media (max-width: 900px) {
-    .mx { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .mx-c { display: none; } .mx-r { grid-column: 1 / -1; margin-top: 8px; }
-    .mx-cell::before { content: attr(data-k); display: block; font-size: 11px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: var(--ink2); margin-bottom: 6px; }
-  }
-  .ph-pair { display: flex; gap: 22px; flex-wrap: wrap; align-items: flex-start; }
-  .ph-pair > div { flex: 0 1 300px; }
+  .scrn-c { margin: 14px 0 0; font-size: 14px; color: var(--ink2); text-align: center; }
 
-  /* how we build it: one block at the end of each requirement */
-  .how { margin-top: 28px; padding: 20px 22px; border-radius: 18px; background: #F4F6F9; border: 1px solid var(--line); }
-  .how-k { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 800; letter-spacing: .8px; text-transform: uppercase; color: var(--ink); margin-bottom: 12px; }
-  .how-k svg { width: 18px; height: 18px; }
-  .how-g { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 26px; }
-  .how-g.one { grid-template-columns: minmax(0, 1fr); }
-  @media (max-width: 760px) { .how-g { grid-template-columns: minmax(0, 1fr); } }
-  .how ul { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.5; color: var(--ink2); }
+  /* limits: every "can't" or "only if" of the requirement, one short line + its rule link */
+  .lim { margin-top: 40px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; }
+  .lim-k, .how summary { font-size: 12px; font-weight: 800; letter-spacing: .8px; text-transform: uppercase; color: var(--ink3); }
+  .lim-k { grid-column: 1 / -1; margin-bottom: 12px; }
+  .lim ul { list-style: none; margin: 0; padding: 0; }
+  .lim li { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 12px; align-items: start; padding: 10px 0; border-top: 1px solid var(--line); font-size: 14px; line-height: 1.45; color: var(--ink); }
+  .lim li .st { justify-self: start; }
+  .lim li small { display: block; color: var(--ink2); font-size: 13px; margin-top: 2px; }
+  .lim .plat { margin: 0 0 4px; }
+
+  /* how we build it: closed by default */
+  .how { margin-top: 24px; border-top: 1px solid var(--line); }
+  .how summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 18px 0 0; }
+  .how summary::-webkit-details-marker { display: none; }
+  .how summary::after { content: ""; width: 8px; height: 8px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); margin: -4px 0 0 4px; }
+  .how[open] summary::after { transform: rotate(225deg); margin-top: 4px; }
+  .how-g { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 16px; }
+  .how ul { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.55; color: var(--ink2); }
   .how li + li { margin-top: 6px; }
-  .how li b { color: var(--ink); font-weight: 700; }
-  .how code { overflow-wrap: anywhere; font: 600 12.5px/1.5 ui-monospace, Menlo, monospace; background: #fff; border: 1px solid var(--line); padding: 2px 5px; border-radius: 6px; color: var(--ink); }
-  .req.na .how { margin-top: 16px; background: #fff; }
+  .how li b { color: var(--ink); }
+  .how code { overflow-wrap: anywhere; font: 600 12.5px/1.5 ui-monospace, Menlo, monospace; background: #F3F4F6; padding: 1px 5px; border-radius: 5px; color: var(--ink); }
+
+  /* requirements without UI: one list */
+  .nu { list-style: none; margin: 8px 0 0; padding: 0; }
+  .nu li { display: grid; grid-template-columns: 96px minmax(0, 1fr) auto; gap: 8px 20px; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .nu li:last-child { border-bottom: 0; }
+  .nu b { font-size: 14px; font-weight: 800; }
+  .nu h4 { margin: 0; font-size: 16px; } .nu p { margin: 2px 0 0; font-size: 14px; color: var(--ink2); line-height: 1.45; }
+  .nu .rq-st { grid-column: 3; grid-row: 1; margin: 0; }
+
+  /* team decisions */
+  .dec { list-style: none; counter-reset: d; margin: 8px 0 0; padding: 0; }
+  .dec li { counter-increment: d; display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--line); font-size: 14.5px; line-height: 1.5; color: var(--ink2); }
+  .dec li:last-child { border-bottom: 0; }
+  .dec li::before { content: counter(d); width: 28px; height: 28px; border-radius: 14px; background: #EEF0F3; color: var(--ink); font-weight: 800; font-size: 13px; display: grid; place-items: center; }
+  .dec b { color: var(--ink); display: block; }
 
   /* try it */
-  .try-g { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 22px; align-items: start; margin-top: 24px; }
-  @media (max-width: 1100px) { .try-g { grid-template-columns: minmax(0, 1fr); } }
+  .try-g { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; align-items: start; padding-top: 32px; }
   .ctl { background: #F8F9FA; border: 1px solid var(--line); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 14px; }
-  .ctl-k { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #98A0AA; margin-bottom: 6px; }
+  .ctl-k { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--ink3); margin-bottom: 6px; }
   .ctl .seg { width: 100%; } .ctl .seg button { flex: 1; padding: 0 6px; }
   .ctl-row { display: flex; align-items: center; gap: 8px; }
   .pbtn { width: 44px; height: 44px; border-radius: 22px; border: 1px solid var(--line); background: #fff; display: grid; place-items: center; cursor: pointer; color: var(--ink); flex: none; }
@@ -165,18 +165,29 @@
   .tg-row { display: flex; align-items: center; gap: 12px; min-height: 48px; cursor: pointer; border: 0; background: none; padding: 0; text-align: left; width: 100%; font: inherit; color: inherit; }
   .tg-row + .tg-row { border-top: 1px solid var(--line); }
   .tg-row span { flex: 1; font-size: 14px; font-weight: 600; } .tg-row small { display: block; font-size: 12px; font-weight: 500; color: var(--ink2); }
-  .tg { width: 50px; height: 30px; border-radius: 15px; background: #D5D9DF; position: relative; flex: none; transition: background-color .2s; }
-  .tg i { position: absolute; left: 3px; top: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(16, 24, 40, .25); transition: transform .2s; }
+  .tg { width: 50px; height: 30px; border-radius: 15px; background: #D5D9DF; position: relative; flex: none; }
+  .tg i { position: absolute; left: 3px; top: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(16, 24, 40, .25); }
   .tg.on { background: #16A34A; } .tg.on i { transform: translateX(20px); }
   .scn { display: flex; flex-direction: column; gap: 2px; }
   .scn button { display: flex; align-items: center; gap: 10px; padding: 9px 8px; border: 0; border-radius: 10px; background: transparent; text-align: left; cursor: pointer; font: 500 14px/1.25 Inter, sans-serif; color: var(--ink); }
   .scn button.on { background: #EEF2FF; }
   .scn i { width: 10px; height: 10px; border-radius: 50%; flex: none; background: #CBD1D8; }
   .scn .lv-adv i { background: #2563EB; } .scn .lv-warn i { background: #F5A524; } .scn .lv-crit i { background: #E5383B; } .scn .lv-ok i { background: #16A34A; }
-  .voice { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; }
-  @media (max-width: 760px) { .voice { grid-template-columns: minmax(0, 1fr); } }
-  .vbox { background: #F8F9FA; border: 1px solid var(--line); border-radius: 16px; padding: 4px 14px; }
+  .cap { margin-top: 10px; font-size: 14px; color: var(--ink2); text-align: center; }
 
+  @media (max-width: 1100px) { .try-g { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 760px) {
+    main { padding: 28px 16px 72px; } .top-r, .jump { padding-left: 16px; padding-right: 16px; }
+    .hero h1 { font-size: 28px; } .hero p { font-size: 16px; }
+    .rq { padding: 24px 16px; border-radius: 22px; margin-top: 32px; }
+    .rq-h { grid-template-columns: minmax(0, 1fr); } .rq-h h2 { font-size: 24px; } .rq-st { grid-column: 1; grid-row: auto; justify-self: start; }
+    .pair, .lim, .how-g { grid-template-columns: minmax(0, 1fr); } .pair { gap: 20px; } .lim .plat { margin-top: 16px; }
+    .scrn-h { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .tabs { width: 100%; } .tabs button { flex: 1; justify-content: center; padding: 0 6px; gap: 5px; font-size: 12.5px; }
+    .tbl thead { display: none; } .tbl, .tbl tbody, .tbl tr { display: block; } .tbl tr { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 12px; padding: 14px 16px; border-bottom: 1px solid var(--line); } .tbl tr:last-child { border-bottom: 0; }
+    .tbl td { border: 0; padding: 0; } .tbl td.ui { display: none; } .tbl td[data-k] { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; } .tbl td[data-k]::before { content: attr(data-k); width: 96px; font-size: 12px; font-weight: 700; color: var(--ink3); }
+    .nu li { grid-template-columns: minmax(0, 1fr); } .nu .rq-st { grid-column: 1; grid-row: auto; }
+  }
   /* ================= car / phone screens (drawn as the platforms' templates) ================= */
   .scr { --ink: #15181D; --ink2: #5B636E; --ink3: #6B7380; --line: #E6E8EC; --card: #FFFFFF; --bg: #F3F4F6; --raise: #FFFFFF;
     --adv: #2563EB; --warn: #F5A524; --crit: #E5383B; --ok: #16A34A; --accent: #2563EB;
@@ -289,6 +300,8 @@
 </style>
 </head>
 <body>
+</head>
+<body>
 <!-- Features nav: same markup and links as the demo page (web/index.html) -->
 <div class="fn-back" id="fn-back"></div>
 <nav class="fn" id="fn" aria-label="Features">
@@ -309,19 +322,20 @@
 </header>
 
 <main><div class="wrap">
-  <section id="summary" style="scroll-margin-top:120px">
+  <section class="hero" id="overview">
     <h1>CarPlay &amp; Android Auto Alerts</h1>
-    <p class="lede">The active alert's icon and message on the car screen, read aloud, next to the driver's navigation app or as the main screen. No map. One look on CarPlay and Android Auto, built from what each platform really gives a non-map app.</p>
-    <p class="meta">Feature design for FRD "CarPlay &amp; Android Auto Alerts" (Nov 11, 2026) · 800×480 car screens · light and dark · driver mode</p>
-    <table class="cov" aria-label="Requirements and what can be built">
-      <thead><tr><th>Requirement</th><th>Apple CarPlay</th><th>Android Auto</th></tr></thead>
-      <tbody id="cov"></tbody>
-    </table>
-    <div class="blk"><b>One blocker for Android Auto.</b> Android Auto only runs apps in the categories it lists: media, messaging, calling, navigation, points of interest, IoT and weather (<a href="https://developer.android.com/training/cars#supported-app-categories" target="_blank" rel="noopener">supported app categories</a>). An alert-only app fits none of them. The only way in is the navigation category, and a navigation app must give turn-by-turn directions (<a href="https://developer.android.com/docs/quality-guidelines/car-app-quality#NF-1" target="_blank" rel="noopener">NF-1</a>). The Android Auto screens below show the design if Road Sense ships as a navigation app. Decision for the team (end of the page).</div>
+    <p>The active alert on the car screen and through the car speakers, as the main screen or over the driver's navigation app. One look on both platforms.</p>
+    <div class="facts"><span>FRD · Nov 11, 2026</span><span>Apple CarPlay · Android Auto</span><span>800×480 car screen</span><span>Light and dark</span></div>
+    <div class="ov">
+      <table class="tbl" aria-label="Requirements">
+        <thead><tr><th>Req</th><th>Requirement</th><th>Work</th><th>Apple CarPlay</th><th>Android Auto</th></tr></thead>
+        <tbody id="ov"></tbody>
+      </table>
+      <div class="alert"><i>!</i><span><b>Blocker for Android Auto.</b> It only runs apps in its listed categories, and an alert-only app fits none (<a href="https://developer.android.com/training/cars#supported-app-categories" target="_blank" rel="noopener">categories</a>). The way in is the navigation category, which needs turn-by-turn (<a href="https://developer.android.com/docs/quality-guidelines/car-app-quality#NF-1" target="_blank" rel="noopener">NF-1</a>). Android Auto screens assume that.</span></div>
+    </div>
   </section>
   <div id="reqs"></div>
 </div></main>
-
 <script>
 // ---------- Features nav ----------
 (() => {
@@ -464,141 +478,165 @@ const base = (x) => Object.assign({ p: 'cp', view: 'app', a: null, aud: true, vi
 const C = (x) => frame(car(base(x)), 800, 480);
 const colK = (p) => `<div class="col-k">${p === 'cp' ? ICP + 'Apple CarPlay' : IAA + 'Android Auto'}</div>`;
 
-// one sub-section = one question, the same state on both platforms side by side
-function sub(n, title, desc, x, cpNotes, aaNotes, after) {
-  return `<div class="sub"><div class="sub-h"><i>${n}</i><h3>${title}</h3></div>${desc ? `<p class="sub-p">${desc}</p>` : ''}
-    <div class="pair"><div>${colK('cp')}${C(Object.assign({ p: 'cp' }, x.cp || x))}${(cpNotes || []).join('')}</div>
-    <div>${colK('aa')}${C(Object.assign({ p: 'aa' }, x.aa || x))}${(aaNotes || []).join('')}</div></div>${after || ''}</div>`;
-}
-// matrix: columns = states, rows = platforms
-function matrix(n, title, desc, cols, after) {
-  const head = `<div class="mx-c"></div>` + cols.map(c => `<div class="mx-h mx-c">${c.k}<small>${c.d || ''}</small></div>`).join('');
-  const row = (p) => `<div class="mx-r">${p === 'cp' ? ICP + 'CarPlay' : IAA + 'Android Auto'}</div>` + cols.map(c => `<div class="mx-cell" data-k="${c.k}">${C(Object.assign({ p }, c.x))}</div>`).join('');
-  return `<div class="sub"><div class="sub-h"><i>${n}</i><h3>${title}</h3></div>${desc ? `<p class="sub-p">${desc}</p>` : ''}<div class="mx" style="--n:${cols.length}">${head}${row('cp')}${row('aa')}</div>${after || ''}</div>`;
-}
 
-// ---------- requirements ----------
-const REQS = [
-  { id: 'req-001', n: 'REQ-001', t: 'Minimal alert screen', c: ['part', 'Same centered layout, from the grid template: icon + alert title; the message line sits in the bar above.'], a: ['part', 'Message template: icon + 2 lines. Only as a navigation app (blocker).'],
-    p: 'Road Sense on the car screen shows only the active alert: icon, alert, message. No map, no navigation. Both platforms use the same layout.' },
-  { id: 'req-002', n: 'REQ-002', t: 'Next to the navigation app', c: ['part', 'Live Activity as a floating card (iOS 26), or a tile in CarPlay Dashboard. No Spotify-style panel.'], a: ['part', 'Heads-up notification as a floating card, only as a navigation app. No panel.'],
-    p: 'The driver keeps their navigation app on screen. A Road Sense alert floats over it as a card, then goes away when the alert ends.' },
-  { id: 'req-003', n: 'REQ-003', t: 'Audio alerts in the car', c: ['ok', 'The phone speaks over any app; other audio ducks.'], a: ['part', 'Limited while another navigation app gives directions (NF-5, DD-1).'],
-    p: 'Each alert is spoken once through the car speakers, whatever is on the car screen. Critical alerts cut in; others wait for the line playing now.' },
-  { id: 'req-004', n: 'REQ-004', t: 'In-vehicle alert settings', c: ['part', 'Two on/off rows on the car screen; Apple asks for no "detailed settings" in the car.'], a: ['ok', 'Two on/off rows on the car screen.'],
-    p: 'Two settings: audio alerts and visual alerts. The driver changes them on the car screen (Road Sense → Settings) or in the phone app; both stay in sync.' },
-  { id: 'req-005', n: 'REQ-005', t: 'CarPlay & Android Auto parity', na: 'Every section on this page shows CarPlay and Android Auto side by side with the same look. Testing on both platforms is engineering work.', c: ['na'], a: ['na'] },
-  { id: 'req-006', n: 'REQ-006', t: 'Asset & configuration prefetch', na: 'Icons and settings download in the background; the driver sees nothing. (It is also needed: car screens only take images already on the phone.)', c: ['na'], a: ['na'] },
-];
+// =====================================================================================================
+// FEATURE DATA. The page is drawn from this object only (blueprint: docs/features/FEATURE-PAGE-TEMPLATE.md).
+// ui requirement: { id, t, goal, st: {cp, aa}, screens: [{ t, one?, v: [{ k, lv?, cp, aa, c }] }], lim: {cp, aa}, how: {cp, aa} }
+// no-UI requirement: { id, t, goal, st: {cp, aa}, noui: true, lim?, how? }
+// =====================================================================================================
+ST.na = 'No UI';
+const LV = { adv: '#2563EB', warn: '#F5A524', crit: '#E5383B', ok: '#16A34A' };
+const F = {
+  reqs: [
+    { id: 'REQ-001', t: 'Minimal alert screen', goal: 'Only the active alert on the car screen: icon, alert, message. No map.', st: { cp: 'part', aa: 'part' },
+      screens: [
+        { t: 'Alert', v: [
+          { k: 'Advisory', lv: 'adv', x: { a: AL.school }, c: 'Blue. Shown until the zone starts.' },
+          { k: 'Warning', lv: 'warn', x: { a: AL.red }, c: 'Amber, dark icon.' },
+          { k: 'Critical', lv: 'crit', x: { a: AL.stopped }, c: 'Red. Replaces any other alert at once.' },
+          { k: 'Cleared', lv: 'ok', x: { a: AL.schoolEnd }, c: 'Green, about 2 s, then back to no alert.' }] },
+        { t: 'No alert', v: [{ k: '', x: {}, c: 'Quiet screen while Road Sense runs.' }] }],
+      lim: {
+        cp: [['part', 'Same layout, built from the grid template', `No driving-task template centers an icon over two lines. ${ln('cpGrid')}`],
+             ['part', 'Distance refreshes every 10 s at most', ln('cpTask')],
+             ['no', 'Full-screen alert dialog not used', `Title and buttons only, no icon, needs an OK tap. ${ln('cpAlert')}`]],
+        aa: [['ok', 'Message template: icon + 2 lines', ln('aaMsg')],
+             ['no', 'Needs the navigation category', `No category for an alert-only app. ${ln('aaCat')}`],
+             ['ok', 'No animation on car screens', ln('SA1')]] },
+      how: {
+        cp: ['<b>Driving task</b> category: templates only.',
+             '<b>Trick:</b> <code>CPGridTemplate</code> with one <code>CPGridButton</code> (icon + alert title); message and distance in the bar title; voice and gear as bar buttons.',
+             '<b>Colors:</b> templates take no colors, so each icon is an image with its colored disc baked in (light and dark sets).',
+             '<b>Later:</b> iOS 27 <code>CPListTemplate</code> details header can replace the grid.'],
+        aa: ['<b>Navigation</b> category (<code>androidx.car.app.category.NAVIGATION</code>).',
+             '<code>MessageTemplate</code>: <code>CarIcon</code> = icon with colored disc, title, message; voice and gear as header actions.',
+             'Replace the screen on a new alert (<code>invalidate()</code>), never push, to stay inside the step limit.'] } },
 
-const HOW = {
-  'req-001': { cp: [
-      '<b>Category:</b> driving task (CarPlay entitlement <code>com.apple.developer.carplay-driving-task</code>), so only templates, no custom drawing.',
-      '<b>Trick for the centered look:</b> a <code>CPGridTemplate</code> with one <code>CPGridButton</code> (alert icon + alert title); the message and distance go in the grid\'s title in the navigation bar. Voice and gear are the bar\'s trailing buttons.',
-      '<b>Alert colors:</b> templates don\'t take colors, so each icon is a ready-made image with its colored disc baked in (light and dark sets), made with <code>UIImage</code> on the phone.',
-      '<b>Updates:</b> a new alert = replace the root template at once; the distance in the title updates no more than every 10 s.',
-      '<b>Later:</b> on iOS 27, a <code>CPListTemplate</code> details header can replace the grid (one prominent item at the top).'],
-    aa: [
-      '<b>Category:</b> navigation (<code>androidx.car.app.category.NAVIGATION</code>), the only way in (blocker above).',
-      '<b>Screen:</b> <code>MessageTemplate</code>: <code>CarIcon</code> = the alert icon with its colored disc, message = title + message line, header actions = voice and settings.',
-      '<b>No map:</b> the app still needs a <code>NavigationTemplate</code> for turn-by-turn (NF-1); the alert screen is pushed on top of it while the driver is not navigating with Road Sense.',
-      '<b>Updates:</b> <code>invalidate()</code> when the alert changes; the template limit (step count) is kept low by replacing, not pushing, screens.'] },
-  'req-002': { cp: [
-      '<b>Floating card:</b> an ActivityKit Live Activity started when the drive starts, <code>supplementalActivityFamilies([.small])</code>. Its state update with an alert makes CarPlay show it as a notification over the navigation app (iOS 26).',
-      '<b>Dashboard tile:</b> the same Live Activity shows in CarPlay Dashboard; no extra work.',
-      '<b>Updates:</b> pushed from the phone app (local ActivityKit update, or APNs push when the app is in the background). Alert ends → state back to "running".',
-      '<b>Older iOS:</b> a local notification with the <code>.carPlay</code> option: title + message, no image.'],
-    aa: [
-      '<b>Floating card:</b> a notification on a high-importance channel with <code>CarAppExtender</code> (navigation apps get heads-up notifications in the car): small icon = the alert icon, title, text.',
-      '<b>Trick:</b> post only for new alerts (<code>setOnlyAlertOnce</code>), cancel it when the alert ends, so nothing stays over the map (IN-1).',
-      '<b>Split screen:</b> nothing to build; the car draws it and shows the same heads-up notification.'] },
-  'req-003': { cp: [
-      '<b>Voice:</b> <code>AVSpeechSynthesizer</code> on the phone, audio session category <code>.playback</code> with mode <code>.voicePrompt</code> and option <code>.duckOthers</code>; activate before speaking, deactivate right after.',
-      '<b>Queue:</b> one line per alert, once. Critical: stop the current line and speak at once. Others: wait.',
-      '<b>Works with any app in front</b> (needs the background audio mode while the drive runs).'],
-    aa: [
-      '<b>Voice:</b> <code>TextToSpeech</code> with <code>AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE</code> and audio focus <code>AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK</code>; release focus when done.',
-      '<b>Same queue</b> as CarPlay (shared Flutter code; platform code only for the audio session).',
-      '<b>Open point:</b> while another navigation app guides, Road Sense may have to stay silent (NF-5). Ask Google.'] },
-  'req-004': { cp: [
-      '<b>Screen:</b> the gear pushes a <code>CPListTemplate</code> with two <code>CPListItem</code>s; the detail text shows On / Off. Tap = flip and update the item (CarPlay rows have no switch).',
-      '<b>Sync:</b> one setting store on the phone (shared preferences); the car screen, phone screen and alert engine all read it.',
-      '<b>Effect:</b> visual off = the engine never sends the alert to the car screen or the Live Activity; audio off = the voice queue drops it. Nothing else changes.'],
-    aa: [
-      '<b>Screen:</b> the gear pushes a <code>ListTemplate</code> with two <code>Row</code>s, each with a <code>Toggle</code> (or On / Off text, to match CarPlay).',
-      '<b>Sync and effect:</b> same setting store and same engine rule as CarPlay.'] },
-  'req-005': { one: [
-      '<b>One look:</b> both car apps are drawn from one shared alert model (title, message, distance, level, icon); only the template code differs per platform.',
-      '<b>Test:</b> CarPlay Simulator (Xcode) and the Android Auto Desktop Head Unit, then a real car for each.'] },
-  'req-006': { one: [
-      '<b>Icons:</b> bundled in the app (all alert icons × light/dark, discs baked in); a new set downloads at app start and replaces them. Car screens only take images already on the phone.',
-      '<b>Settings and alert texts:</b> fetched with the rest of the app config at start, cached for offline drives.'] },
+    { id: 'REQ-002', t: 'Next to the navigation app', goal: 'The driver keeps their navigation app. A Road Sense alert floats over it, then goes away.', st: { cp: 'part', aa: 'part' },
+      screens: [
+        { t: 'Navigation app in front', v: [
+          { k: 'Alert', x: { view: 'nav', a: AL.stopped }, c: 'Card top right; the turn card stays visible.' },
+          { k: 'No alert', x: { view: 'nav' }, c: 'Nothing covers the navigation app.' }] },
+        { t: 'Split screen', v: [
+          { k: 'Alert', x: { view: 'side', a: AL.red }, c: 'The car draws the split. CarPlay: Road Sense tile. Android Auto: the same card.' },
+          { k: 'No alert', x: { view: 'side' }, c: 'CarPlay keeps a quiet tile; Android Auto shows nothing.' }] }],
+      lim: {
+        cp: [['part', 'Floating card needs iOS 26', `Live Activity, shown in Dashboard or as a notification. ${ln('cpLive')}`],
+             ['no', 'No panel of our own', `Dashboard holds navigation apps and Now Playing. ${ln('cpDash')}`]],
+        aa: [['part', 'Floating card only as a navigation app', `${ln('aaHun')} · ${ln('aaNotif')}`],
+             ['no', 'No panel of our own', `Places only for its categories. ${ln('aaCat')}`]] },
+      how: {
+        cp: ['<b>Floating card:</b> ActivityKit Live Activity, <code>supplementalActivityFamilies([.small])</code>, started with the drive; an alert update shows it over the navigation app.',
+             '<b>Dashboard tile:</b> the same Live Activity, no extra work.',
+             '<b>Older iOS:</b> local notification with <code>.carPlay</code>: title and message, no image.'],
+        aa: ['<b>Floating card:</b> notification with <code>CarAppExtender</code> on a high-importance channel.',
+             '<b>Trick:</b> <code>setOnlyAlertOnce</code> and cancel when the alert ends, so nothing stays on the map.',
+             '<b>Split screen:</b> nothing to build; the car shows the same card.'] } },
+
+    { id: 'REQ-003', t: 'Audio alerts in the car', noui: true, goal: 'Each alert said once through the car speakers. Critical alerts cut in.', st: { cp: 'ok', aa: 'part' },
+      lim: { aa: [['part', 'Quiet while another navigation app guides', `${ln('NF5')} · ${ln('DD1')}`]] },
+      how: { cp: ['<code>AVSpeechSynthesizer</code>, session <code>.playback</code> / <code>.voicePrompt</code> / <code>.duckOthers</code>, on only while speaking.'],
+             aa: ['<code>TextToSpeech</code>, <code>USAGE_ASSISTANCE_NAVIGATION_GUIDANCE</code>, focus <code>AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK</code>.'] } },
+
+    { id: 'REQ-004', t: 'In-vehicle alert settings', goal: 'Audio alerts and visual alerts, on or off, from the car screen or the phone. Both stay in sync.', st: { cp: 'part', aa: 'ok' },
+      screens: [
+        { t: 'Settings on the car screen', v: [{ k: '', x: { view: 'set' }, c: 'The gear in the top bar opens two rows. Tap a row to switch it.' }] },
+        { t: 'What each setting does', v: [
+          { k: 'Both on', x: { a: AL.stopped }, c: 'Shown and spoken.' },
+          { k: 'Audio off', x: { a: AL.stopped, aud: false }, c: 'Shown, not spoken. The speaker shows muted.' },
+          { k: 'Visual off', x: { a: AL.stopped, vis: false }, c: 'Spoken, not shown. No card over other apps either.' },
+          { k: 'Both off', x: { a: AL.stopped, aud: false, vis: false }, c: 'Nothing.' }] },
+        { t: 'Settings on the phone', v: [{ k: '', phone: true, c: 'Settings → In-vehicle alerts.' }] }],
+      lim: {
+        cp: [['part', 'Settings in the car: Apple review decides', `"Do not show … detailed settings". Two rows is our reading. ${ln('cpTask')}`],
+             ['part', 'Rows have no switch', 'On / Off text on both platforms, for one look.']],
+        aa: [['ok', 'Settings screen allowed', ln('aaSet')]] },
+      how: {
+        cp: ['Gear pushes a <code>CPListTemplate</code> with two <code>CPListItem</code>s; tap flips the value and updates the detail text.',
+             'One setting store on the phone for car, phone and alert engine. Visual off: the engine never sends the alert to the car or the Live Activity. Audio off: the voice queue drops it.'],
+        aa: ['Gear pushes a <code>ListTemplate</code> with two <code>Row</code>s.', 'Same setting store and engine rule.'] } },
+
+    { id: 'REQ-005', t: 'Parity', noui: true, goal: 'Same behavior on both platforms. Every screen on this page is the same on both.', st: { cp: 'na', aa: 'na' },
+      how: { one: ['One shared alert model (title, message, distance, level, icon); only template code per platform. Test in CarPlay Simulator and Android Auto DHU, then a car.'] } },
+    { id: 'REQ-006', t: 'Asset & configuration prefetch', noui: true, goal: 'Icons and settings download in the background. Car screens only take images already on the phone.', st: { cp: 'na', aa: 'na' },
+      how: { one: ['Icons bundled (every alert × light/dark, discs baked in), refreshed at app start; settings and texts cached with the app config.'] } },
+  ],
+  decide: [
+    ['Android Auto category', `Ship Road Sense as a navigation app (turn-by-turn needed, ${ln('NF1')}), or voice alerts from the phone only?`],
+    ['iOS 26 for the floating card', `The CarPlay Live Activity needs iOS 26 (${ln('cpLive')}). Older iPhones: notification and voice.`],
+    ['Android Auto voice while Google Maps guides', `${ln('NF5')}, ${ln('DD1')}: ask Google whether safety alerts count.`],
+    ['CarPlay alert screen', `Grid template now, or iOS 27 list details header (${ln('cpListT')})? Two setting rows OK in the car (${ln('cpTask')})?`],
+  ],
 };
-const WRENCH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-.5-.5-2.5z"/></svg>';
-function howBlock(id) {
-  const h = HOW[id]; if (!h) return '';
-  const ul = (a) => `<ul>${a.map(x => `<li>${x}</li>`).join('')}</ul>`;
-  const g = h.one ? `<div class="how-g one">${ul(h.one)}</div>`
-    : `<div class="how-g"><div>${colK('cp')}${ul(h.cp)}</div><div>${colK('aa')}${ul(h.aa)}</div></div>`;
-  return `<div class="how"><div class="how-k">${WRENCH}How we build it</div>${g}</div>`;
+
+// ---------- render ----------
+const VAR = {};   // chosen variant per screen block
+const sid = (id) => id.toLowerCase();
+const statusCell = (s) => `<div class="rq-st"><span class="k">CarPlay</span>${st(s.cp)}<span class="k">Android Auto</span>${st(s.aa)}</div>`;
+const plat = (p) => `<div class="plat">${p === 'cp' ? ICP + 'Apple CarPlay' : IAA + 'Android Auto'}</div>`;
+
+function screenPair(key, v) {
+  if (v.phone) { const ph = (k) => `<div><div class="plat">${k === 'cp' ? ICP + 'iPhone' : IAA + 'Android phone'}</div><div class="ph-w">${frame(phoneSet(base({})), 390, 400, 'ph')}</div></div>`; return `<div class="pair">${ph('cp')}${ph('aa')}</div>`; }
+  return `<div class="pair"><div>${plat('cp')}${C(Object.assign({ p: 'cp' }, v.x))}</div><div>${plat('aa')}${C(Object.assign({ p: 'aa' }, v.x))}</div></div>`;
 }
-function reqHead(r, extra) {
-  const chips = !r.c ? '' : r.na ? `<div class="req-st">${st('na')}</div>` : `<div class="req-st"><div><span class="k">CarPlay</span>${st(r.c[0])}</div><div><span class="k">Android Auto</span>${st(r.a[0])}</div></div>`;
-  return `<div class="req-h"><div class="req-n"><small>${r.n ? 'REQ' : 'LAST'}</small><b>${r.n ? r.n.slice(4) : 'Try'}</b></div><div class="req-tx"><h2>${r.t}</h2><p>${r.na || r.p}</p>${extra || ''}</div>${chips}</div>`;
+function screenBlock(r, i) {
+  const s = r.screens[i], key = r.id + ':' + i, j = VAR[key] || 0, v = s.v[j];
+  const tabs = s.v.length > 1 ? `<div class="tabs" role="tablist">${s.v.map((x, n) => `<button type="button" role="tab" data-key="${key}" data-n="${n}" class="${n === j ? 'on' : ''}" aria-selected="${n === j}">${x.lv ? `<i style="background:${LV[x.lv]}"></i>` : ''}${x.k}</button>`).join('')}</div>` : '';
+  return `<div class="scrn" data-block="${key}"><div class="scrn-h"><h3>${s.t}</h3>${tabs}</div><div class="scrn-b">${screenPair(key, v)}</div><p class="scrn-c">${v.c}</p></div>`;
+}
+const limList = (a) => `<ul>${(a || []).map(([s, t, w]) => `<li>${st(s)}<span>${t}<small>${w}</small></span></li>`).join('')}</ul>`;
+const limits = (r) => r.lim ? `<div class="lim"><div class="lim-k">Limits</div><div>${plat('cp')}${limList(r.lim.cp)}</div><div>${plat('aa')}${limList(r.lim.aa)}</div></div>` : '';
+const ul = (a) => `<ul>${a.map(x => `<li>${x}</li>`).join('')}</ul>`;
+function how(h) {
+  if (!h) return '';
+  const g = h.one ? `<div class="how-g" style="grid-template-columns:minmax(0,1fr)">${ul(h.one)}</div>`
+    : `<div class="how-g"><div>${plat('cp')}${ul(h.cp)}</div><div>${plat('aa')}${ul(h.aa)}</div></div>`;
+  return `<details class="how"><summary>How we build it</summary>${g}</details>`;
+}
+const rqHead = (id, t, goal, s) => `<header class="rq-h"><div class="rq-id">${id}</div><h2>${t}</h2><p>${goal}</p>${s ? statusCell(s) : ''}</header>`;
+
+function board() {
+  const ui = F.reqs.filter(r => !r.noui), nu = F.reqs.filter(r => r.noui);
+  document.getElementById('ov').innerHTML = F.reqs.map(r => `<tr data-go="${r.noui ? 'no-ui' : sid(r.id)}"><td class="id">${r.id}</td><td>${r.t}</td><td class="ui">${r.noui ? 'No UI' : 'Screens'}</td><td data-k="CarPlay">${st(r.st.cp)}</td><td data-k="Android Auto">${st(r.st.aa)}</td></tr>`).join('');
+  let h = ui.map(r => `<section class="rq" id="${sid(r.id)}">${rqHead(r.id, r.t, r.goal, r.st)}${r.screens.map((_, i) => screenBlock(r, i)).join('')}${limits(r)}${how(r.how)}</section>`).join('');
+  h += `<section class="rq noui" id="no-ui">${rqHead('NO UI', 'Requirements without screens', 'Engineering work only. Nothing new to see on the car screen.')}
+    <ul class="nu">${nu.map(r => `<li><b>${r.id}</b><div><h4>${r.t}</h4><p>${r.goal}${r.lim ? ' ' + r.lim.aa.map(([, t, w]) => `Android Auto: ${t.toLowerCase()} (${w}).`).join(' ') : ''}</p></div>${statusCell(r.st)}</li>`).join('')}</ul>
+    <details class="how"><summary>How we build it</summary><div class="how-g" style="grid-template-columns:minmax(0,1fr)">${ul(nu.map(r => `<b>${r.id}:</b> ` + (r.how.one ? r.how.one.join(' ') : `CarPlay: ${r.how.cp.join(' ')} Android Auto: ${r.how.aa.join(' ')}`)))}</div></details></section>`;
+  h += `<section class="rq try" id="try">${rqHead('PROTOTYPE', 'Try it', 'A drive up State St. Switch platform, screen and settings. The voice is your browser\'s.')}${bodyTry()}</section>`;
+  h += `<section class="rq open" id="decide">${rqHead('OPEN', 'For the team to decide', 'Answers change the screens above.')}<ol class="dec">${F.decide.map(([t, d]) => `<li><span><b>${t}</b>${d}</span></li>`).join('')}</ol></section>`;
+  const el = document.getElementById('reqs'); el.innerHTML = h;
+  for (const f of document.querySelectorAll('.fr')) { ro.observe(f); fitFrame(f); }
+  el.onclick = (e) => {
+    const b = e.target.closest('[data-key]'); if (!b) return;
+    VAR[b.dataset.key] = +b.dataset.n;
+    const [rid, i] = b.dataset.key.split(':'), r = F.reqs.find(x => x.id === rid);
+    const blk = el.querySelector(`[data-block="${b.dataset.key}"]`); blk.outerHTML = screenBlock(r, +i);
+    for (const f of el.querySelectorAll(`[data-block="${b.dataset.key}"] .fr`)) { ro.observe(f); fitFrame(f); }
+  };
+  wireTry();
+  const J = [['overview', 'Overview']].concat(ui.map(r => [sid(r.id), r.id.slice(4) + ' · ' + r.t]), [['no-ui', 'No UI'], ['try', 'Try it'], ['decide', 'To decide']]);
+  document.getElementById('jump').innerHTML = J.map(([id, t]) => `<a data-id="${id}" role="link" tabindex="0">${t}</a>`).join('');
+  watchJump();
 }
 
-function body001() {
-  return sub('1.1', 'Alert screen', 'The alert takes the whole screen: icon in the alert color, the alert, the message with the distance. Voice and settings in the top bar.',
-    { a: AL.stopped },
-    [note('part', `CarPlay has no template that centers a big icon over two lines for a driving task app. Built from the grid template (an icon + a title, ${ln('cpGrid')}); the message goes in the navigation bar title. Check with the tech lead: iOS 27 lists add "a details header to present one item prominently" (${ln('cpListT')}).`),
-     note('part', `The distance updates at most every 10 s: "Do not periodically refresh data items … more than once every 10 seconds" (${ln('cpTask')}). A new alert replaces the screen at once.`)],
-    [note('ok', `Message template: icon, up to 2 lines of text, header actions (${ln('aaMsg')}).`), note('no', `Not publishable as an alert-only app: no fitting category (${ln('aaCat')}).`)])
-  + matrix('1.2', 'Alert levels', 'One color per level, as on the phone. Dark icon on amber, white on the other colors.', [
-    { k: 'Advisory', d: 'blue', x: { a: AL.school } }, { k: 'Warning', d: 'amber', x: { a: AL.red } }, { k: 'Critical', d: 'red', x: { a: AL.stopped } }, { k: 'Cleared', d: 'green, ~2 s', x: { a: AL.schoolEnd } }],
-    note('ok', `No motion anywhere on the car screen: "must not display animated elements" (${ln('SA1')}). Same on CarPlay.`))
-  + sub('1.3', 'No alert', 'Quiet: Road Sense is running, and where you are.', {})
-  + sub('1.4', 'CarPlay\'s full-screen dialog (not used)', 'The same low-clearance alert. CarPlay\'s only full-screen dialog drops the icon and needs a tap on OK while driving, so Road Sense uses the alert screen (1.1) on both.',
-    { cp: { a: AL.bridge, modal: true }, aa: { a: AL.bridge } },
-    [note('no', `Icon in the dialog: the alert template is "a title and one or more buttons" (${ln('cpAlert')}, ${ln('cpAlertApi')}).`)],
-    [note('ok', 'Android Auto\'s alert screen is already full screen (1.1).')]);
+// in-page links: the page has a <base href> (to load the app's images), so "#id" links would leave the page. Scroll in JS.
+function goTo(id) { const s = document.getElementById(id); if (s) { s.scrollIntoView({ behavior: 'smooth', block: 'start' }); history.replaceState(null, '', location.pathname + location.search + '#' + id); } }
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('#jump a[data-id], tr[data-go]'); if (!a) return;
+  e.preventDefault(); goTo(a.dataset.id || a.dataset.go);
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.matches('#jump a[data-id]')) goTo(e.target.dataset.id); });
+
+let io;
+function watchJump() {
+  if (io) io.disconnect();
+  const links = [...document.querySelectorAll('#jump a')];
+  const set = (id) => { for (const a of links) { const on = a.dataset.id === id; a.classList.toggle('on', on); if (on) { const j = document.getElementById('jump'); j.scrollTo({ left: a.offsetLeft - 24, behavior: 'smooth' }); } } };
+  io = new IntersectionObserver((es) => { const v = es.filter(e => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0]; if (v) set(v.target.id); }, { rootMargin: '-120px 0px -60% 0px' });
+  for (const a of links) { const s = document.getElementById(a.dataset.id); if (s) io.observe(s); }
+  set('overview');
 }
-function body002() {
-  return sub('2.1', 'Navigation app in front', 'The alert floats over the navigation app as a card: icon, alert, message, distance. Top right, so the turn card stays visible. Gone when the alert ends.',
-    { view: 'nav', a: AL.stopped },
-    [note('part', `A Live Activity, "shown in CarPlay Dashboard, or as a notification" (${ln('cpLive')}): iOS 26 and later. Older iOS: a notification with a title and subtitle, no image (${ln('cpNotif')}).`)],
-    [note('part', `A heads-up notification (app icon, text, actions, ${ln('aaHun')}): only from a navigation app (${ln('aaNotif')}), and only when relevant to the driver (${ln('IN1')}).`)])
-  + sub('2.2', 'Split screen', 'The split itself is drawn by the car system, not by Road Sense: navigation on the left, music on the right. CarPlay Dashboard keeps a Road Sense tile for the drive; Android Auto shows the same floating card.',
-    { cp: { view: 'side', a: AL.red }, aa: { view: 'side', a: AL.red } },
-    [note('no', `A Spotify-style panel of our own: Dashboard holds navigation apps and Now Playing (${ln('cpDash')}). The Live Activity tile is the place Apple gives (${ln('cpLive')}).`)],
-    [note('no', `A Road Sense panel: Android Auto gives places only to its categories, and alerts are not one (${ln('aaCat')}, ${ln('aaOther')}).`)])
-  + `<p class="sub-p" style="margin-top:14px">With no alert, nothing covers the navigation app (CarPlay Dashboard keeps the quiet tile).</p>`;
-}
-function body003() {
-  const lines = ['stopped', 'school', 'red', 'bridge'].map(k => `<button class="tg-row" data-say="${k}" type="button"><span>“${AL[k].say}”<small>${AL[k].t} · ${AL[k].lv === 'crit' ? 'critical: cuts in at once' : 'after the line playing now'}</small></span><i class="pbtn" style="width:36px;height:36px">${SPK}</i></button>`).join('');
-  return `<div class="sub"><div class="sub-h"><i>3.1</i><h3>What the driver hears</h3></div><p class="sub-p">One short sentence per alert, said once. Tap to hear.</p>
-    <div class="voice"><div class="vbox">${lines}</div><div>
-      <div class="col-k">${ICP}Apple CarPlay</div>
-      ${note('ok', `Any app in front: the phone speaks; music and the navigation voice duck. Audio session open only while speaking (${ln('cpAudio')}).`)}
-      ${note('ok', `CarPlay notifications are silent ("not read aloud", ${ln('cpNotif')}), so the app speaks for itself.`)}
-      <div class="col-k" style="margin-top:16px">${IAA}Android Auto</div>
-      ${note('part', `Navigation audio focus with ducking (${ln('aaVoice')}), for navigation apps only (${ln('DD1')}).`)}
-      ${note('no', `While another navigation app gives directions: no "voice guidance" from a second navigation app (${ln('NF5')}). Whether safety alerts count: ask Google.`)}
-    </div></div></div>`;
-}
-function body004() {
-  const cols = [
-    { k: 'Both on', d: 'shown + spoken', x: { a: AL.stopped } },
-    { k: 'Audio off', d: 'shown, not spoken', x: { a: AL.stopped, aud: false } },
-    { k: 'Visual off', d: 'spoken, not shown', x: { a: AL.stopped, vis: false } },
-    { k: 'Both off', d: 'nothing', x: { a: AL.stopped, aud: false, vis: false } },
-  ];
-  return sub('4.1', 'Settings on the car screen', 'The gear in the top bar opens two rows. Tap a row to turn it on or off.', { view: 'set', aud: true, vis: true },
-    [note('part', `Apple: "Do not show CarPlay UI for tasks unrelated to driving (for example, account setup, detailed settings)" (${ln('cpTask')}). Two on/off rows about alerts are our reading of "allowed"; Apple review decides. CarPlay rows have no switch, so both platforms show On / Off.`)],
-    [note('ok', `Settings may use the list template, "all settings on one screen" (${ln('aaSet')}).`)])
-  + matrix('4.2', 'What each setting does', 'The same stopped-vehicle alert in all four. Visual off: the screen stays as it is with no alert, and nothing floats over the navigation app.', cols)
-  + `<div class="sub"><div class="sub-h"><i>4.3</i><h3>Same switches on the phone</h3></div><p class="sub-p">Settings → In-vehicle alerts. A change on either screen shows on the other.</p>
-    <div class="ph-pair"><div>${frame(phoneSet(base({})), 390, 400, 'ph')}</div><div>${frame(phoneSet(base({ vis: false })), 390, 400, 'ph')}<div class="cap">Visual off</div></div></div></div>`;
-}
+
 function bodyTry() {
   return `<div class="try-g">
       <div><div class="fr" id="live" data-w="800" data-h="480" style="aspect-ratio:800/480"></div><div class="cap" id="live-cap"></div></div>
@@ -618,38 +656,6 @@ function bodyTry() {
         <div><div class="ctl-k">Alerts on this drive</div><div class="scn" id="c-scn"></div></div>
       </div>
     </div>`;
-}
-
-function board() {
-  document.getElementById('cov').innerHTML = REQS.map(r => `<tr><td><a href="#${r.id}">${r.n}</a><small>${r.t}</small></td><td data-k="CarPlay">${st(r.c[0])}${r.c[1] ? `<span class="why">${r.c[1]}</span>` : ''}</td><td data-k="Android Auto">${st(r.a[0])}${r.a[1] ? `<span class="why">${r.a[1]}</span>` : ''}</td></tr>`).join('');
-  const B = { 'req-001': body001, 'req-002': body002, 'req-003': body003, 'req-004': body004 };
-  const html = REQS.map(r => `<section class="req ${r.na ? 'na' : ''}" id="${r.id}">${reqHead(r)}${r.na ? '' : B[r.id]()}${howBlock(r.id)}</section>`).join('')
-    + `<section class="req try" id="try">${reqHead({ t: 'Try it', p: 'A drive up State St with the alerts above. Switch the platform, what is on the car screen, and the two settings. The voice is your browser\'s.' })}${bodyTry()}</section>`
-    + `<section class="req" id="decide"><div class="req-h" style="border:0;padding:0"><div class="req-tx"><h2>For the team to decide</h2></div></div>
-      <div class="blk info"><b>1. Android Auto category.</b> Ship Road Sense as a navigation app (turn-by-turn needed, ${ln('NF1')}), or leave Android Auto at voice alerts from the phone only?<br>
-      <b>2. iOS 26 for the floating card.</b> The CarPlay Live Activity needs iOS 26 (${ln('cpLive')}). Older iPhones: notification + voice.<br>
-      <b>3. Android Auto voice while Google Maps guides.</b> ${ln('NF5')} and ${ln('DD1')}: ask Google whether safety alerts count.<br>
-      <b>4. CarPlay alert screen.</b> Grid template now, or the iOS 27 list details header (${ln('cpListT')})? And are two on/off rows OK in the car (${ln('cpTask')})?</div></section>`;
-  const el = document.getElementById('reqs');
-  el.innerHTML = html;
-  for (const f of el.querySelectorAll('.fr')) { ro.observe(f); fitFrame(f); }
-  for (const b of el.querySelectorAll('[data-say]')) b.onclick = () => speak(AL[b.dataset.say].say, true);
-  wireTry();
-  // jump bar
-  const J = [['summary', '<b>Summary</b>']].concat(REQS.map(r => [r.id, `<b>${r.n.slice(4)}</b>${r.t.replace('CarPlay & Android Auto parity', 'Parity').replace('Asset & configuration prefetch', 'Prefetch')}`, r.na])).concat([['try', '<b>Try it</b>'], ['decide', 'To decide']]);
-  document.getElementById('jump').innerHTML = J.map(([id, t, na]) => `<a href="#${id}" data-id="${id}" class="${na ? 'mute' : ''}">${t}</a>`).join('');
-  watchJump();
-}
-
-// highlight the section in view
-let io;
-function watchJump() {
-  if (io) io.disconnect();
-  const links = [...document.querySelectorAll('#jump a')];
-  const set = (id) => { for (const a of links) { const on = a.dataset.id === id; a.classList.toggle('on', on); if (on) a.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } };
-  io = new IntersectionObserver((es) => { const v = es.filter(e => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0]; if (v) set(v.target.id); }, { rootMargin: '-130px 0px -55% 0px' });
-  for (const a of links) { const s = document.getElementById(a.dataset.id); if (s) io.observe(s); }
-  set('summary');
 }
 
 // ---------- try it ----------
@@ -690,6 +696,7 @@ function wireTry() {
 }
 setInterval(() => { if (!S.playing) return; S.t += 0.5; if (S.t >= DRIVE[S.i][1]) go(S.i + 1); }, 500);
 
+
 // ---------- theme ----------
 document.getElementById('theme').onclick = (e) => {
   const t = e.target.dataset.t; if (!t) return; DARK = t === 'dark';
@@ -699,6 +706,7 @@ document.getElementById('theme').onclick = (e) => {
 };
 try { if (localStorage.getItem('rs-feat-theme') === 'dark') { DARK = true; for (const b of document.getElementById('theme').children) b.className = b.dataset.t === 'dark' ? 'on' : ''; } } catch (e) {}
 board();
+if (location.hash) setTimeout(() => goTo(location.hash.slice(1)), 300);
 </script>
 </body>
 </html>
