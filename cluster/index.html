@@ -29,7 +29,7 @@
   .demo-seg a:focus-visible { outline: 2px solid #2563EB; outline-offset: 1px; }
   /* phone: no group labels, short names, device icons only */
   @media (max-width: 760px) { .demo-bar { gap: 6px 8px; padding-left: 6px; padding-right: 6px; } .demo-k, .demo-bar .lg { display: none; } .demo-seg a { height: 32px; padding: 0 8px; font-size: 13px; gap: 5px; } .demo-seg a .dv-t { display: none; } #demo-open { height: 32px; padding: 0 10px; } }
-  @media (max-width: 400px) { .demo-seg a svg { width: 16px; height: 16px; } .demo-grp:first-child .demo-seg a svg { display: none; } }
+  @media (max-width: 400px) { .demo-seg a svg { width: 16px; height: 16px; } .demo-grp:first-of-type .demo-seg a svg { display: none; } }
   #root { padding-top: var(--barh, calc(var(--bar) + env(safe-area-inset-top, 0px))); }
   /* computer: the board (phone + side panel) centered under the bar */
   body:not(.app) #root { display: flex; justify-content: center; }
@@ -99,6 +99,31 @@
   .dsh-sc span { flex: 1; min-width: 0; }
   .dsh-tag { flex: none; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 8px; background: #EEF0F3; color: var(--ink2); }
   .dsh-tag.crit { background: #FDEBEC; color: #C62828; } .dsh-tag.warn { background: #FEF3DF; color: #9A5B00; } .dsh-tag.adv { background: #EAF1FE; color: #1D4ED8; } .dsh-tag.ev { background: #1C2026; color: #fff; }
+  /* Features nav (left): the demo + one page per feature document (web/features/<name>/). Wide screens: docked;
+     narrow: a menu button at the left of the bar opens it over the page. --navw = the space it takes. */
+  :root { --navw: 0px; }
+  .fn { position: fixed; z-index: 260; left: 0; top: 0; bottom: 0; width: 248px; box-sizing: border-box; background: #fff; border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: calc(12px + env(safe-area-inset-top, 0px)) 10px 12px; transform: translateX(-102%); transition: transform .26s cubic-bezier(.2, .8, .2, 1); }
+  .fn-h { display: flex; align-items: center; gap: 10px; padding: 4px 8px 14px; }
+  .fn-h img { width: 30px; height: 30px; }
+  .fn-h b { font-size: 15px; font-weight: 700; flex: 1; color: var(--ink); }
+  .fn-k { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #98A0AA; padding: 6px 10px; }
+  .fn-i { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 8px 10px; border-radius: 12px; color: var(--ink2); text-decoration: none; font-size: 14px; font-weight: 600; line-height: 1.25; }
+  .fn-i:hover { background: #F3F4F6; color: var(--ink); }
+  .fn-i.on { background: #EEF2FF; color: #1D4ED8; }
+  .fn-i svg { width: 20px; height: 20px; flex: none; }
+  .fn-i small { display: block; font-size: 12px; font-weight: 500; color: #98A0AA; margin-top: 2px; }
+  .fn-x { width: 36px; height: 36px; border: 0; border-radius: 18px; background: #EEF0F3; color: var(--ink); font-size: 16px; cursor: pointer; }
+  .fn-back { position: fixed; inset: 0; z-index: 259; background: rgba(16, 24, 40, .28); opacity: 0; pointer-events: none; transition: opacity .25s; }
+  body.fn-on .fn { transform: none; } body.fn-on .fn-back { opacity: 1; pointer-events: auto; }
+  .fn-open { width: 34px; height: 34px; margin: 6px 0; border: 0; border-radius: 10px; background: #EEF0F3; color: var(--ink); display: grid; place-items: center; cursor: pointer; flex: none; }
+  .fn-open svg { width: 18px; height: 18px; }
+  @media (min-width: 900px) {
+    :root { --navw: 248px; }
+    .fn { transform: none; transition: none; } .fn-x, .fn-back, .fn-open { display: none; }
+    .demo-bar { left: var(--navw); }
+    body.app #root { left: var(--navw); }
+    body:not(.app) #root { margin-left: var(--navw); }
+  }
 </style>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
@@ -110,7 +135,17 @@
 </script>
 </head>
 <body>
+<!-- Features nav: same markup and links as web/features/*/index.html -->
+<div class="fn-back" id="fn-back"></div>
+<nav class="fn" id="fn" aria-label="Features">
+  <div class="fn-h"><img src="img/roadsense-icon.svg" alt=""><b>Road Sense</b><button class="fn-x" id="fn-x" type="button" aria-label="Close the features menu">✕</button></div>
+  <div class="fn-k">Demo</div>
+  <a class="fn-i" data-fn="demo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg><span>Road Sense demo<small>Map and no-map apps</small></span></a>
+  <div class="fn-k" style="margin-top:10px">Features</div>
+  <a class="fn-i" data-fn="car-alerts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M8.5 15.5 12 8l3.5 7.5"/></svg><span>CarPlay &amp; Android Auto Alerts<small>FRD · Nov 11, 2026</small></span></a>
+</nav>
 <nav class="demo-bar" aria-label="Choose the app and the device">
+  <button class="fn-open" id="fn-open" type="button" aria-label="Open the features menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <div class="demo-grp"><span class="demo-k">App</span><div class="demo-seg" role="group" aria-label="App">
     <a id="to-map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5V4l-6 2.5z"/><path d="M9 4v13M15 6.5v13"/></svg><span>Map<span class="lg"> app</span></span></a>
     <a id="to-cluster"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="8" height="16" rx="2"/><rect x="13" y="4" width="8" height="7" rx="2"/><rect x="13" y="13" width="8" height="7" rx="2"/></svg><span>No map<span class="lg"> app</span></span></a>
@@ -147,7 +182,7 @@
     <li><b style="display:inline">Another app in front:</b> only a notification + voice (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=29" target="_blank" rel="noopener">p. 28</a>); iOS 26 Live Activities in CarPlay Dashboard (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=12" target="_blank" rel="noopener">p. 11</a>).</li>
   </ul></div>
 </aside>
-<script src="_dc.js?v=c8ffa1a-1794205220"></script>
+<script src="_dc.js?v=b262ecc-1794810310"></script>
 <script>
 // Which app: /cluster/ (demo) or ?cluster (local) = the no-map cluster; else the map app.
 const q = new URLSearchParams(location.search);
@@ -159,6 +194,12 @@ const device = ['tl', 'tp', 'aa', 'cp'].includes(q.get('device')) ? q.get('devic
 const SIZE = { phone: [390, 844], tl: [1194, 834], tp: [641, 918], aa: [800, 480], cp: [800, 480] }[device];
 const keep = ['app', 'board'].filter(k => q.has(k)).concat(device !== 'phone' ? ['device=' + device] : []).join('&');
 const link = (c) => (c ? (local ? root + '?cluster' + (keep ? '&' + keep : '') : root + 'cluster/' + (keep ? '?' + keep : '')) : root + (keep ? '?' + keep : ''));
+for (const a of document.querySelectorAll('.fn-i')) {
+  a.href = root + (a.dataset.fn === 'demo' ? '' : 'features/' + a.dataset.fn + '/');
+  if (a.dataset.fn === 'demo') { a.classList.add('on'); a.setAttribute('aria-current', 'page'); }
+}
+document.getElementById('fn-open').onclick = () => document.body.classList.add('fn-on');
+document.getElementById('fn-x').onclick = document.getElementById('fn-back').onclick = () => document.body.classList.remove('fn-on');
 const toMap = document.getElementById('to-map'), toCl = document.getElementById('to-cluster');
 toMap.href = link(false); toCl.href = link(true);
 if (device === 'aa' || device === 'cp') document.body.classList.add('car-dev');
@@ -184,14 +225,15 @@ if (app) {
     const pick = store('rs-demo-size'), actual = pick ? pick === 'actual' : wide; B.classList.toggle('actual', actual);
     const bar = document.querySelector('.demo-bar').getBoundingClientRect().height;
     const pane = wide && B.classList.contains('dsh-on') ? document.getElementById('dsh').getBoundingClientRect().width : 0;
-    const vw = document.documentElement.clientWidth - pane, vh = (window.visualViewport && visualViewport.height) || innerHeight;
+    const nav = wide ? document.getElementById('fn').getBoundingClientRect().width : 0; // Features nav, docked on wide screens
+    const vw = document.documentElement.clientWidth - pane - nav, vh = (window.visualViewport && visualViewport.height) || innerHeight;
     const G = wide ? 28 : 0; // space around the framed device on a computer
     const k = actual ? 1 : Math.min((vw - 2 * G) / SIZE[0], (vh - bar - 2 * G) / SIZE[1]);
     document.documentElement.style.setProperty('--rad', (device === 'phone' ? 44 : device === 'aa' || device === 'cp' ? 16 : 30) + 'px');
     const r = document.getElementById('root');
     r.style.transform = `scale(${k})`; // centered by margins: never widens the page
     // 100%: the page scrolls to show the whole device (and centres it when it fits one way)
-    r.style.marginLeft = actual ? Math.max(G, (vw - SIZE[0]) / 2) + 'px' : '';
+    r.style.marginLeft = actual ? nav + Math.max(G, (vw - SIZE[0]) / 2) + 'px' : '';
     document.documentElement.classList.toggle('actual', actual);
     for (const b of document.querySelectorAll('#dsh-fit button')) b.className = (b.dataset.f === 'actual') === actual ? 'on' : '';
   };
@@ -199,7 +241,7 @@ if (app) {
 }
 (async () => {
   try {
-    const Root = await DC.load(cluster ? 'Cluster.dc.html?v=c8ffa1a-1794205220' : 'LiveDrive.dc.html?v=c8ffa1a-1794205220');
+    const Root = await DC.load(cluster ? 'Cluster.dc.html?v=b262ecc-1794810310' : 'LiveDrive.dc.html?v=b262ecc-1794810310');
     ReactDOM.createRoot(document.getElementById('root')).render(DC.h(Root, { ...(app ? { app: '1' } : {}), ...(device !== 'phone' ? { device } : {}) }));
   } catch (e) { document.getElementById('root').innerHTML = '<pre style="padding:16px;color:#B91C1C">Could not load the app: ' + e.message + '</pre>'; }
 })();
