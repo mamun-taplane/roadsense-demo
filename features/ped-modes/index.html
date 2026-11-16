@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pedestrian &amp; Cyclist Modes — Road Sense</title>
+<!-- Feature design: "Pedestrian & Cyclist Modes" (FRD, Nov 11 2026). Built on the feature-page blueprint
+     (docs/features/FEATURE-PAGE-TEMPLATE.md): content lives in the F object. Phone screens use the demo map app's parts.
+     Local: http://localhost:5178/web/features/ped-modes/  ·  demo: <demo>/features/ped-modes/ -->
+<base href="../../app/">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+  /* ---------- Features nav (same as the demo page) ---------- */
+  .fn { position: fixed; z-index: 160; left: 0; top: 0; bottom: 0; width: 248px; background: #fff; border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: calc(12px + env(safe-area-inset-top, 0px)) 10px 12px; transform: translateX(-102%); transition: transform .26s cubic-bezier(.2, .8, .2, 1); }
+  .fn-h { display: flex; align-items: center; gap: 10px; padding: 4px 8px 14px; }
+  .fn-h img { width: 30px; height: 30px; }
+  .fn-h b { font-size: 15px; font-weight: 700; flex: 1; }
+  .fn-k { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #98A0AA; padding: 6px 10px 6px; }
+  .fn-i { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 8px 10px; border-radius: 12px; color: var(--ink2); text-decoration: none; font-size: 14px; font-weight: 600; line-height: 1.25; }
+  .fn-i:hover { background: #F3F4F6; color: var(--ink); }
+  .fn-i.on { background: #EEF2FF; color: #1D4ED8; }
+  .fn-i svg { width: 20px; height: 20px; flex: none; }
+  .fn-i span { min-width: 0; }
+  .fn-i small { display: block; font-size: 12px; font-weight: 500; color: #98A0AA; margin-top: 2px; }
+  .fn-x { width: 36px; height: 36px; border: 0; border-radius: 18px; background: #EEF0F3; color: var(--ink); font-size: 16px; cursor: pointer; }
+  .fn-back { position: fixed; inset: 0; z-index: 159; background: rgba(16, 24, 40, .28); opacity: 0; pointer-events: none; transition: opacity .25s; }
+  body.fn-on .fn { transform: none; } body.fn-on .fn-back { opacity: 1; pointer-events: auto; }
+  .fn-open { width: 40px; height: 40px; border: 0; border-radius: 12px; background: #EEF0F3; color: var(--ink); display: grid; place-items: center; cursor: pointer; flex: none; }
+  .fn-open svg { width: 20px; height: 20px; }
+  @media (min-width: 900px) {
+    :root { --navw: 248px; }
+    .fn { transform: none; transition: none; } .fn-x, .fn-back, .fn-open { display: none; }
+  }
+
+  /* =====================================================================================================
+     FEATURE PAGE BLUEPRINT (docs/features/FEATURE-PAGE-TEMPLATE.md). Every feature page uses these blocks:
+     .hero (title, one line, facts) · .ov (overview table + blocker) · .rq (one per UI requirement:
+     header → screens → limits → how we build it) · .rq.noui (all requirements without UI, one list) ·
+     .rq try (prototype) · .rq open (team decisions). Screens: .scrn = title + variant tabs + CarPlay | Android Auto.
+     ===================================================================================================== */
+  :root { --ink: #15181D; --ink2: #5B636E; --ink3: #8A929C; --line: #E3E6EA; --bg: #F5F6F8; --bar: 56px; --r: 20px; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; }
+  body { overflow-x: hidden; }
+  a { color: #2563EB; text-underline-offset: 2px; }
+
+  /* top bar + section tabs */
+  .top { position: sticky; top: 0; z-index: 100; margin-left: var(--navw); background: rgba(255, 255, 255, .97); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top, 0px); }
+  .top-r { min-height: var(--bar); display: flex; align-items: center; gap: 12px; padding: 0 24px; }
+  .top-t { font-size: 15px; font-weight: 700; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .jump { display: flex; gap: 4px; padding: 0 24px; overflow-x: auto; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; height: 40px; padding: 0 12px; display: flex; align-items: center; font-size: 13.5px; font-weight: 600; color: var(--ink2); text-decoration: none; border-bottom: 2px solid transparent; white-space: nowrap; cursor: pointer; }
+  .jump a:hover { color: var(--ink); }
+  .jump a.on { color: var(--ink); border-bottom-color: var(--ink); }
+  .seg { display: flex; gap: 2px; padding: 3px; border-radius: 12px; background: #EEF0F3; flex: none; }
+  .seg button { height: 32px; padding: 0 12px; border: 0; border-radius: 9px; background: transparent; font: 600 13px/1 Inter, sans-serif; color: var(--ink2); cursor: pointer; white-space: nowrap; }
+  .seg button.on { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(16, 24, 40, .14); }
+
+  main { margin-left: var(--navw); padding: 40px 24px 96px; }
+  .wrap { max-width: 1120px; margin: 0 auto; }
+  section { scroll-margin-top: 112px; }
+
+  /* hero */
+  .hero h1 { font-size: 36px; line-height: 1.1; letter-spacing: -.8px; margin: 0 0 10px; }
+  .hero p { font-size: 17px; line-height: 1.5; color: var(--ink2); margin: 0; max-width: 720px; }
+  .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .facts span { height: 28px; padding: 0 12px; border-radius: 14px; background: #fff; border: 1px solid var(--line); font-size: 12.5px; font-weight: 600; color: var(--ink2); display: flex; align-items: center; }
+
+  /* status chip: the only status vocabulary on the page */
+  .st { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 12px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+  .st::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .st.ok { background: #E8F6EE; color: #15803D; } .st.part { background: #FEF3DF; color: #9A5B00; } .st.no { background: #FDEBEC; color: #C62828; } .st.na { background: #EEF0F3; color: var(--ink2); }
+
+  /* overview */
+  .ov { margin-top: 32px; }
+  .tbl { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; font-size: 14.5px; }
+  .tbl th { text-align: left; font-size: 11.5px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--ink3); padding: 12px 18px; border-bottom: 1px solid var(--line); }
+  .tbl td { padding: 14px 18px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  .tbl tr:last-child td { border-bottom: 0; }
+  .tbl tr[data-go] { cursor: pointer; } .tbl tr[data-go]:hover td { background: #FAFBFC; }
+  .tbl .id { font-weight: 800; white-space: nowrap; width: 1%; } .tbl .ui { color: var(--ink2); width: 1%; white-space: nowrap; }
+  .alert { margin-top: 16px; display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; border-radius: 16px; background: #FDEBEC; font-size: 14.5px; line-height: 1.5; color: #5B1A1B; }
+  .alert b { color: #8E1F21; }
+  .alert i { flex: none; width: 24px; height: 24px; border-radius: 12px; background: #E5383B; color: #fff; font: 800 14px/24px Inter, sans-serif; text-align: center; font-style: normal; }
+
+  /* requirement section */
+  .rq { margin-top: 48px; background: #fff; border: 1px solid var(--line); border-radius: 28px; padding: 40px; }
+  .rq-h { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 32px; padding-bottom: 28px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
+  .rq-id { grid-column: 1 / -1; justify-self: start; height: 28px; padding: 0 12px; border-radius: 8px; background: var(--ink); color: #fff; font-size: 13px; font-weight: 800; letter-spacing: .6px; display: flex; align-items: center; }
+  .rq-h h2 { font-size: 30px; line-height: 1.15; letter-spacing: -.6px; margin: 6px 0 0; }
+  .rq-h p { grid-column: 1; font-size: 16px; line-height: 1.5; color: var(--ink2); margin: 0; max-width: 680px; }
+  .rq-st { grid-column: 2; grid-row: 2 / span 2; align-self: start; display: grid; grid-template-columns: auto auto; gap: 8px 10px; align-items: center; margin-top: 10px; }
+  .rq-st span.k { font-size: 12px; font-weight: 700; color: var(--ink3); }
+  .rq.try .rq-id { background: #2563EB; } .rq.open .rq-id, .rq.noui .rq-id { background: #6B7380; }
+
+  /* screen block: title + variant tabs, then CarPlay | Android Auto, same size, then one caption line */
+  .scrn { padding-top: 32px; }
+  .scrn-h { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+  .scrn-h h3 { font-size: 19px; letter-spacing: -.2px; margin: 0; flex: 1; min-width: 160px; }
+  .tabs { display: flex; gap: 2px; padding: 3px; border-radius: 12px; background: #EEF0F3; overflow-x: auto; scrollbar-width: none; max-width: 100%; }
+  .tabs button { height: 32px; padding: 0 14px; border: 0; border-radius: 9px; background: transparent; font: 600 13px/1 Inter, sans-serif; color: var(--ink2); cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 7px; }
+  .tabs button.on { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(16, 24, 40, .14); }
+  .tabs i { width: 8px; height: 8px; border-radius: 50%; }
+  .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  .ph-w { max-width: 320px; margin: 0 auto; }
+  .plat { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--ink2); margin-bottom: 10px; }
+  .plat svg { width: 16px; height: 16px; }
+  .fr { position: relative; width: 100%; overflow: hidden; border-radius: 14px; box-shadow: 0 0 0 1px rgba(16, 24, 40, .08); background: #000; }
+  .fr.ph { border-radius: 28px 28px 14px 14px; }
+  .fr > .scr { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+  .scrn-c { margin: 14px 0 0; font-size: 14px; color: var(--ink2); text-align: center; }
+
+  /* limits: every "can't" or "only if" of the requirement, one short line + its rule link */
+  .lim { margin-top: 40px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; }
+  .lim-k, .how summary { font-size: 12px; font-weight: 800; letter-spacing: .8px; text-transform: uppercase; color: var(--ink3); }
+  .lim-k { grid-column: 1 / -1; margin-bottom: 12px; }
+  .lim ul { list-style: none; margin: 0; padding: 0; }
+  .lim li { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 12px; align-items: start; padding: 10px 0; border-top: 1px solid var(--line); font-size: 14px; line-height: 1.45; color: var(--ink); }
+  .lim li .st { justify-self: start; }
+  .lim li small { display: block; color: var(--ink2); font-size: 13px; margin-top: 2px; }
+  .lim .plat { margin: 0 0 4px; }
+
+  /* how we build it: closed by default */
+  .how { margin-top: 24px; border-top: 1px solid var(--line); }
+  .how summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 18px 0 0; }
+  .how summary::-webkit-details-marker { display: none; }
+  .how summary::after { content: ""; width: 8px; height: 8px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); margin: -4px 0 0 4px; }
+  .how[open] summary::after { transform: rotate(225deg); margin-top: 4px; }
+  .how-g { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 16px; }
+  .how ul { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.55; color: var(--ink2); }
+  .how li + li { margin-top: 6px; }
+  .how li b { color: var(--ink); }
+  .how code { overflow-wrap: anywhere; font: 600 12.5px/1.5 ui-monospace, Menlo, monospace; background: #F3F4F6; padding: 1px 5px; border-radius: 5px; color: var(--ink); }
+
+  /* requirements without UI: one list */
+  .nu { list-style: none; margin: 8px 0 0; padding: 0; }
+  .nu li { display: grid; grid-template-columns: 96px minmax(0, 1fr) auto; gap: 8px 20px; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .nu li:last-child { border-bottom: 0; }
+  .nu b { font-size: 14px; font-weight: 800; }
+  .nu h4 { margin: 0; font-size: 16px; } .nu p { margin: 2px 0 0; font-size: 14px; color: var(--ink2); line-height: 1.45; }
+  .nu .rq-st { grid-column: 3; grid-row: 1; margin: 0; }
+
+  /* team decisions */
+  .dec { list-style: none; counter-reset: d; margin: 8px 0 0; padding: 0; }
+  .dec li { counter-increment: d; display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--line); font-size: 14.5px; line-height: 1.5; color: var(--ink2); }
+  .dec li:last-child { border-bottom: 0; }
+  .dec li::before { content: counter(d); width: 28px; height: 28px; border-radius: 14px; background: #EEF0F3; color: var(--ink); font-weight: 800; font-size: 13px; display: grid; place-items: center; }
+  .dec b { color: var(--ink); display: block; }
+
+  /* try it */
+  .try-g { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; align-items: start; padding-top: 32px; }
+  .ctl { background: #F8F9FA; border: 1px solid var(--line); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 14px; }
+  .ctl-k { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--ink3); margin-bottom: 6px; }
+  .ctl .seg { width: 100%; } .ctl .seg button { flex: 1; padding: 0 6px; }
+  .ctl-row { display: flex; align-items: center; gap: 8px; }
+  .pbtn { width: 44px; height: 44px; border-radius: 22px; border: 1px solid var(--line); background: #fff; display: grid; place-items: center; cursor: pointer; color: var(--ink); flex: none; }
+  .pbtn.pri { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .pbtn svg { width: 18px; height: 18px; }
+  .now { font-size: 13px; font-weight: 600; color: var(--ink2); min-width: 0; flex: 1; }
+  .say { font-size: 13px; line-height: 1.4; color: var(--ink2); padding: 10px 12px; border-radius: 12px; background: #fff; border: 1px solid var(--line); min-height: 40px; }
+  .say b { color: var(--ink); }
+  .tg-row { display: flex; align-items: center; gap: 12px; min-height: 48px; cursor: pointer; border: 0; background: none; padding: 0; text-align: left; width: 100%; font: inherit; color: inherit; }
+  .tg-row + .tg-row { border-top: 1px solid var(--line); }
+  .tg-row span { flex: 1; font-size: 14px; font-weight: 600; } .tg-row small { display: block; font-size: 12px; font-weight: 500; color: var(--ink2); }
+  .tg { width: 50px; height: 30px; border-radius: 15px; background: #D5D9DF; position: relative; flex: none; }
+  .tg i { position: absolute; left: 3px; top: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(16, 24, 40, .25); }
+  .tg.on { background: #16A34A; } .tg.on i { transform: translateX(20px); }
+  .scn { display: flex; flex-direction: column; gap: 2px; }
+  .scn button { display: flex; align-items: center; gap: 10px; padding: 9px 8px; border: 0; border-radius: 10px; background: transparent; text-align: left; cursor: pointer; font: 500 14px/1.25 Inter, sans-serif; color: var(--ink); }
+  .scn button.on { background: #EEF2FF; }
+  .scn i { width: 10px; height: 10px; border-radius: 50%; flex: none; background: #CBD1D8; }
+  .scn .lv-adv i { background: #2563EB; } .scn .lv-warn i { background: #F5A524; } .scn .lv-crit i { background: #E5383B; } .scn .lv-ok i { background: #16A34A; }
+  .cap { margin-top: 10px; font-size: 14px; color: var(--ink2); text-align: center; }
+
+  @media (max-width: 1100px) { .try-g { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 760px) {
+    main { padding: 28px 16px 72px; } .top-r, .jump { padding-left: 16px; padding-right: 16px; }
+    .hero h1 { font-size: 28px; } .hero p { font-size: 16px; }
+    .rq { padding: 24px 16px; border-radius: 22px; margin-top: 32px; }
+    .rq-h { grid-template-columns: minmax(0, 1fr); } .rq-h h2 { font-size: 24px; } .rq-st { grid-column: 1; grid-row: auto; justify-self: start; }
+    .pair, .lim, .how-g { grid-template-columns: minmax(0, 1fr); } .pair { gap: 20px; } .lim .plat { margin-top: 16px; }
+    .scrn-h { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .tabs { width: 100%; } .tabs button { flex: 1; justify-content: center; padding: 0 6px; gap: 5px; font-size: 12.5px; }
+    .tbl:not(.mt) thead { display: none; } .tbl:not(.mt), .tbl:not(.mt) tbody, .tbl:not(.mt) tr { display: block; } .tbl:not(.mt) tr { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 12px; padding: 14px 16px; border-bottom: 1px solid var(--line); } .tbl:not(.mt) tr:last-child { border-bottom: 0; }
+    .tbl:not(.mt) td { border: 0; padding: 0; } .tbl:not(.mt) td.ui { display: none; } .tbl:not(.mt) td[data-k] { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; } .tbl:not(.mt) td[data-k]::before { content: attr(data-k); width: 96px; font-size: 12px; font-weight: 700; color: var(--ink3); }
+    .nu li { grid-template-columns: minmax(0, 1fr); } .nu .rq-st { grid-column: 1; grid-row: auto; }
+  }
+  .tbl.mt { margin-top: 4px; } .tbl.mt td, .tbl.mt th { padding: 11px 18px; } .tbl .c { text-align: center; width: 18%; }
+  .tbl i.yes { font-style: normal; font-weight: 800; color: #15803D; } .tbl i.no { font-style: normal; color: #C3C8CF; }
+  @media (max-width: 760px) { .tbl.mt td, .tbl.mt th { padding: 10px 8px; font-size: 13px; } .tbl.mt th { font-size: 10.5px; letter-spacing: .3px; } }
+  /* ================= phone screens (the map app's look: web/index.html, LiveDrive.dc.html) ================= */
+  .ph-w { max-width: 320px; margin: 0 auto; }
+  .fr.ph { border-radius: 36px; box-shadow: 0 0 0 1px rgba(16, 24, 40, .1); }
+  .scr { --ink: #15181D; --ink2: #5B636E; --ink3: #6B7380; --line: #E6E8EC; --card: #FFFFFF; --bg: #F3F4F6; --raise: #F3F4F6;
+    --adv: #2563EB; --warn: #F5A524; --crit: #E5383B; --ok: #16A34A; --accent: #2563EB;
+    position: relative; overflow: hidden; background: var(--bg); color: var(--ink); font-family: Inter, sans-serif; font-feature-settings: 'tnum' 1; }
+  .scr.dark { --ink: #F1F3F6; --ink2: #AAB2BD; --ink3: #838C99; --line: #2B323C; --card: #191E25; --bg: #0D1015; --raise: #222831; --accent: #7AA9FF; color-scheme: dark; }
+  .phn { width: 390px; height: 844px; }
+  .mapbg { position: absolute; inset: 0; background: url(img/map-plain.png) center / cover; }
+  .dark .mapbg { filter: invert(.92) hue-rotate(180deg) brightness(.85) contrast(.9); }
+  .fade { position: absolute; left: 0; right: 0; top: 0; height: 210px; background: linear-gradient(var(--bg) 0, var(--bg) 120px, transparent); opacity: .9; }
+  .sb { position: absolute; left: 0; right: 0; top: 0; height: 54px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px 0 38px; font-size: 16px; font-weight: 600; z-index: 3; }
+  .sb svg { width: 66px; height: 14px; }
+  .and .sb { height: 40px; padding: 0 22px; font-size: 14px; font-weight: 500; }
+  .and .sb svg { width: 56px; height: 12px; }
+  .home { position: absolute; left: 50%; bottom: 8px; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: var(--ink); z-index: 6; }
+  .and .home { width: 108px; height: 4px; margin-left: -54px; bottom: 9px; opacity: .7; }
+  /* top card: next crossing + signal */
+  .tc { position: absolute; left: 12px; right: 12px; top: 54px; height: 100px; border-radius: 24px; background: var(--card); display: flex; align-items: center; padding: 0 12px 0 20px; gap: 10px; }
+  .and .tc { top: 44px; }
+  .tc-d { flex: 1; min-width: 0; } .tc-d b { font-size: 34px; font-weight: 800; letter-spacing: -.8px; } .tc-d b small { font-size: 16px; font-weight: 600; color: var(--ink2); margin-left: 2px; letter-spacing: 0; }
+  .tc-d div { font-size: 15px; font-weight: 600; color: var(--ink2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .head { height: 74px; border-radius: 16px; background: #15181D; display: flex; align-items: center; gap: 8px; padding: 0 10px; }
+  .dark .head { background: #0A0C10; box-shadow: inset 0 0 0 1px #2B323C; }
+  .lens { width: 44px; text-align: center; } .lens i { display: grid; place-items: center; width: 40px; height: 40px; margin: 0 auto; border-radius: 50%; background: var(--ok); color: #fff; } .lens i svg { width: 22px; height: 22px; }
+  .lens.r i { background: var(--crit); } .lens b { display: block; font-size: 12px; font-weight: 700; color: #fff; margin-top: 3px; }
+  .wait { display: flex; align-items: center; gap: 10px; } .wait i { width: 50px; height: 50px; border-radius: 12px; background: #2A2D33; display: grid; place-items: center; } .wait i svg { width: 28px; height: 28px; }
+  .wait b { display: block; font-size: 19px; font-weight: 800; color: #F5A524; } .wait span { font-size: 12.5px; font-weight: 600; color: #C9CED6; }
+  /* alert card under the top card */
+  .ac { position: absolute; left: 12px; right: 12px; top: 164px; height: 76px; border-radius: 20px; background: var(--card); display: flex; align-items: center; gap: 14px; padding: 0 16px 0 12px; }
+  .and .ac { top: 154px; }
+  .ac.lv-crit { box-shadow: inset 0 0 0 2px var(--crit); } .ac.lv-warn { box-shadow: inset 0 0 0 2px var(--warn); }
+  .ac-i { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; background: var(--adv); flex: none; } .ac-i img { width: 30px; height: 30px; }
+  .lv-warn .ac-i { background: var(--warn); } .lv-crit .ac-i { background: var(--crit); }
+  .ac-t { flex: 1; min-width: 0; } .ac-t b { display: block; font-size: 17px; font-weight: 700; } .ac-t span { font-size: 14px; color: var(--ink2); }
+  .ac-d { text-align: right; font-size: 19px; font-weight: 800; } .ac-d small { display: block; font-size: 12px; font-weight: 600; color: var(--ink3); }
+  /* toast: the mode switched by itself */
+  .toast { position: absolute; left: 12px; right: 12px; top: 164px; height: 64px; border-radius: 18px; background: #15181D; color: #fff; display: flex; align-items: center; gap: 12px; padding: 0 10px 0 12px; z-index: 2; }
+  .dark .toast { background: #F1F3F6; color: #15181D; }
+  .and .toast { top: 154px; }
+  .toast .mi { width: 40px; height: 40px; border-radius: 12px; background: rgba(255, 255, 255, .14); }
+  .dark .toast .mi { background: rgba(16, 24, 40, .08); }
+  .toast-t { flex: 1; } .toast-t b { display: block; font-size: 15.5px; font-weight: 700; } .toast-t span { font-size: 13px; opacity: .75; }
+  .toast-b { height: 40px; padding: 0 14px; border-radius: 12px; background: rgba(255, 255, 255, .14); font-size: 14px; font-weight: 700; display: grid; place-items: center; }
+  .dark .toast-b { background: rgba(16, 24, 40, .08); }
+  /* mode icon (the demo's filled icons on a tint) */
+  .mi { width: 28px; height: 28px; border-radius: 9px; display: grid; place-items: center; flex: none; background: #EEF2FF; }
+  .mi img { width: 70%; height: 70%; }
+  .dark .mi { background: #18223A; }
+  /* left chips: mode, then sharing status */
+  .chips { position: absolute; left: 12px; bottom: 140px; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; z-index: 2; }
+  .chip { height: 40px; border-radius: 20px; background: var(--card); display: flex; align-items: center; gap: 8px; padding: 0 14px 0 6px; font-size: 14.5px; font-weight: 700; box-shadow: 0 0 0 1px var(--line); }
+  .chip small { font-size: 12.5px; font-weight: 600; color: var(--ink3); }
+  .chip.bc { padding-left: 14px; height: 36px; font-size: 14px; }
+  .bdot { width: 10px; height: 10px; border-radius: 50%; background: var(--adv); box-shadow: 0 0 0 4px rgba(37, 99, 235, .18); flex: none; }
+  .chip.bc.gps, .chip.bc.net { background: #FEF3DF; color: #7A4A00; box-shadow: 0 0 0 1px #F7D9A6; }
+  .dark .chip.bc.gps, .dark .chip.bc.net { background: #2A2416; color: #F7B547; box-shadow: 0 0 0 1px #4A3A1A; }
+  .chip.bc.gps .bdot, .chip.bc.net .bdot { background: var(--warn); box-shadow: 0 0 0 4px rgba(245, 165, 36, .22); }
+  .chip.bc.off { color: var(--ink2); } .chip.bc.off .bdot { background: #A3AAB4; box-shadow: none; }
+  /* right controls */
+  .zm { position: absolute; right: 12px; bottom: 202px; width: 46px; border-radius: 23px; background: var(--card); display: flex; flex-direction: column; align-items: center; box-shadow: 0 0 0 1px var(--line); }
+  .zm i { height: 46px; display: grid; place-items: center; font-size: 24px; font-style: normal; font-weight: 400; }
+  .btns { position: absolute; right: 12px; bottom: 140px; display: flex; gap: 8px; }
+  .rb { width: 46px; height: 46px; border-radius: 50%; background: var(--card); display: grid; place-items: center; box-shadow: 0 0 0 1px var(--line); font-size: 14px; font-weight: 700; }
+  .rb svg { width: 22px; height: 22px; }
+  /* bottom dock */
+  .dock { position: absolute; left: 12px; right: 12px; bottom: 28px; height: 100px; border-radius: 24px; background: var(--card); display: flex; align-items: center; }
+  .dk { flex: 1; text-align: center; } .dk + .dk { box-shadow: -1px 0 0 var(--line); }
+  .dk-n { font-size: 34px; font-weight: 800; letter-spacing: -.8px; line-height: 1; } .dk-n.w { font-size: 24px; letter-spacing: -.3px; }
+  .dk-n.ok { color: var(--ok); }
+  .dk-l { font-size: 12.5px; font-weight: 600; color: var(--ink3); margin-top: 6px; }
+  .slim { width: 56px; height: 66px; margin: 0 auto; border: 2.5px solid #15181D; border-radius: 9px; background: #fff; color: #15181D; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .slim small { font-size: 8.5px; font-weight: 800; line-height: 1.05; text-align: center; } .slim b { font-size: 27px; font-weight: 800; line-height: 1; }
+  .hdg { display: flex; align-items: center; justify-content: center; gap: 8px; } .hdg b { font-size: 32px; font-weight: 800; }
+  .hdg i { width: 30px; height: 30px; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--line); position: relative; } .hdg i::after { content: ""; position: absolute; left: 10px; top: 4px; border: 5px solid transparent; border-bottom: 10px solid var(--crit); border-top: 0; }
+  .me { position: absolute; left: 50%; top: 560px; width: 52px; height: 52px; margin-left: -26px; border-radius: 50%; background: var(--adv); display: grid; place-items: center; box-shadow: 0 0 0 4px #fff, 0 0 0 14px rgba(37, 99, 235, .14); }
+  .me svg { width: 22px; height: 22px; color: #fff; }
+  /* sheets and dialogs */
+  .dim { position: absolute; inset: 0; background: rgba(16, 24, 40, .38); z-index: 4; }
+  .dark .dim { background: rgba(0, 0, 0, .6); }
+  .sheet { position: absolute; left: 0; right: 0; bottom: 0; border-radius: 28px 28px 0 0; background: var(--bg); z-index: 5; padding: 10px 16px 34px; }
+  .sheet::before { content: ""; display: block; width: 40px; height: 5px; border-radius: 3px; background: var(--line); margin: 0 auto 14px; }
+  .sh-h { display: flex; align-items: center; gap: 10px; padding: 0 6px 12px; } .sh-h b { flex: 1; font-size: 26px; font-weight: 800; letter-spacing: -.6px; }
+  .sh-h i { height: 40px; padding: 0 18px; border-radius: 20px; background: var(--ink); color: var(--bg); font-style: normal; font-size: 15px; font-weight: 700; display: grid; place-items: center; }
+  .sh-k { font-size: 13px; font-weight: 600; color: var(--ink3); text-transform: uppercase; letter-spacing: .6px; padding: 12px 8px 8px; }
+  .grp { background: var(--card); border-radius: 20px; padding: 0 16px; }
+  .rw { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 10px 0; }
+  .rw + .rw { box-shadow: inset 0 1px 0 var(--line); }
+  .rw-t { flex: 1; min-width: 0; } .rw-t b { display: block; font-size: 16px; font-weight: 600; } .rw-t span { display: block; font-size: 13px; color: var(--ink2); margin-top: 2px; line-height: 1.35; }
+  .rw .mi { width: 40px; height: 40px; border-radius: 12px; }
+  .rd { width: 24px; height: 24px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--line); flex: none; }
+  .rd.on { box-shadow: inset 0 0 0 7px var(--accent); }
+  .sw { width: 50px; height: 30px; border-radius: 15px; background: #D5D9DF; position: relative; flex: none; } .dark .sw { background: #3A424D; }
+  .sw i { position: absolute; left: 3px; top: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; }
+  .sw.on { background: var(--ok); } .sw.on i { left: 23px; }
+  .sg { display: flex; gap: 2px; padding: 3px; border-radius: 12px; background: var(--raise); margin-top: 10px; }
+  .sg span { flex: 1; height: 36px; border-radius: 9px; display: grid; place-items: center; font-size: 13.5px; font-weight: 600; color: var(--ink2); }
+  .sg span.on { background: var(--card); color: var(--ink); box-shadow: 0 1px 2px rgba(16, 24, 40, .14); }
+  .dark .sg span.on { background: #2C333D; }
+  .pbtn2 { height: 54px; border-radius: 16px; background: var(--ink); color: var(--bg); display: grid; place-items: center; font-size: 17px; font-weight: 700; }
+  .pbtn2.q { background: transparent; color: var(--ink); }
+  /* get started (first launch) */
+  .gs { position: absolute; inset: 0; background: var(--bg); padding: 70px 20px 34px; display: flex; flex-direction: column; }
+  .and .gs { padding-top: 60px; }
+  .gs-l { width: 56px; height: 56px; } .gs h1 { font-size: 30px; line-height: 1.15; letter-spacing: -.8px; margin: 18px 0 8px; } .gs p { font-size: 16px; line-height: 1.45; color: var(--ink2); margin: 0 0 20px; }
+  .gs .grp { padding: 0 16px; } .gs .rw { min-height: 76px; }
+  .gs .tag { font-size: 11.5px; font-weight: 700; color: var(--accent); background: #EEF2FF; padding: 3px 8px; border-radius: 8px; margin-left: 6px; }
+  .dark .gs .tag { background: #18223A; }
+  .gs .pbtn2 { margin-top: auto; }
+  .steps { display: flex; gap: 6px; } .steps i { flex: 1; height: 4px; border-radius: 2px; background: var(--line); } .steps i.on { background: var(--ink); }
+  /* opt in */
+  .oi { text-align: center; padding: 6px 8px 0; }
+  .oi-ic { width: 72px; height: 72px; margin: 6px auto 16px; border-radius: 50%; background: #EEF2FF; display: grid; place-items: center; }
+  .dark .oi-ic { background: #18223A; }
+  .oi-ic .bdot { width: 18px; height: 18px; box-shadow: 0 0 0 8px rgba(37, 99, 235, .2), 0 0 0 16px rgba(37, 99, 235, .08); }
+  .oi h2 { font-size: 26px; letter-spacing: -.6px; margin: 0 0 10px; } .oi p { font-size: 15.5px; line-height: 1.45; color: var(--ink2); margin: 0 0 8px; }
+  .oi ul { text-align: left; list-style: none; padding: 0; margin: 16px 0 22px; background: var(--card); border-radius: 18px; }
+  .oi li { display: flex; gap: 12px; align-items: center; padding: 14px 16px; font-size: 15px; font-weight: 500; } .oi li + li { box-shadow: inset 0 1px 0 var(--line); }
+  .oi li i { width: 24px; height: 24px; border-radius: 50%; background: #E8F6EE; color: #15803D; display: grid; place-items: center; font-style: normal; font-size: 13px; font-weight: 800; flex: none; }
+  .dark .oi li i { background: #142A1D; color: #3DD07A; }
+  /* system dialogs (drawn by iOS / Android, not by us) */
+  .ios-al { position: absolute; left: 50%; top: 50%; width: 270px; transform: translate(-50%, -50%); border-radius: 14px; background: rgba(242, 242, 247, .97); color: #000; text-align: center; z-index: 5; overflow: hidden; }
+  .dark .ios-al { background: rgba(44, 44, 46, .97); color: #fff; }
+  .ios-al-b { padding: 19px 16px 16px; } .ios-al b { display: block; font-size: 17px; font-weight: 600; line-height: 1.25; } .ios-al p { font-size: 13px; line-height: 1.35; margin: 6px 0 0; }
+  .ios-al .bt { height: 44px; display: grid; place-items: center; font-size: 17px; color: #007AFF; box-shadow: inset 0 1px 0 rgba(60, 60, 67, .29); }
+  .ios-al .bt.b { font-weight: 600; }
+  .ios-al .mapmini { height: 120px; margin: 12px 0 0; border-radius: 10px; background: url(img/map-plain.png) center 60% / 200%; position: relative; }
+  .ios-al .mapmini span { position: absolute; left: 8px; top: 8px; background: rgba(255, 255, 255, .9); color: #000; border-radius: 8px; padding: 3px 8px; font-size: 12px; font-weight: 600; }
+  .and-al { position: absolute; left: 24px; right: 24px; top: 50%; transform: translateY(-50%); border-radius: 28px; background: #ECEEF4; color: #1A1C1E; z-index: 5; padding: 24px 24px 16px; text-align: center; }
+  .dark .and-al { background: #2A2D34; color: #E3E3E8; }
+  .and-al .ai { width: 28px; height: 28px; margin: 0 auto 14px; color: #3B5BA9; } .dark .and-al .ai { color: #B0C6FF; }
+  .and-al b { display: block; font-size: 22px; font-weight: 500; line-height: 1.3; }
+  .and-al .bt { height: 48px; margin-top: 8px; border-radius: 24px; display: grid; place-items: center; font-size: 15px; font-weight: 600; background: #D9E2FF; color: #00174B; }
+  .dark .and-al .bt { background: #3B4664; color: #DCE1FF; }
+  .and-al .acc { display: flex; justify-content: space-around; margin: 18px 0 10px; font-size: 14px; font-weight: 500; }
+  .and-al .acc div i { display: block; width: 84px; height: 84px; margin: 0 auto 8px; border-radius: 50%; background: url(img/map-plain.png) center 60% / 300%; }
+  .and-al .acc div.on i { box-shadow: 0 0 0 3px #3B5BA9; }
+  .and-al .acc div:not(.on) i { filter: blur(3px); opacity: .8; }
+</style>
+</head>
+<body>
+<!-- Features nav: same markup and links as the demo page (web/index.html) -->
+<div class="fn-back" id="fn-back"></div>
+<nav class="fn" id="fn" aria-label="Features">
+  <div class="fn-h"><img src="img/roadsense-icon.svg" alt=""><b>Road Sense</b><button class="fn-x" id="fn-x" type="button" aria-label="Close the features menu">✕</button></div>
+  <div class="fn-k">Demo</div>
+  <a class="fn-i" data-fn="demo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg><span>Road Sense demo<small>Map and no-map apps</small></span></a>
+  <div class="fn-k" style="margin-top:10px">Features</div>
+  <a class="fn-i" data-fn="car-alerts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M8.5 15.5 12 8l3.5 7.5"/></svg><span>CarPlay &amp; Android Auto Alerts<small>FRD · Nov 11, 2026</small></span></a>
+  <a class="fn-i" data-fn="ped-modes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13" cy="4.5" r="1.8"/><path d="M9 21l2.5-6.5L14 17v4M7.5 11l3-3.5h3l2.5 3.5M11.5 14.5l1-4"/></svg><span>Pedestrian &amp; Cyclist Modes<small>FRD · Nov 11, 2026</small></span></a>
+</nav>
+
+<header class="top">
+  <div class="top-r">
+    <button class="fn-open" id="fn-open" type="button" aria-label="Open the features menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <div class="top-t">Pedestrian &amp; Cyclist Modes</div>
+    <div class="seg" id="theme" role="group" aria-label="Screen theme"><button data-t="light" class="on" type="button">Light</button><button data-t="dark" type="button">Dark</button></div>
+  </div>
+  <nav class="jump" id="jump" aria-label="Sections"></nav>
+</header>
+<main><div class="wrap">
+  <section class="hero" id="overview">
+    <h1>Pedestrian &amp; Cyclist Modes</h1>
+    <p>One app for driving, walking and cycling. Alerts follow the mode, and people on foot or on a bike can let nearby drivers see them.</p>
+    <div class="facts"><span>FRD · Nov 11, 2026</span><span>iPhone · Android</span><span>390×844 phone</span><span>Light and dark</span></div>
+    <div class="ov">
+      <table class="tbl" aria-label="Requirements">
+        <thead><tr><th>Req</th><th>Requirement</th><th>Work</th><th id="ov-a"></th><th id="ov-b"></th></tr></thead>
+        <tbody id="ov"></tbody>
+      </table>
+      <div class="alert"><i>!</i><span><b>Dependency.</b> Sharing positions (REQ-005, REQ-007) needs the backend that receives virtual PSMs and BSMs and passes them to nearby Road Sense users. The screens are ready without it.</span></div>
+    </div>
+  </section>
+  <div id="reqs"></div>
+</div></main>
+<script>
+// ---------- Features nav ----------
+(() => {
+  const root = location.pathname.split('/features/')[0] + '/';
+  for (const a of document.querySelectorAll('.fn-i')) {
+    a.href = location.origin + root + (a.dataset.fn === 'demo' ? '' : 'features/' + a.dataset.fn + '/');
+    if (a.dataset.fn === 'ped-modes') { a.classList.add('on'); a.setAttribute('aria-current', 'page'); }
+  }
+  const B = document.body, open = (on) => B.classList.toggle('fn-on', on);
+  document.getElementById('fn-open').onclick = () => open(true);
+  document.getElementById('fn-x').onclick = () => open(false);
+  document.getElementById('fn-back').onclick = () => open(false);
+})();
+
+
+// ---------- sources (each opens at the rule) ----------
+const L = {
+  iosMotion: ['https://developer.apple.com/documentation/bundleresources/information-property-list/nsmotionusagedescription', 'Motion usage description'],
+  iosAct: ['https://developer.apple.com/documentation/coremotion/cmmotionactivity', 'CMMotionActivity'],
+  iosAcc: ['https://developer.apple.com/documentation/corelocation/claccuracyauthorization', 'precise / approximate location'],
+  iosBg: ['https://developer.apple.com/documentation/corelocation/handling-location-updates-in-the-background', 'location in the background'],
+  anAct: ['https://developer.android.com/reference/android/Manifest.permission#ACTIVITY_RECOGNITION', 'ACTIVITY_RECOGNITION'],
+  anTrans: ['https://developer.android.com/develop/sensors-and-location/location/transitions', 'Activity Recognition Transition API'],
+  anAcc: ['https://developer.android.com/develop/sensors-and-location/location/permissions#accuracy', 'location accuracy'],
+  anBg: ['https://developer.android.com/develop/sensors-and-location/location/permissions#background', 'background location'],
+  anFgs: ['https://developer.android.com/develop/background-work/services/fgs/service-types#location', 'location foreground service'],
+  frdBg: ['https://docs.google.com/document/d/13S21QRBqabp-QR2U1EcGzzl6b2nzYvUhTj-dSumUHog/edit', 'FRD Background Operation'],
+};
+const ln = (k) => `<a href="${L[k][0]}" target="_blank" rel="noopener">${L[k][1]}</a>`;
+const ST = { ok: 'Possible', part: 'With limits', no: 'Not possible', na: 'No UI' };
+const st = (s, t) => `<span class="st ${s}">${t || ST[s]}</span>`;
+
+// ---------- the phone app (same parts as the demo's map app) ----------
+const MODES = { drive: { t: 'Driving', ic: 'stopped' }, walk: { t: 'Walking', ic: 'ped' }, bike: { t: 'Cycling', ic: 'bike' } };
+const AL = {
+  ped: { lv: 'warn', ic: 'ped', t: 'Pedestrian crossing', s: '300 S · from their phone', d: '250 ft' },
+  rlr: { lv: 'crit', ic: 'rlr', t: 'Car not stopping', s: 'Wait on the curb', d: 'Now' },
+  hook: { lv: 'crit', ic: 'stopped', t: 'Car turning right', s: 'Across your lane · 600 S', d: '120 ft' },
+};
+const ico = (ic, lv) => `v2/ic/${ic}-${lv === 'warn' || !lv ? 'k' : 'w'}.svg`;
+const mIco = (m, dark) => `<i class="mi"><img src="v2/ic/${MODES[m].ic}-${dark ? 'w' : 'k'}.svg" alt=""></i>`;
+const SBAR = (p) => `<div class="sb"><span>9:41</span><svg viewBox="0 0 66 14" fill="currentColor"><rect x="0" y="8" width="3" height="6" rx="1"/><rect x="5" y="5" width="3" height="9" rx="1"/><rect x="10" y="2" width="3" height="12" rx="1"/><rect x="15" y="0" width="3" height="14" rx="1"/><rect x="38" y="1" width="24" height="12" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="40.5" y="3.5" width="17" height="7" rx="2"/><rect x="63" y="5" width="2" height="4" rx="1"/></svg></div>`;
+const ARR = { l: 'M15 18V10a4 4 0 0 0-4-4H6M9 3 6 6l3 3', s: 'M12 20V5M6 10l6-6 6 6', r: 'M9 18V10a4 4 0 0 1 4-4h5M15 3l3 3-3 3' };
+const lens = (d, cls, n) => `<div class="lens ${cls}"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="${ARR[d]}"/></svg></i><b>${n}</b></div>`;
+const GEAR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>';
+const SPK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
+const BC = { on: ['Visible to drivers', 'Visible to others'], gps: ['Paused · weak GPS'], net: ['Paused · no connection'], off: ['Not sharing'] };
+
+function topCard(m) {
+  if (m === 'walk') return `<div class="tc"><div class="tc-d"><b>40<small>ft</small></b><div>State St crosswalk</div></div><div class="head wait"><i><svg viewBox="0 0 24 24" fill="#F5A524"><path d="M8.2 12.6V5.7a1.4 1.4 0 0 1 2.8 0v5.6h.6V4.4a1.4 1.4 0 0 1 2.8 0v6.9h.6V5.6a1.4 1.4 0 0 1 2.8 0v8.6c0 4.4-2.6 7.3-6.3 7.3-2.6 0-4.1-1.3-5.4-3.4l-2.4-4.1a1.3 1.3 0 0 1 2.2-1.4z"/></svg></i><div><b>Wait</b><span>Walk in 18 s</span></div></div></div>`;
+  return `<div class="tc"><div class="tc-d"><b>${m === 'bike' ? 440 : 410}<small>ft</small></b><div>State St &amp; 800 S</div></div><div class="head">${lens('l', 'r', 77)}${lens('s', '', 23)}${lens('r', '', 23)}</div></div>`;
+}
+function dock(m) {
+  const hd = `<div class="dk"><div class="hdg"><i></i><b>N</b></div><div class="dk-l">1°</div></div>`;
+  if (m === 'walk') return `<div class="dock"><div class="dk"><div class="dk-n w">None</div><div class="dk-l">cars approaching</div></div><div class="dk"><div class="dk-n w">0.2 mi</div><div class="dk-l">to 400 S</div></div>${hd}</div>`;
+  if (m === 'bike') return `<div class="dock"><div class="dk"><div class="dk-n">14</div><div class="dk-l">mph</div></div><div class="dk"><div class="dk-n w">Clear</div><div class="dk-l">behind you</div></div>${hd}</div>`;
+  return `<div class="dock"><div class="dk"><div class="dk-n ok">33</div><div class="dk-l">mph</div></div><div class="dk"><div class="slim"><small>SPEED<br>LIMIT</small><b>35</b></div></div>${hd}</div>`;
+}
+// o = { p: 'a'|'b', m, auto, bc: 'on'|'gps'|'net'|'off'|null, al, toast, sheet, dark, setM, share, bsm }
+function phone(o) {
+  const m = o.m || 'drive', and = o.p === 'b';
+  let h = `<div class="mapbg"></div><div class="fade"></div>${SBAR(o.p)}`;
+  if (o.sheet === 'start') h += startScreen(o);
+  else {
+    h += topCard(m) + `<div class="me"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 4.5 20l7.5-4 7.5 4z"/></svg></div>`;
+    if (o.al) { const a = AL[o.al]; h += `<div class="ac lv-${a.lv}"><i class="ac-i"><img src="${ico(a.ic, a.lv)}" alt=""></i><div class="ac-t"><b>${a.t}</b><span>${a.s}</span></div><div class="ac-d">${a.d}</div></div>`; }
+    if (o.toast) h += `<div class="toast">${mIco(o.toast, !o.dark)}<div class="toast-t"><b>Switched to ${MODES[o.toast].t.toLowerCase()}</b><span>${{ walk: 'You seem to be walking', bike: 'You seem to be riding a bike', drive: 'You seem to be in a vehicle' }[o.toast]}</span></div><div class="toast-b">Undo</div></div>`;
+    const bc = o.bc ? `<div class="chip bc ${o.bc}"><i class="bdot"></i>${o.bc === 'on' ? BC.on[m === 'drive' ? 1 : 0] : BC[o.bc][0]}</div>` : '';
+    h += `<div class="chips"><div class="chip">${mIco(m, o.dark)}${MODES[m].t}${o.auto ? '<small>Auto</small>' : ''}</div>${bc}</div>`;
+    h += `<div class="zm"><i>+</i><i>−</i></div><div class="btns"><i class="rb">2D</i><i class="rb">${GEAR}</i><i class="rb">${SPK}</i></div>${dock(m)}`;
+    if (o.sheet) h += `<div class="dim"></div>` + ({ modes: modeSheet, settings: setSheet, optin: optinSheet, act: actDialog, loc: locDialog }[o.sheet])(o);
+  }
+  h += `<i class="home"></i>`;
+  return `<div class="scr phn ${and ? 'and' : 'ios'} ${o.dark ? 'dark' : ''}" style="width:390px;height:844px">${h}</div>`;
+}
+const radioRows = (o) => [['auto', 'Detect it for me', 'Switches between walking, cycling and driving'], ['drive', 'Driving', ''], ['walk', 'Walking', ''], ['bike', 'Cycling', '']]
+  .map(([k, t, d]) => `<div class="rw">${k === 'auto' ? `<i class="mi" style="background:transparent;box-shadow:inset 0 0 0 1.5px var(--line)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7M21 4v5h-5"/></svg></i>` : mIco(k, o.dark)}<div class="rw-t"><b>${t}${k === 'auto' && o.tag ? '<span class="tag" style="display:inline">Recommended</span>' : ''}</b>${d ? `<span>${d}</span>` : ''}</div><i class="rd ${(o.pick || 'auto') === k ? 'on' : ''}"></i></div>`).join('');
+function startScreen(o) {
+  return `<div class="gs"><div class="steps"><i class="on"></i><i class="on"></i><i></i><i></i></div><img class="gs-l" src="img/roadsense-icon.svg" alt="" style="margin-top:28px"><h1>How do you get around?</h1><p>Alerts change with how you travel. Change it any time.</p><div class="grp">${radioRows(Object.assign({ tag: true }, o))}</div><div class="pbtn2">Continue</div></div>`;
+}
+const modeSheet = (o) => `<div class="sheet"><div class="sh-h"><b>You are</b></div><div class="grp">${radioRows(Object.assign({}, o, { pick: o.auto ? 'auto' : o.m }))}</div></div>`;
+function setSheet(o) {
+  const seg = ['Auto', 'Driving', 'Walking', 'Cycling'].map((t, i) => `<span class="${(o.auto ? 0 : { drive: 1, walk: 2, bike: 3 }[o.m]) === i ? 'on' : ''}">${t}</span>`).join('');
+  return `<div class="sheet" style="top:90px"><div class="sh-h"><b>Settings</b><i>Done</i></div>
+    <div class="sh-k">You are</div><div class="grp"><div class="rw" style="display:block"><div class="rw-t"><b>Mode</b><span>Auto switches between walking, cycling and driving</span></div><div class="sg">${seg}</div></div></div>
+    <div class="sh-k">Let others see you</div><div class="grp">
+      <div class="rw"><div class="rw-t"><b>When I walk or ride</b><span>Shares your position with nearby vehicles</span></div><i class="sw ${o.share !== false ? 'on' : ''}"><i></i></i></div>
+      <div class="rw"><div class="rw-t"><b>When I drive</b><span>Shares your car's position with others nearby</span></div><i class="sw ${o.bsm ? 'on' : ''}"><i></i></i></div></div>
+    <div class="sh-k">Alerts</div><div class="grp"><div class="rw"><div class="rw-t"><b>Voice alerts</b><span>Read every alert out loud</span></div><i class="sw on"><i></i></i></div></div></div>`;
+}
+const optinSheet = (o) => `<div class="sheet"><div class="oi"><div class="oi-ic"><i class="bdot"></i></div><h2>Let drivers see you</h2><p>While you walk or ride, Road Sense shares where you are with vehicles nearby, so they know you're there.</p>
+    <ul><li><i>✓</i>Only while you walk or ride</li><li><i>✓</i>Only when your location is accurate</li><li><i>✓</i>Turn it off any time in Settings</li></ul>
+    <div class="pbtn2">Share my position</div><div class="pbtn2 q">Not now</div></div></div>`;
+function actDialog(o) {
+  if (o.p === 'a') return `<div class="ios-al"><div class="ios-al-b"><b>“Road Sense” Would Like to Access Your Motion &amp; Fitness Activity</b><p>Road Sense switches between walking, cycling and driving by itself.</p></div><div class="bt">Don't Allow</div><div class="bt b">OK</div></div>`;
+  return `<div class="and-al"><svg class="ai" viewBox="0 0 24 24" fill="currentColor"><circle cx="13" cy="4" r="2"/><path d="M13.5 7.5 10 9l-1 4h2l.6-2.3 1.2.9V20h2v-7.5l-1.6-1.4.5-2 1.3 1.9H18v-2h-2.3z"/></svg><b>Allow Road Sense to access your physical activity?</b><div class="bt" style="margin-top:22px">Allow</div><div class="bt">Don't allow</div></div>`;
+}
+function locDialog(o) {
+  if (o.p === 'a') return `<div class="ios-al"><div class="ios-al-b"><b>Allow “Road Sense” to use your location?</b><p>Nearby drivers see you while you walk or ride.</p><div class="mapmini"><span>Precise: On</span></div></div><div class="bt">Allow Once</div><div class="bt">Allow While Using App</div><div class="bt">Don't Allow</div></div>`;
+  return `<div class="and-al"><svg class="ai" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg><b>Allow Road Sense to access this device's location?</b><div class="acc"><div class="on"><i></i>Precise</div><div><i></i>Approximate</div></div><div class="bt">While using the app</div><div class="bt">Only this time</div><div class="bt">Don't allow</div></div>`;
+}
+
+// ---------- frames ----------
+const ro = new ResizeObserver((es) => { for (const e of es) fitFrame(e.target); });
+function fitFrame(f) { const s = f.firstElementChild; if (s) s.style.transform = `scale(${f.clientWidth / +f.dataset.w})`; }
+const frame = (html, w, h, cls) => `<div class="fr ${cls || ''}" data-w="${w}" data-h="${h}" style="aspect-ratio:${w}/${h}">${html}</div>`;
+let DARK = false;
+const base = (x) => Object.assign({ p: 'a', m: 'walk', auto: false, bc: null, dark: DARK }, x);
+const SCREEN = (x) => `<div class="ph-w">${frame(phone(base(x)), 390, 844, 'ph')}</div>`;
+
+// =====================================================================================================
+// FEATURE DATA. The page is drawn from this object only (blueprint: docs/features/FEATURE-PAGE-TEMPLATE.md).
+// plat: the two columns. ui requirement: { id, t, goal, st: {a, b}, screens: [{ t, v: [{ k, x, c }] } | { t, table }], lim: {a, b}, how: {a, b} }
+// no-UI requirement: { id, t, goal, st: {a, b}, noui: true, how: { one } }
+// =====================================================================================================
+const LV = { adv: '#2563EB', warn: '#F5A524', crit: '#E5383B', ok: '#16A34A' };
+const APL = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.6c0-2.4 2-3.6 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.1 1-4 2.4-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8s1.9.8 3.2.8 2.1-1.2 2.9-2.4c.9-1.3 1.3-2.6 1.3-2.7 0 0-2.4-1-2.4-4.1zM14 5.5c.7-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.2 1.8-1 2.9 1 .1 2.1-.6 2.8-1.4z"/></svg>';
+const AND = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 9.5 19.4 6.4a.4.4 0 0 0-.7-.4l-1.8 3.1A11 11 0 0 0 12 8a11 11 0 0 0-4.9 1.1L5.3 6a.4.4 0 0 0-.7.4l1.8 3.1A10.4 10.4 0 0 0 1 18h22a10.4 10.4 0 0 0-5.4-8.5zM7 15.3a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm10 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>';
+const F = {
+  plat: { a: [APL, 'iPhone'], b: [AND, 'Android'] },
+  reqs: [
+    { id: 'REQ-001', t: 'Automatic mode detection', goal: 'Road Sense notices walking, cycling or driving and switches by itself.', st: { a: 'part', b: 'part' },
+      screens: [
+        { t: 'It switches by itself', v: [
+          { k: 'Walking', x: { m: 'walk', auto: true, bc: 'on', toast: 'walk' }, c: 'A short note says what changed. Undo goes back for this trip.' },
+          { k: 'Cycling', x: { m: 'bike', auto: true, bc: 'on', toast: 'bike' }, c: 'Same note for every switch, then it goes away.' },
+          { k: 'Driving', x: { m: 'drive', auto: true, toast: 'drive' }, c: 'Driving stops sharing your position as a pedestrian or cyclist.' }] },
+        { t: 'Permission, asked once', v: [{ k: '', x: { m: 'walk', auto: true, sheet: 'act' }, c: 'Asked by the system when auto is first used. Without it, the mode is picked by hand.' }] }],
+      lim: {
+        a: [['part', 'Needs Motion & Fitness permission', `Our reason shows in the dialog. ${ln('iosMotion')}`],
+            ['part', 'Readings come with a confidence', `We switch only on a confident, steady reading, so it's never instant. ${ln('iosAct')}`]],
+        b: [['part', 'Needs physical activity permission', `Android 10 and later. ${ln('anAct')}`],
+            ['part', 'Not instant', `"Latency of event detection might vary by device." ${ln('anTrans')}`]] },
+      how: {
+        a: ['<code>CMMotionActivityManager</code>: <code>walking</code> / <code>running</code> → Walking, <code>cycling</code> → Cycling, <code>automotive</code> → Driving.',
+            '<b>Trick:</b> switch only after the same activity at medium or high confidence for about 20 s; ignore <code>stationary</code> (keep the mode at a red light).'],
+        b: ['Activity Recognition Transition API: <code>WALKING</code> / <code>RUNNING</code>, <code>ON_BICYCLE</code>, <code>IN_VEHICLE</code>, <code>ENTER</code> transitions.',
+            'Same steady-reading rule as iPhone, in the shared Flutter code; <code>STILL</code> keeps the mode.'] } },
+
+    { id: 'REQ-002', t: 'Manual mode selection', goal: 'The user picks the mode at first launch and can change it any time.', st: { a: 'ok', b: 'ok' },
+      screens: [
+        { t: 'First launch', v: [{ k: '', x: { sheet: 'start' }, c: 'One step of get started. Detect it for me is picked by default.' }] },
+        { t: 'Change it any time', v: [
+          { k: 'Tap the mode', x: { m: 'walk', bc: 'on', sheet: 'modes' }, c: 'Tap the mode chip on the map: the same four choices.' },
+          { k: 'Settings', x: { m: 'walk', bc: 'on', sheet: 'settings' }, c: 'Settings → You are. Same choices.' }] }],
+      how: { a: ['Plain app screens (Flutter), the same on both. The choice is stored on the phone; "Auto" turns REQ-001 on.'], b: ['Same screens and storage.'] } },
+
+    { id: 'REQ-003', t: 'Current mode indicator', goal: 'The map always shows which mode is on.', st: { a: 'ok', b: 'ok' },
+      screens: [{ t: 'Mode chip', v: [
+        { k: 'Driving', x: { m: 'drive' }, c: 'Bottom left, above the speed bar. "Auto" when detection picked it.' },
+        { k: 'Walking', x: { m: 'walk', bc: 'on' }, c: 'Walking: the top card is the crosswalk signal, the bar shows cars approaching.' },
+        { k: 'Cycling', x: { m: 'bike', auto: true, bc: 'on' }, c: 'Cycling: signals as when driving, the bar shows what is behind you.' }] }],
+      how: { a: ['The chip reads the stored mode; a mode change redraws it at once (no animation).'], b: ['Same.'] } },
+
+    { id: 'REQ-004', t: 'Mode-relevant alerts', goal: 'Each alert says which modes get it. Users only see alerts for their mode.', st: { a: 'ok', b: 'ok' },
+      screens: [
+        { t: 'Same corner, different alert', v: [
+          { k: 'Driving', lv: 'warn', x: { m: 'drive', al: 'ped' }, c: 'A driver is told about the pedestrian (from the pedestrian\'s phone).' },
+          { k: 'Walking', lv: 'crit', x: { m: 'walk', bc: 'on', al: 'rlr' }, c: 'The pedestrian is told about the car that is not stopping.' },
+          { k: 'Cycling', lv: 'crit', x: { m: 'bike', bc: 'on', al: 'hook' }, c: 'A cyclist is told about the car turning across them.' }] },
+        { t: 'Which alerts each mode gets', table: { cols: ['Driving', 'Walking', 'Cycling'], rows: [
+          ['Signal turning red', 1, 0, 1], ['Walk signal and crossing time', 0, 1, 0], ['School zone · speed', 1, 0, 0], ['Work zone', 1, 1, 1],
+          ['Low clearance', 1, 0, 0], ['Stopped vehicle', 1, 0, 1], ['Emergency vehicle', 1, 1, 1], ['Pedestrian crossing', 1, 0, 1],
+          ['Cyclist on your right', 1, 0, 0], ['Car not stopping', 0, 1, 1], ['Car behind you · turning across you', 0, 0, 1]] } }],
+      how: { a: ['Each alert type gets a <code>modes</code> list (already in the demo\'s alert engine); the engine drops alerts not for the current mode.'], b: ['Same shared code.'] } },
+
+    { id: 'REQ-005', t: 'Virtual PSM broadcasting', goal: 'When walking or cycling, the phone shares the user\'s position with nearby vehicles, after opt-in.', st: { a: 'part', b: 'part' },
+      screens: [
+        { t: 'Opt in', v: [
+          { k: 'Ask', x: { m: 'walk', bc: 'off', sheet: 'optin' }, c: 'Asked the first time the mode is Walking or Cycling. Nothing is shared before Yes.' },
+          { k: 'Location', x: { m: 'walk', bc: 'off', sheet: 'loc' }, c: 'Then the system asks for location. Precise must stay on.' }] },
+        { t: 'Turn it off any time', v: [{ k: '', x: { m: 'walk', bc: 'on', sheet: 'settings' }, c: 'Settings → Let others see you. Off stops sharing at once.' }] }],
+      lim: {
+        a: [['part', 'Precise location must be on', `Approximate location never gets near 20 m, so nothing is shared. ${ln('iosAcc')}`],
+            ['part', 'Screen off needs background location', `Background updates; iOS shows the blue location pill. ${ln('iosBg')}`]],
+        b: [['part', 'Precise location must be on', ln('anAcc')],
+            ['part', 'Screen off needs a foreground service', `With an ongoing notification. ${ln('anFgs')}`],
+            ['part', 'Background location is a separate grant', `Android 11+: from Settings, and Google Play reviews it. ${ln('anBg')}`]] },
+      how: {
+        a: ['<code>CLLocationManager</code>, best accuracy, <code>allowsBackgroundLocationUpdates</code> while walking or cycling.', 'Each fix → a virtual PSM to the Road Sense backend (dependency in the FRD), about once a second.'],
+        b: ['Fused location, high accuracy, in a <code>location</code> foreground service.', 'Same virtual PSM sender in shared code.'] } },
+
+    { id: 'REQ-006', t: 'Broadcast status indicator', goal: 'The user can see whether their position is being shared. Paused turns yellow.', st: { a: 'ok', b: 'ok' },
+      screens: [{ t: 'Sharing chip', v: [
+        { k: 'Sharing', lv: 'adv', x: { m: 'walk', bc: 'on' }, c: 'Under the mode chip. Blue dot: nearby drivers can see you.' },
+        { k: 'Weak GPS', lv: 'warn', x: { m: 'walk', bc: 'gps' }, c: 'Yellow: paused while location is worse than 20 m (REQ-008). Resumes by itself.' },
+        { k: 'No connection', lv: 'warn', x: { m: 'walk', bc: 'net' }, c: 'Yellow: paused while the connection is too poor (REQ-010).' },
+        { k: 'Off', x: { m: 'walk', bc: 'off' }, c: 'Grey: the user turned sharing off. Tap to turn it on.' }] }],
+      how: { a: ['One state from the sender: sharing, paused (GPS), paused (connection), off. The chip only shows it.'], b: ['Same.'] } },
+
+    { id: 'REQ-007', t: 'Virtual BSM for motorists', goal: 'Could have: drivers who opt in share their car\'s position too.', st: { a: 'part', b: 'part' },
+      screens: [{ t: 'Driving, sharing on', v: [
+        { k: 'Settings', x: { m: 'drive', sheet: 'settings', bsm: true }, c: 'Off by default. Settings → Let others see you → When I drive.' },
+        { k: 'Map', x: { m: 'drive', bc: 'on' }, c: 'The same chip as walking, reading "Visible to others".' }] }],
+      lim: { a: [['part', 'Same location limits as REQ-005', ln('iosBg')]], b: [['part', 'Same location limits as REQ-005', ln('anBg')]] },
+      how: { a: ['Same sender as REQ-005, message type BSM, from Driving mode only.'], b: ['Same.'] } },
+
+    { id: 'REQ-008', t: 'GPS accuracy safeguard', noui: true, goal: 'No sharing while accuracy is worse than about 20 m. Seen through the yellow chip (REQ-006).', st: { a: 'na', b: 'na' },
+      how: { one: ['Sender checks <code>horizontalAccuracy</code> / <code>Location.getAccuracy()</code> against the threshold (remote config, default 20 m) before each message.'] } },
+    { id: 'REQ-009', t: 'Location outlier filtering', noui: true, goal: 'Unrealistic jumps are dropped, not shared.', st: { a: 'na', b: 'na' },
+      how: { one: ['Drop a fix if the speed implied since the last good fix is above the mode\'s cap (walk ~4 m/s, bike ~15 m/s, drive ~45 m/s).'] } },
+    { id: 'REQ-010', t: 'Connectivity safeguard', noui: true, goal: 'No sharing on a poor connection; resumes by itself. Seen through the yellow chip (REQ-006).', st: { a: 'na', b: 'na' },
+      how: { one: ['Pause when the last messages were not acknowledged in time; never queue old positions for later.'] } },
+  ],
+  decide: [
+    ['Auto detection on by default?', 'Detect it for me is the first-launch default here. Needs the activity permission, and switching is never instant.'],
+    ['Words in the app', 'Driving / Walking / Cycling on screen (FRD: Motorist / Pedestrian / Cyclist). Same meaning.'],
+    ['Sharing with the screen off', `Needs background location on both (${ln('iosBg')}, ${ln('anBg')}). Ties into ${ln('frdBg')}.`],
+    ['Sharing chip color', 'Blue when sharing (the demo\'s Broadcasting chip), yellow when paused, grey when off. FRD names only yellow.'],
+  ],
+};
+
+// ---------- render (same for every feature page) ----------
+const VAR = {};   // chosen variant per screen block
+const sid = (id) => id.toLowerCase();
+const PN = (k) => F.plat[k][1];
+const statusCell = (s) => `<div class="rq-st"><span class="k">${PN('a')}</span>${st(s.a)}<span class="k">${PN('b')}</span>${st(s.b)}</div>`;
+const plat = (k) => `<div class="plat">${F.plat[k][0]}${F.plat[k][1]}</div>`;
+const pair = (v) => `<div class="pair"><div>${plat('a')}${SCREEN(Object.assign({ p: 'a' }, v.x))}</div><div>${plat('b')}${SCREEN(Object.assign({ p: 'b' }, v.x))}</div></div>`;
+function table(t) {
+  return `<table class="tbl mt">
+    <thead><tr><th>Alert</th>${t.cols.map(c => `<th class="c">${c}</th>`).join('')}</tr></thead>
+    <tbody>${t.rows.map(([n, ...on]) => `<tr><td>${n}</td>${on.map(x => `<td class="c">${x ? '<i class="yes">✓</i>' : '<i class="no">–</i>'}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+}
+function screenBlock(r, i) {
+  const s = r.screens[i], key = r.id + ':' + i;
+  if (s.table) return `<div class="scrn"><div class="scrn-h"><h3>${s.t}</h3></div>${table(s.table)}</div>`;
+  const j = VAR[key] || 0, v = s.v[j];
+  const tabs = s.v.length > 1 ? `<div class="tabs" role="tablist">${s.v.map((x, n) => `<button type="button" role="tab" data-key="${key}" data-n="${n}" class="${n === j ? 'on' : ''}" aria-selected="${n === j}">${x.lv ? `<i style="background:${LV[x.lv]}"></i>` : ''}${x.k}</button>`).join('')}</div>` : '';
+  return `<div class="scrn" data-block="${key}"><div class="scrn-h"><h3>${s.t}</h3>${tabs}</div><div class="scrn-b">${pair(v)}</div><p class="scrn-c">${v.c}</p></div>`;
+}
+const limList = (a) => `<ul>${(a || []).map(([s, t, w]) => `<li>${st(s)}<span>${t}<small>${w}</small></span></li>`).join('')}</ul>`;
+const limits = (r) => r.lim ? `<div class="lim"><div class="lim-k">Limits</div><div>${plat('a')}${limList(r.lim.a)}</div><div>${plat('b')}${limList(r.lim.b)}</div></div>` : '';
+const ul = (a) => `<ul>${a.map(x => `<li>${x}</li>`).join('')}</ul>`;
+function how(h) {
+  if (!h) return '';
+  const g = h.one ? `<div class="how-g" style="grid-template-columns:minmax(0,1fr)">${ul(h.one)}</div>`
+    : `<div class="how-g"><div>${plat('a')}${ul(h.a)}</div><div>${plat('b')}${ul(h.b)}</div></div>`;
+  return `<details class="how"><summary>How we build it</summary>${g}</details>`;
+}
+const rqHead = (id, t, goal, s) => `<header class="rq-h"><div class="rq-id">${id}</div><h2>${t}</h2><p>${goal}</p>${s ? statusCell(s) : ''}</header>`;
+
+function board() {
+  const ui = F.reqs.filter(r => !r.noui), nu = F.reqs.filter(r => r.noui);
+  document.getElementById('ov-a').textContent = PN('a'); document.getElementById('ov-b').textContent = PN('b');
+  document.getElementById('ov').innerHTML = F.reqs.map(r => `<tr data-go="${r.noui ? 'no-ui' : sid(r.id)}"><td class="id">${r.id}</td><td>${r.t}</td><td class="ui">${r.noui ? 'No UI' : 'Screens'}</td><td data-k="${PN('a')}">${st(r.st.a)}</td><td data-k="${PN('b')}">${st(r.st.b)}</td></tr>`).join('');
+  let h = ui.map(r => `<section class="rq" id="${sid(r.id)}">${rqHead(r.id, r.t, r.goal, r.st)}${r.screens.map((_, i) => screenBlock(r, i)).join('')}${limits(r)}${how(r.how)}</section>`).join('');
+  h += `<section class="rq noui" id="no-ui">${rqHead('NO UI', 'Requirements without screens', 'Engineering work only. What the user sees of them is shown above.')}
+    <ul class="nu">${nu.map(r => `<li><b>${r.id}</b><div><h4>${r.t}</h4><p>${r.goal}</p></div>${statusCell(r.st)}</li>`).join('')}</ul>
+    <details class="how"><summary>How we build it</summary><div class="how-g" style="grid-template-columns:minmax(0,1fr)">${ul(nu.map(r => `<b>${r.id}:</b> ` + r.how.one.join(' ')))}</div></details></section>`;
+  h += `<section class="rq try" id="try">${rqHead('PROTOTYPE', 'Try it', F.tryGoal)}${bodyTry()}</section>`;
+  h += `<section class="rq open" id="decide">${rqHead('OPEN', 'For the team to decide', 'Answers change the screens above.')}<ol class="dec">${F.decide.map(([t, d]) => `<li><span><b>${t}</b>${d}</span></li>`).join('')}</ol></section>`;
+  const el = document.getElementById('reqs'); el.innerHTML = h;
+  for (const f of document.querySelectorAll('.fr')) { ro.observe(f); fitFrame(f); }
+  el.onclick = (e) => {
+    const b = e.target.closest('[data-key]'); if (!b) return;
+    VAR[b.dataset.key] = +b.dataset.n;
+    const [rid, i] = b.dataset.key.split(':'), r = F.reqs.find(x => x.id === rid);
+    const blk = el.querySelector(`[data-block="${b.dataset.key}"]`); blk.outerHTML = screenBlock(r, +i);
+    for (const f of el.querySelectorAll(`[data-block="${b.dataset.key}"] .fr`)) { ro.observe(f); fitFrame(f); }
+  };
+  wireTry();
+  const J = [['overview', 'Overview']].concat(ui.map(r => [sid(r.id), r.id.slice(4) + ' · ' + r.t]), [['no-ui', 'No UI'], ['try', 'Try it'], ['decide', 'To decide']]);
+  document.getElementById('jump').innerHTML = J.map(([id, t]) => `<a data-id="${id}" role="link" tabindex="0">${t}</a>`).join('');
+  watchJump();
+}
+
+// in-page links: the page has a <base href> (to load the app's images), so "#id" links would leave the page. Scroll in JS.
+function goTo(id) { const s = document.getElementById(id); if (s) { s.scrollIntoView({ behavior: 'smooth', block: 'start' }); history.replaceState(null, '', location.pathname + location.search + '#' + id); } }
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('#jump a[data-id], tr[data-go]'); if (!a) return;
+  e.preventDefault(); goTo(a.dataset.id || a.dataset.go);
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.matches('#jump a[data-id]')) goTo(e.target.dataset.id); });
+let io;
+function watchJump() {
+  if (io) io.disconnect();
+  const links = [...document.querySelectorAll('#jump a')];
+  const set = (id) => { for (const a of links) { const on = a.dataset.id === id; a.classList.toggle('on', on); if (on) { const j = document.getElementById('jump'); j.scrollTo({ left: a.offsetLeft - 24, behavior: 'smooth' }); } } };
+  io = new IntersectionObserver((es) => { const v = es.filter(e => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0]; if (v) set(v.target.id); }, { rootMargin: '-120px 0px -60% 0px' });
+  for (const a of links) { const s = document.getElementById(a.dataset.id); if (s) io.observe(s); }
+  set('overview');
+}
+
+// ---------- try it ----------
+F.tryGoal = 'A walk and a ride on State St. Pick the mode, let it detect, and change what the phone can do.';
+const T = { p: 'a', mode: 'auto', act: 'walk', share: true, gps: 5, net: true, bsm: false, toast: null };
+const segH = (id, opts, v) => `<div class="seg" id="${id}">${opts.map(([k, t]) => `<button data-v="${k}" type="button" class="${String(v) === String(k) ? 'on' : ''}">${t}</button>`).join('')}</div>`;
+function bodyTry() {
+  return `<div class="try-g">
+      <div><div style="max-width:340px;margin:0 auto"><div class="fr ph" id="live" data-w="390" data-h="844" style="aspect-ratio:390/844"></div></div><div class="cap" id="live-cap"></div></div>
+      <div class="ctl" id="tctl"></div>
+    </div>`;
+}
+function tState() {
+  const m = T.mode === 'auto' ? T.act : T.mode, vru = m !== 'drive';
+  const want = vru ? T.share : T.bsm;
+  const bc = !want ? (vru ? 'off' : null) : T.gps > 20 ? 'gps' : !T.net ? 'net' : 'on';
+  return { m, bc };
+}
+function renderTry() {
+  const { m, bc } = tState(), f = document.getElementById('live'); if (!f) return;
+  f.innerHTML = phone(base({ p: T.p, m, auto: T.mode === 'auto', bc, toast: T.toast })); fitFrame(f);
+  document.getElementById('live-cap').textContent = { on: 'Sharing: nearby vehicles can see you.', gps: 'Paused: location is worse than 20 m.', net: 'Paused: the connection is too poor.', off: 'Not sharing: turned off.' }[bc] || 'Driving: not sharing (turn on "When I drive" to share).';
+  document.getElementById('tctl').innerHTML = `
+    <div><div class="ctl-k">Phone</div>${segH('t-p', [['a', 'iPhone'], ['b', 'Android']], T.p)}</div>
+    <div><div class="ctl-k">You are</div>${segH('t-mode', [['auto', 'Auto'], ['drive', 'Driving'], ['walk', 'Walking'], ['bike', 'Cycling']], T.mode)}</div>
+    ${T.mode === 'auto' ? `<div><div class="ctl-k">The phone senses</div>${segH('t-act', [['walk', 'Walking'], ['bike', 'Cycling'], ['drive', 'Driving']], T.act)}</div>` : ''}
+    <div><div class="ctl-k">Let others see you</div>
+      <button class="tg-row" id="t-share" type="button" role="switch" aria-checked="${T.share}"><span>When I walk or ride</span><i class="tg ${T.share ? 'on' : ''}"><i></i></i></button>
+      <button class="tg-row" id="t-bsm" type="button" role="switch" aria-checked="${T.bsm}"><span>When I drive</span><i class="tg ${T.bsm ? 'on' : ''}"><i></i></i></button></div>
+    <div><div class="ctl-k">GPS accuracy</div>${segH('t-gps', [[5, '5 m'], [15, '15 m'], [35, '35 m']], T.gps)}</div>
+    <div><div class="ctl-k">Connection</div>${segH('t-net', [['1', 'Good'], ['0', 'None']], T.net ? '1' : '0')}</div>`;
+}
+let tTimer;
+function wireTry() {
+  document.getElementById('tctl').onclick = (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    const seg = b.parentElement.id, v = b.dataset.v;
+    if (b.id === 't-share') T.share = !T.share; else if (b.id === 't-bsm') T.bsm = !T.bsm;
+    else if (seg === 't-p') T.p = v; else if (seg === 't-mode') { T.mode = v; T.toast = null; }
+    else if (seg === 't-act') { if (v !== T.act) { T.act = v; T.toast = v; clearTimeout(tTimer); tTimer = setTimeout(() => { T.toast = null; renderTry(); }, 3500); } }
+    else if (seg === 't-gps') T.gps = +v; else if (seg === 't-net') T.net = v === '1';
+    renderTry();
+  };
+  ro.observe(document.getElementById('live'));
+  renderTry();
+}
+
+// ---------- theme ----------
+document.getElementById('theme').onclick = (e) => {
+  const t = e.target.dataset.t; if (!t) return; DARK = t === 'dark';
+  try { localStorage.setItem('rs-feat-theme', t); } catch (er) {}
+  for (const b of document.getElementById('theme').children) b.className = b.dataset.t === t ? 'on' : '';
+  const y = scrollY; board(); scrollTo(0, y);
+};
+try { if (localStorage.getItem('rs-feat-theme') === 'dark') { DARK = true; for (const b of document.getElementById('theme').children) b.className = b.dataset.t === 'dark' ? 'on' : ''; } } catch (e) {}
+board();
+if (location.hash) setTimeout(() => goTo(location.hash.slice(1)), 300);
+</script>
+</body>
+</html>
