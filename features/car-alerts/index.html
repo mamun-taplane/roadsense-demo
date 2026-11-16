@@ -40,7 +40,7 @@
      header → screens → limits → how we build it) · .rq.noui (all requirements without UI, one list) ·
      .rq try (prototype) · .rq open (team decisions). Screens: .scrn = title + variant tabs + CarPlay | Android Auto.
      ===================================================================================================== */
-  :root { --ink: #15181D; --ink2: #5B636E; --ink3: #8A929C; --line: #E3E6EA; --bg: #F5F6F8; --navw: 0px; --bar: 56px; --r: 20px; }
+  :root { --ink: #15181D; --ink2: #5B636E; --ink3: #8A929C; --line: #E3E6EA; --bg: #F5F6F8; --bar: 56px; --r: 20px; }
   * { box-sizing: border-box; }
   html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; }
   body { overflow-x: hidden; }
@@ -239,8 +239,10 @@
   .row-tx { flex: 1; min-width: 0; }
   .row-t { font-size: 24px; font-weight: 700; line-height: 1.2; }
   .row-s { margin-top: 5px; font-size: 17px; font-weight: 500; color: var(--ink2); }
-  .row-v { font-size: 22px; font-weight: 700; flex: none; color: var(--ink); }
-  .row-v.off { color: var(--ink3); }
+  .ctg { width: 68px; height: 40px; border-radius: 20px; background: #C9CED6; position: relative; flex: none; }
+  .dark .ctg { background: #3A424D; }
+  .ctg i { position: absolute; left: 4px; top: 4px; width: 32px; height: 32px; border-radius: 50%; background: #fff; }
+  .ctg.on { background: #16A34A; } .ctg.on i { left: 32px; }
   /* CarPlay alert template (modal) */
   .modal { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(16, 24, 40, .5); }
   .dark .modal { background: rgba(0, 0, 0, .62); }
@@ -259,16 +261,17 @@
   .map-g svg { position: static; width: 38px; height: 38px; flex: none; }
   .map-g b { font-size: 26px; font-weight: 800; } .map-g span { font-size: 17px; font-weight: 600; opacity: .92; }
   /* CarPlay Dashboard (layout set by CarPlay): Live Activity tile + Now Playing */
-  .dcol { position: absolute; top: 12px; bottom: 12px; right: 12px; width: 236px; display: flex; flex-direction: column; gap: 12px; }
+  .dcol { position: absolute; top: 12px; bottom: 12px; right: 12px; width: 268px; display: flex; flex-direction: column; gap: 12px; }
   .dc { flex: 1; border-radius: 14px; background: var(--card); padding: 14px; display: flex; flex-direction: column; min-height: 0; }
   .la-h { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--ink2); }
   .la-h img { width: 22px; height: 22px; border-radius: 6px; background: #fff; }
   .la-h span { flex: 1; }
   .la-h b { color: var(--ink); font-size: 15px; }
-  .la-m { flex: 1; display: flex; align-items: center; gap: 12px; min-height: 0; }
-  .la-m .disc { width: 52px; height: 52px; } .la-m .disc img { width: 30px; height: 30px; } .la-m .disc.app img { width: 40px; height: 40px; }
-  .la-t { font-size: 20px; font-weight: 800; line-height: 1.15; }
-  .la-s { font-size: 14px; font-weight: 500; color: var(--ink2); margin-top: 3px; line-height: 1.25; }
+  .dc.la { flex: 1.5; padding: 16px; }
+  .la-m { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 10px; min-height: 0; }
+  .la-m .disc { width: 56px; height: 56px; } .la-m .disc img { width: 32px; height: 32px; } .la-m .disc.app img { width: 44px; height: 44px; }
+  .la-t { font-size: 22px; font-weight: 800; line-height: 1.15; letter-spacing: -.3px; }
+  .la-s { font-size: 15px; font-weight: 500; color: var(--ink2); margin-top: 4px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .media { display: flex; flex-direction: column; gap: 8px; }
   .media-a { width: 56px; height: 56px; border-radius: 10px; background: #CBD1D8; display: grid; place-items: center; color: #fff; }
   .dark .media-a { background: #2B323C; }
@@ -418,7 +421,7 @@ function appScreen(o) {
   return `${head(o)}<div class="msg ${a ? 'lv-' + a.lv : 'quiet'}">${mid}</div>${modal}`;
 }
 function setScreen(o) {
-  const r = (t, s, on) => `<div class="row"><div class="row-tx"><div class="row-t">${t}</div><div class="row-s">${s}</div></div><div class="row-v ${on ? '' : 'off'}">${on ? 'On' : 'Off'}</div></div>`;
+  const r = (t, s, on) => `<div class="row"><div class="row-tx"><div class="row-t">${t}</div><div class="row-s">${s}</div></div><i class="ctg ${on ? 'on' : ''}"><i></i></i></div>`;
   return `<div class="hd"><i class="hd-bk">${BACKC}</i><div class="hd-t">Settings</div></div><div class="lst">${r('Audio alerts', 'Read alerts aloud', o.aud)}${r('Visual alerts', 'Show alerts on this screen', o.vis)}</div>`;
 }
 function mapSvg(dark) {
@@ -435,11 +438,11 @@ function mapSvg(dark) {
 }
 const guide = () => `<div class="map-g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20v-7.5A4.5 4.5 0 0 1 12.5 8H19"/><path d="M15 4l4 4-4 4"/></svg><div><b>500 ft</b><br><span>Turn right onto 400 S</span></div></div>`;
 function laCard(o) {
-  // CarPlay Live Activity, small family (the Apple Watch Smart Stack size)
+  // CarPlay Live Activity in Dashboard (small family): app + distance, icon, alert, message
   const a = o.vis ? o.a : null;
-  return `<div class="dc ${a ? 'lv-' + a.lv : ''}"><div class="la-h"><img src="${APP}" alt=""><span>Road Sense</span><b>${a ? a.d : ''}</b></div>
+  return `<div class="dc la ${a ? 'lv-' + a.lv : ''}"><div class="la-h"><img src="${APP}" alt=""><span>Road Sense</span><b>${a ? a.d : ''}</b></div>
     <div class="la-m">${a ? `<i class="disc"><img src="${icon(a)}" alt=""></i><div><div class="la-t">${a.t}</div><div class="la-s">${a.s}</div></div>`
-      : `<i class="disc app"><img src="${APP}" alt=""></i><div><div class="la-t" style="font-size:17px">Running</div><div class="la-s">State St · Salt Lake City</div></div>`}</div></div>`;
+      : `<i class="disc app"><img src="${APP}" alt=""></i><div><div class="la-t" style="font-size:19px">Running</div><div class="la-s">State St · Salt Lake City</div></div>`}</div></div>`;
 }
 const mediaCard = () => `<div class="dc media"><div style="display:flex;gap:12px;align-items:center"><i class="media-a">${NOTE}</i><div><div class="media-t">KUER 90.1</div><div class="media-s">Radio · Live</div></div></div>
     <div class="media-c"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></div></div>`;
@@ -452,8 +455,8 @@ function car(o) {
   if (o.view === 'app') body = appScreen(o);
   else if (o.view === 'set') body = setScreen(o);
   else if (o.view === 'nav') body = `<div class="map" style="inset:0;border-radius:0">${mapSvg(o.dark)}${guide()}<div class="map-k">Your navigation app</div></div>${banner(o)}`;
-  else if (o.p === 'cp') body = `<div class="map" style="left:12px;top:12px;bottom:12px;right:260px">${mapSvg(o.dark)}${guide()}<div class="map-k">Your navigation app</div></div><div class="dcol">${laCard(o)}${mediaCard()}</div>`;
-  else body = `<div class="map" style="left:12px;top:12px;bottom:12px;right:260px">${mapSvg(o.dark)}${guide()}<div class="map-k">Your navigation app</div></div><div class="dcol">${mediaCard()}</div>${banner(o, 'in-split')}`;
+  else if (o.p === 'cp') body = `<div class="map" style="left:12px;top:12px;bottom:12px;right:292px">${mapSvg(o.dark)}${guide()}<div class="map-k">Your navigation app</div></div><div class="dcol">${laCard(o)}${mediaCard()}</div>`;
+  else body = `<div class="map" style="left:12px;top:12px;bottom:12px;right:292px">${mapSvg(o.dark)}${guide()}<div class="map-k">Your navigation app</div></div><div class="dcol">${mediaCard()}</div>${banner(o, 'in-split')}`;
   return `<div class="scr car ${o.p} ${o.dark ? 'dark' : ''}" style="width:800px;height:480px">${sys(o)}<div class="body">${body}</div></div>`;
 }
 
@@ -518,13 +521,13 @@ const F = {
           { k: 'Alert', x: { view: 'nav', a: AL.stopped }, c: 'Card top right; the turn card stays visible.' },
           { k: 'No alert', x: { view: 'nav' }, c: 'Nothing covers the navigation app.' }] },
         { t: 'Split screen', v: [
-          { k: 'Alert', x: { view: 'side', a: AL.red }, c: 'The car draws the split. CarPlay: Road Sense tile. Android Auto: the same card.' },
+          { k: 'Alert', x: { view: 'side', a: AL.red }, c: 'The car draws the split. CarPlay: a Road Sense tile. Android Auto: no tile for other apps, so the same floating card.' },
           { k: 'No alert', x: { view: 'side' }, c: 'CarPlay keeps a quiet tile; Android Auto shows nothing.' }] }],
       lim: {
         cp: [['part', 'Floating card needs iOS 26', `Live Activity, shown in Dashboard or as a notification. ${ln('cpLive')}`],
              ['no', 'No panel of our own', `Dashboard holds navigation apps and Now Playing. ${ln('cpDash')}`]],
         aa: [['part', 'Floating card only as a navigation app', `${ln('aaHun')} · ${ln('aaNotif')}`],
-             ['no', 'No panel of our own', `Places only for its categories. ${ln('aaCat')}`]] },
+             ['no', 'No tile in the split screen', `Android Auto picks the side cards; Google documents no way for an app to add one. Alerts float instead. ${ln('aaCat')}`]] },
       how: {
         cp: ['<b>Floating card:</b> ActivityKit Live Activity, <code>supplementalActivityFamilies([.small])</code>, started with the drive; an alert update shows it over the navigation app.',
              '<b>Dashboard tile:</b> the same Live Activity, no extra work.',
@@ -540,7 +543,7 @@ const F = {
 
     { id: 'REQ-004', t: 'In-vehicle alert settings', goal: 'Audio alerts and visual alerts, on or off, from the car screen or the phone. Both stay in sync.', st: { cp: 'part', aa: 'ok' },
       screens: [
-        { t: 'Settings on the car screen', v: [{ k: '', x: { view: 'set' }, c: 'The gear in the top bar opens two rows. Tap a row to switch it.' }] },
+        { t: 'Settings on the car screen', v: [{ k: 'Both on', x: { view: 'set' }, c: 'The gear in the top bar opens two toggles.' }, { k: 'Audio off', x: { view: 'set', aud: false }, c: 'Tap a row to switch it.' }] },
         { t: 'What each setting does', v: [
           { k: 'Both on', x: { a: AL.stopped }, c: 'Shown and spoken.' },
           { k: 'Audio off', x: { a: AL.stopped, aud: false }, c: 'Shown, not spoken. The speaker shows muted.' },
@@ -549,12 +552,12 @@ const F = {
         { t: 'Settings on the phone', v: [{ k: '', phone: true, c: 'Settings → In-vehicle alerts.' }] }],
       lim: {
         cp: [['part', 'Settings in the car: Apple review decides', `"Do not show … detailed settings". Two rows is our reading. ${ln('cpTask')}`],
-             ['part', 'Rows have no switch', 'On / Off text on both platforms, for one look.']],
+             ['ok', 'Toggle drawn as the row image', 'CarPlay rows have no switch; the toggle is the row\'s accessory image, swapped on tap.']],
         aa: [['ok', 'Settings screen allowed', ln('aaSet')]] },
       how: {
-        cp: ['Gear pushes a <code>CPListTemplate</code> with two <code>CPListItem</code>s; tap flips the value and updates the detail text.',
+        cp: ['Gear pushes a <code>CPListTemplate</code> with two <code>CPListItem</code>s. <b>Trick:</b> the toggle is the item\'s <code>accessoryImage</code> (on / off images, light and dark); a tap flips the value and swaps the image.',
              'One setting store on the phone for car, phone and alert engine. Visual off: the engine never sends the alert to the car or the Live Activity. Audio off: the voice queue drops it.'],
-        aa: ['Gear pushes a <code>ListTemplate</code> with two <code>Row</code>s.', 'Same setting store and engine rule.'] } },
+        aa: ['Gear pushes a <code>ListTemplate</code> with two <code>Row</code>s, each with a <code>Toggle</code>.', 'Same setting store and engine rule.'] } },
 
     { id: 'REQ-005', t: 'Parity', noui: true, goal: 'Same behavior on both platforms. Every screen on this page is the same on both.', st: { cp: 'na', aa: 'na' },
       how: { one: ['One shared alert model (title, message, distance, level, icon); only template code per platform. Test in CarPlay Simulator and Android Auto DHU, then a car.'] } },
