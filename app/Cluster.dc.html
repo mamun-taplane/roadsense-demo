@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <title>Road Sense — cluster</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=7cc8138-1795413858">
-<link rel="stylesheet" href="dash.css?v=7cc8138-1795413858">
-<link rel="stylesheet" href="cluster.css?v=7cc8138-1795413858">
+<link rel="stylesheet" href="rs2.css?v=bc671e2-1795415340">
+<link rel="stylesheet" href="dash.css?v=bc671e2-1795415340">
+<link rel="stylesheet" href="cluster.css?v=bc671e2-1795415340">
 </head>
 <body>
 <x-dc>
@@ -175,6 +175,8 @@
       </section>
     </sc-if>
     <div class="ct-list {{ ctListCls }}" role="list">
+      <!-- Android Auto (v50f): sectioned list, two sections with their headers (the host draws them) -->
+      <sc-if value="{{ ctSec.show }}" hint-placeholder-val="{{ false }}"><div class="ct-sh ct-sh1">Next signal</div><div class="ct-sh ct-sh2">{{ ctSec.h2 }}</div></sc-if>
       <sc-for list="{{ ctRows }}" as="r" hint-placeholder-count="3">
       <div class="ct-row {{ r.cls }}" role="listitem">
         <div class="ct-img" aria-hidden="true">
@@ -1413,7 +1415,7 @@ class Component extends DCLogic {
     // every alert: full-screen dialog over our car screen (shared carDlg: CarPlay alert template + OK, Android Auto
     // message template); the list keeps updating by the 10 s rule underneath
     const { cd, cdOk } = this.carDlg(ranked, cp);
-    return { carOn: true, ctRows: this.ctSnap, ctDh: this.ctHead, ctListCls: cp ? 'has-dh' : '', cm: cd, cdOk };
+    return { carOn: true, ctRows: this.ctSnap, ctDh: this.ctHead, ctListCls: cp ? 'has-dh' : 'has-sec', ctSec: { show: !cp, h2: al.length || p ? 'Alerts' : 'This road' }, cm: cd, cdOk };
   }
   renderVals() {
     const S = this.sim, st = this.state;
@@ -1490,7 +1492,7 @@ class Component extends DCLogic {
     const full = !this.still && !(this.props && this.props.app); // app: just the phone screen (live page on a phone)
     const near = !dstr[1] || (dstr[1] === 'ft' && Number(dstr[0]) <= 400);
     const fsOn = drive && !!fsA;
-    const car = this.dev().car ? this.carTpl({ nv, sig, ranked, fsA, limit, p, word }) : { carOn: false, ctRows: [], ctDh: { show: false }, ctListCls: '', cm: { show: false }, cdOk: () => {} };
+    const car = this.dev().car ? this.carTpl({ nv, sig, ranked, fsA, limit, p, word }) : { carOn: false, ctRows: [], ctDh: { show: false }, ctListCls: '', ctSec: { show: false, h2: '' }, cm: { show: false }, cdOk: () => {} };
     return {
       also, alsoRows,
       ...car,
