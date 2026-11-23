@@ -557,10 +557,10 @@
 .cg-lens.cl-x { background: transparent; color: #5B636E; box-shadow: inset 0 0 0 2px #3A3F47; }
 /* v50f Android Auto: sectioned list (Next signal | Alerts), each section its own card under a header; fixed sizes */
 .ct-list.has-sec { background: transparent; border-radius: 0; overflow: visible; }
-.has-sec .ct-row { flex-basis: 76px; background: var(--card); }
+.has-sec .ct-row { flex-basis: 82px; background: var(--card); }
 .has-sec .ct-row.k-sig { margin-top: 30px; border-radius: 18px; box-shadow: none; }
 .has-sec .ct-row.k-sig + .ct-row { margin-top: 30px; border-radius: 18px 18px 0 0; }
 .has-sec .ct-row:last-child { border-radius: 0 0 18px 18px; }
 .has-sec .ct-row.k-sig + .ct-row:last-child { border-radius: 18px; }
 .ct-sh { position: absolute; left: 6px; height: 30px; line-height: 30px; font-size: 16px; font-weight: 600; color: var(--ink-2); }
-.ct-sh1 { top: 0; } .ct-sh2 { top: 106px; }
+.ct-sh1 { top: 0; } .ct-sh2 { top: 112px; }
