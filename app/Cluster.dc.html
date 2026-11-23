@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <title>Road Sense — cluster</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=ae2e441-1794817129">
-<link rel="stylesheet" href="dash.css?v=ae2e441-1794817129">
-<link rel="stylesheet" href="cluster.css?v=ae2e441-1794817129">
+<link rel="stylesheet" href="rs2.css?v=e6e26a1-1795409670">
+<link rel="stylesheet" href="dash.css?v=e6e26a1-1795409670">
+<link rel="stylesheet" href="cluster.css?v=e6e26a1-1795409670">
 </head>
 <body>
 <x-dc>
@@ -165,11 +165,20 @@
       <div class="ct-title">Road Sense</div>
       <button class="cn-b ct-hb" onClick="{{ toggleVoice }}" aria-label="{{ voiceLabel }}"><sc-if value="{{ voiceOn }}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></sc-if><sc-if value="{{ voiceOff }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9l5 6M21 9l-5 6"/></svg></sc-if></button>
     </header>
-    <div class="ct-list" role="list">
+    <!-- CarPlay (iOS 27): the list's details header shows the next signal prominently, like the phone's signal card
+         (three lamps as one image, no countdowns: the 10 s rule); the rows below are alerts, priority, speed limit -->
+    <sc-if value="{{ ctDh.show }}" hint-placeholder-val="{{ false }}">
+      <section class="ct-dh" aria-label="{{ sigLabel }}">
+        <div class="ct-dh-img" aria-hidden="true"><i class="cg-lens {{ ctDh.L }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-6.5a4.5 4.5 0 0 0-4.5-4.5H6"/><path d="M10 5 6 9l4 4"/></svg></i><i class="cg-lens {{ ctDh.S }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5"/><path d="M7 10l5-5 5 5"/></svg></i><i class="cg-lens {{ ctDh.R }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20v-6.5A4.5 4.5 0 0 1 12.5 9H18"/><path d="M14 5l4 4-4 4"/></svg></i></div>
+        <div class="ct-tx"><div class="ct-k">Next signal</div><div class="ct-t">{{ ctDh.name }}</div><div class="ct-s">{{ ctDh.sub }}</div></div>
+        <div class="ct-d">{{ ctDh.d }}</div>
+      </section>
+    </sc-if>
+    <div class="ct-list {{ ctListCls }}" role="list">
       <sc-for list="{{ ctRows }}" as="r" hint-placeholder-count="3">
       <div class="ct-row {{ r.cls }}" role="listitem">
         <div class="ct-img" aria-hidden="true">
-          <div class="ct-head"><i class="ct-lp lp-r"></i><i class="ct-lp lp-y"></i><i class="ct-lp lp-g"></i></div>
+          <div class="ct-head"><i class="cg-lens"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5"/><path d="M7 10l5-5 5 5"/></svg></i></div>
           <div class="ct-ic"><span class="icset ic-{{ r.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""><svg class="i i-turn-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-6.5a4.5 4.5 0 0 0-4.5-4.5H6"/><path d="M10 5 6 9l4 4"/></svg><svg class="i i-turn-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20v-6.5A4.5 4.5 0 0 1 12.5 9H18"/><path d="M14 5l4 4-4 4"/></svg><svg class="i i-go-s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5"/><path d="M7 10l5-5 5 5"/></svg></span></div>
           <div class="ct-lim"><span class="ct-lim-w">SPEED</span><span class="ct-lim-w">LIMIT</span><span class="ct-lim-n">{{ r.lim }}</span></div>
         </div>
@@ -1379,25 +1388,27 @@ class Component extends DCLogic {
   // more than once every 10 seconds" — so no countdowns or live speed; a row changes at once only when something
   // happens (new signal, new color, new alert, new limit), otherwise its distance updates every 10 s.
   carTpl({ nv, sig, ranked, fsA, limit, p, word }) {
+    const cp = this.dev().k === 'cp';
     const al = ranked.filter(a => a.key !== 'hold').slice(0, p ? 1 : 2);
     const lit = { g: 'g', y: 'y', fy: 'y', r: 'r', x: 'r' }[sig.S.c] || 'g';
     const sigSub = ['Straight ' + word[sig.S.c]].concat(sig.L.c === 'x' ? ['no left turn'] : sig.L.c !== sig.S.c ? ['left ' + word[sig.L.c]] : []).join(' · ');
-    const event = [nv.name, sig.S.c, sig.L.c, al.map(a => a.key + a.lv).join(','), limit, p && p.st].join('|');
+    const event = [nv.name, sig.S.c, sig.L.c, sig.R.c, al.map(a => a.key + a.lv).join(','), limit, p && p.st].join('|');
     const now = performance.now();
     if (this.still || !this.ctSnap || event !== this.ctEvent || now - this.ctT >= 10000) {
-      const rows = [{ cls: 'k-sig lp-' + lit, title: nv.name, sub: sigSub, d: nv.dstr.join(' '), ic: 'info-w', lim: '' }];
+      // CarPlay: the signal is the details header (iOS 27); Android Auto: the first row
+      const head = { show: cp, name: nv.name, sub: sigSub, d: nv.dstr.join(' '), L: 'cl-' + sig.L.c, S: 'cl-' + sig.S.c, R: 'cl-' + sig.R.c };
+      const rows = cp ? [] : [{ cls: 'k-sig cl-' + sig.S.c, title: nv.name, sub: sigSub, d: nv.dstr.join(' '), ic: 'info-w', lim: '' }];
       if (!al.length) rows.push({ cls: 'k-al lv-ok', title: 'No alerts ahead', sub: 'Connected to UDOT signals', d: '', ic: 'check-w', lim: '' });
       for (const a of al) rows.push({ cls: 'k-al lv-' + a.lv, title: a.title, sub: a.sub, d: [a.dv, a.dl].filter(Boolean).join(' '), ic: a.ic, lim: '' });
       if (p) rows.push({ cls: 'k-al lv-' + (p.st === 'ok' ? 'ok' : p.st === 'no' ? 'crit' : 'adv'), title: p.st === 'req' ? 'Requesting priority' : p.st === 'ok' ? 'Priority granted' : 'Priority denied',
         sub: p.st === 'req' ? 'Sent automatically' : p.st === 'ok' ? 'Green held for you' : 'Signal stays red', d: '', ic: p.st === 'ok' ? 'check-w' : p.st === 'no' ? 'info-w' : 'siren-w', lim: '' });
       rows.push({ cls: 'k-lim' + (limit == null ? ' none' : ''), title: limit == null ? 'No speed limit data' : `Speed limit ${limit} mph`, sub: limit == null ? 'Drive to the posted limit' : 'Voice warns when you go over', d: '', ic: 'info-w', lim: limit == null ? '--' : String(limit) });
-      this.ctSnap = rows.slice(0, 4); this.ctEvent = event; this.ctT = now;
+      this.ctSnap = rows.slice(0, cp ? 3 : 4); this.ctHead = head; this.ctEvent = event; this.ctT = now;
     }
     // every alert: full-screen dialog over our car screen (shared carDlg: CarPlay alert template + OK, Android Auto
-    // message template); the list rows stay underneath and keep updating by the 10 s rule
-    const { cd, cdOk } = this.carDlg(ranked, this.dev().k === 'cp');
-    const cm = cd;
-    return { carOn: true, ctRows: this.ctSnap, cm, cdOk };
+    // message template); the list keeps updating by the 10 s rule underneath
+    const { cd, cdOk } = this.carDlg(ranked, cp);
+    return { carOn: true, ctRows: this.ctSnap, ctDh: this.ctHead, ctListCls: cp ? 'has-dh' : '', cm: cd, cdOk };
   }
   renderVals() {
     const S = this.sim, st = this.state;
@@ -1474,7 +1485,7 @@ class Component extends DCLogic {
     const full = !this.still && !(this.props && this.props.app); // app: just the phone screen (live page on a phone)
     const near = !dstr[1] || (dstr[1] === 'ft' && Number(dstr[0]) <= 400);
     const fsOn = drive && !!fsA;
-    const car = this.dev().car ? this.carTpl({ nv, sig, ranked, fsA, limit, p, word }) : { carOn: false, ctRows: [], cm: { show: false }, cdOk: () => {} };
+    const car = this.dev().car ? this.carTpl({ nv, sig, ranked, fsA, limit, p, word }) : { carOn: false, ctRows: [], ctDh: { show: false }, ctListCls: '', cm: { show: false }, cdOk: () => {} };
     return {
       also, alsoRows,
       ...car,

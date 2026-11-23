@@ -506,7 +506,9 @@
 .ct-img { width: 60px; height: 60px; flex: none; display: grid; place-items: center; }
 .ct-img > * { display: none; }
 .k-sig .ct-head, .k-al .ct-ic, .k-lim .ct-lim { display: flex; }
-.ct-head { width: 28px; height: 60px; border-radius: 9px; background: #0C0E11; flex-direction: column; align-items: center; justify-content: space-evenly; }
+.ct-head { width: 60px; height: 60px; border-radius: 15px; background: #0C0E11; align-items: center; justify-content: center; }
+.ct-head .cg-lens { width: 44px; height: 44px; }
+.ct-head .cg-lens svg { width: 26px; height: 26px; }
 .ct-lp { width: 15px; height: 15px; border-radius: 50%; background: #2A2F37; display: block; }
 .lp-r .ct-lp.lp-r { background: var(--sig-r); } .lp-y .ct-lp.lp-y { background: var(--sig-y); } .lp-g .ct-lp.lp-g { background: var(--sig-g); }
 .ct-ic { width: 56px; height: 56px; border-radius: 15px; background: var(--adv); align-items: center; justify-content: center; }
@@ -540,3 +542,16 @@
 .ph.th-dark.car-cp .ct-modal { background: rgba(0, 0, 0, .62); }
 .ph.th-dark.car-cp .ct-m-card { background: var(--raise); box-shadow: 0 0 0 1px #343C47; }
 .ph.th-dark.car-cp .ct-m-b { background: #2C333D; color: var(--accent-t); }
+/* v50 CarPlay (iOS 27): the list's details header = the next signal, like the phone's signal card. Three lamps in one
+   image (no countdowns: driving-task data may refresh only every 10 s); the rows move down and get a little shorter. */
+.ct-dh { position: absolute; left: calc(var(--cx0) + 12px); right: 12px; top: 76px; height: 124px; box-sizing: border-box; padding: 0 20px 0 14px; border-radius: 14px; background: var(--card); display: flex; align-items: center; gap: 18px; }
+.ct-dh-img { flex: none; display: flex; gap: 8px; padding: 10px 12px; border-radius: 18px; background: #0C0E11; }
+.ct-dh-img .cg-lens { width: 54px; height: 54px; }
+.ct-dh-img .cg-lens svg { width: 31px; height: 31px; }
+.ct-k { font-size: 12px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink-3, var(--ink-2)); margin-bottom: 4px; }
+.ct-dh .ct-d { font-size: 26px; font-weight: 800; letter-spacing: -.6px; }
+.ct-list.has-dh { top: 212px; }
+.has-dh .ct-row { flex-basis: 85px; }
+.cg-lens.cl-g { background: var(--sig-g); } .cg-lens.cl-r { background: var(--sig-r); }
+.cg-lens.cl-y, .cg-lens.cl-fy { background: var(--sig-y); color: #1C2026; }
+.cg-lens.cl-x { background: transparent; color: #5B636E; box-shadow: inset 0 0 0 2px #3A3F47; }

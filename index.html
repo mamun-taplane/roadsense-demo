@@ -90,6 +90,7 @@
   .dsh-list { padding: 0 8px 16px; }
   .dsh-note { display: none; margin: 0 16px 20px; padding: 14px 14px 12px; border-radius: 12px; background: #F3F4F6; font: 500 12.5px/1.45 Inter, sans-serif; color: #3B424C; }
   body.car-dev .dsh-note { display: block; }
+  body.car-dev .demo-app { display: none !important; } /* car screens: one template screen for both apps */
   .dsh-note b { display: block; margin-bottom: 6px; font-size: 13px; color: #15181D; }
   .dsh-note ul { margin: 0; padding-left: 16px; } .dsh-note li { margin-bottom: 6px; }
   .dsh-note a { color: #2563EB; }
@@ -148,7 +149,7 @@
 </nav>
 <nav class="demo-bar" aria-label="Choose the app and the device">
   <button class="fn-open" id="fn-open" type="button" aria-label="Open the features menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-  <div class="demo-grp"><span class="demo-k">App</span><div class="demo-seg" role="group" aria-label="App">
+  <div class="demo-grp demo-app"><span class="demo-k">App</span><div class="demo-seg" role="group" aria-label="App">
     <a id="to-map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5V4l-6 2.5z"/><path d="M9 4v13M15 6.5v13"/></svg><span>Map<span class="lg"> app</span></span></a>
     <a id="to-cluster"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="8" height="16" rx="2"/><rect x="13" y="4" width="8" height="7" rx="2"/><rect x="13" y="13" width="8" height="7" rx="2"/></svg><span>No map<span class="lg"> app</span></span></a>
   </div></div>
@@ -178,13 +179,14 @@
   <div class="dsh-sec" style="padding-bottom:0"><div class="dsh-k">Jump to</div></div>
   <div class="dsh-list" id="dsh-list"></div>
   <div class="dsh-note" role="note"><b>Why the car screens differ from the phone</b><ul>
-    <li><b style="display:inline">No full-screen design of our own.</b> CarPlay: the map "cannot be used to draw alerts, overlays, or other UI" (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=37" target="_blank" rel="noopener">Apple guide p. 36</a>). Android Auto: "only map content" on the map (<a href="https://developer.android.com/docs/quality-guidelines/car-app-quality#NF-2" target="_blank" rel="noopener">NF-2</a>). A plain system full-screen alert is allowed: CarPlay alert template, title + at least one button (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=17" target="_blank" rel="noopener">p. 16</a>); Android Auto message template (<a href="https://developer.android.com/design/ui/cars/guides/templates/overview#:~:text=Brief%20or%20longer%20full-screen%20message" target="_blank" rel="noopener">templates</a>).</li>
-    <li><b style="display:inline">No animation.</b> Android Auto: "must not display animated elements" (<a href="https://developer.android.com/docs/quality-guidelines/car-app-quality#SA-1" target="_blank" rel="noopener">SA-1</a>). The same design is used on CarPlay.</li>
-    <li><b style="display:inline">Map needs navigation.</b> A custom map only for navigation apps with turn-by-turn directions (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=8" target="_blank" rel="noopener">Apple p. 7</a>, <a href="https://developer.android.com/docs/quality-guidelines/car-app-quality#NF-1" target="_blank" rel="noopener">NF-1</a>); otherwise lists and alert screens, refreshed at most every 10 s on CarPlay (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=7" target="_blank" rel="noopener">p. 6</a>).</li>
-    <li><b style="display:inline">Another app in front:</b> only a notification + voice (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=29" target="_blank" rel="noopener">p. 28</a>); iOS 26 Live Activities in CarPlay Dashboard (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=12" target="_blank" rel="noopener">p. 11</a>).</li>
+    <li><b style="display:inline">Not a navigation app, so no map.</b> CarPlay: Road Sense is a driving task app, which "must use the provided templates… custom maps… are not possible" (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=7" target="_blank" rel="noopener">Apple guide p. 6</a>). Android Auto: a map only for navigation, POI and weather apps (<a href="https://developer.android.com/design/ui/cars/guides/templates/overview" target="_blank" rel="noopener">templates</a>). Same screen for the map app and the no-map app.</li>
+    <li><b style="display:inline">Templates only, drawn by the car.</b> A list (CarPlay iOS 27: the next signal as the list's details header) and the system's full-screen alert: CarPlay alert template, title + at least one button (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=17" target="_blank" rel="noopener">p. 16</a>); Android Auto message template. Only our images (lamps, icons, sign) carry our colors.</li>
+    <li><b style="display:inline">Slow refresh, no animation.</b> "Do not periodically refresh data items… more than once every 10 seconds" (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=7" target="_blank" rel="noopener">p. 6</a>): no countdowns, no live speed; a row changes at once only when something happens. Android Auto: "must not display animated elements" (<a href="https://developer.android.com/docs/quality-guidelines/car-app-quality#SA-1" target="_blank" rel="noopener">SA-1</a>).</li>
+    <li><b style="display:inline">Android Auto has no category for it.</b> Its categories are media, messaging, navigation, POI, IoT, weather, video, games (<a href="https://developer.android.com/training/cars#supported-app-categories" target="_blank" rel="noopener">list</a>); no driving-task one. Publishing there needs Google's OK.</li>
+    <li><b style="display:inline">Another app in front:</b> only a notification + voice (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=29" target="_blank" rel="noopener">p. 28</a>); a Live Activity in CarPlay Dashboard (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=12" target="_blank" rel="noopener">p. 11</a>).</li>
   </ul></div>
 </aside>
-<script src="_dc.js?v=ae2e441-1794817129"></script>
+<script src="_dc.js?v=e6e26a1-1795409670"></script>
 <script>
 // Which app: /cluster/ (demo) or ?cluster (local) = the no-map cluster; else the map app.
 const q = new URLSearchParams(location.search);
@@ -243,7 +245,9 @@ if (app) {
 }
 (async () => {
   try {
-    const Root = await DC.load(cluster ? 'Cluster.dc.html?v=ae2e441-1794817129' : 'LiveDrive.dc.html?v=ae2e441-1794817129');
+    // car screens: Road Sense is not a navigation app, so neither car platform allows it a map: both phone apps show the
+    // same template screen there (list + system alert), which lives in the no-map app (docs/CAR-SCREENS.md §8)
+    const Root = await DC.load(cluster || device === 'aa' || device === 'cp' ? 'Cluster.dc.html?v=e6e26a1-1795409670' : 'LiveDrive.dc.html?v=e6e26a1-1795409670');
     ReactDOM.createRoot(document.getElementById('root')).render(DC.h(Root, { ...(app ? { app: '1' } : {}), ...(device !== 'phone' ? { device } : {}) }));
   } catch (e) { document.getElementById('root').innerHTML = '<pre style="padding:16px;color:#B91C1C">Could not load the app: ' + e.message + '</pre>'; }
 })();
