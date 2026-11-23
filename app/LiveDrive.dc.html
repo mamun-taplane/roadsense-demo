@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Road Sense — live drive</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=3f957ce-1795413201">
+<link rel="stylesheet" href="rs2.css?v=dc88c09-1795413480">
 </head>
 <body>
 <x-dc>
@@ -1248,7 +1248,8 @@ class Component extends DCLogic {
   carDlg(order, cp) {
     const seen = this.carSeen || (this.carSeen = {});
     for (const k in seen) if (!order.some(a => a.key === k)) delete seen[k];
-    const a = order.find(x => x.key !== 'hold' && !(cp && seen[x.key]));
+    // no success / all-clear screen on the car ("School zone ended", "Green light"…): the alert just closes (user, v50d)
+    const a = order.find(x => x.key !== 'hold' && x.lv !== 'ok' && !(cp && seen[x.key]));
     if (!a) return { cd: { show: false, cls: '', ic: 'info-w', title: '', sub: '', ok: false }, cdOk: () => {} };
     // the distance follows the 10 s refresh rule like the list (no live counting); a new alert shows its own at once
     const now = performance.now(), dk = this.cdDist;
