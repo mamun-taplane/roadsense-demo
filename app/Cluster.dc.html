@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <title>Road Sense — cluster</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=f938f09-1795412722">
-<link rel="stylesheet" href="dash.css?v=f938f09-1795412722">
-<link rel="stylesheet" href="cluster.css?v=f938f09-1795412722">
+<link rel="stylesheet" href="rs2.css?v=3f957ce-1795413201">
+<link rel="stylesheet" href="dash.css?v=3f957ce-1795413201">
+<link rel="stylesheet" href="cluster.css?v=3f957ce-1795413201">
 </head>
 <body>
 <x-dc>
@@ -1176,7 +1176,10 @@ class Component extends DCLogic {
     for (const k in seen) if (!order.some(a => a.key === k)) delete seen[k];
     const a = order.find(x => x.key !== 'hold' && !(cp && seen[x.key]));
     if (!a) return { cd: { show: false, cls: '', ic: 'info-w', title: '', sub: '', ok: false }, cdOk: () => {} };
-    const dist = [a.dv, a.dl].filter(Boolean).join(' ');
+    // the distance follows the 10 s refresh rule like the list (no live counting); a new alert shows its own at once
+    const now = performance.now(), dk = this.cdDist;
+    if (this.still || !dk || dk.key !== a.key || now - dk.t >= 10000) this.cdDist = { key: a.key, t: now, s: [a.dv, a.dl].filter(Boolean).join(' ') };
+    const dist = this.cdDist.s;
     return {
       // CarPlay: CPAlertTemplate has only title variants + actions (no icon, no second text, text in system
       // colors); OK in the system's neutral style
