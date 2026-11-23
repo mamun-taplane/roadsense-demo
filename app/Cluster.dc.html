@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <title>Road Sense — cluster</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=e6e26a1-1795409670">
-<link rel="stylesheet" href="dash.css?v=e6e26a1-1795409670">
-<link rel="stylesheet" href="cluster.css?v=e6e26a1-1795409670">
+<link rel="stylesheet" href="rs2.css?v=f938f09-1795412722">
+<link rel="stylesheet" href="dash.css?v=f938f09-1795412722">
+<link rel="stylesheet" href="cluster.css?v=f938f09-1795412722">
 </head>
 <body>
 <x-dc>
@@ -528,7 +528,8 @@ class Component extends DCLogic {
     this.spoken = {};
     this.lastSay = '';
     this.still = (props && props.still) || '';
-    this.state = { screen: this.still && !/^splash\b/.test(this.still) ? 'drive' : 'splash', playing: false, rate: 1, voice: true, tick: 0, done: false, set: false, sChime: true, sAwake: true, sOver: 0, zoom: 2, sVeh: 1, view: '3d', mode: 'drive', vol: 0.8, setPg: 'home', theme: 'light' };
+    // the demo page (props.app) starts with voice off (user, 2026-11-23); the speaker button turns it on
+    this.state = { screen: this.still && !/^splash\b/.test(this.still) ? 'drive' : 'splash', playing: false, rate: 1, voice: !(props && props.app), tick: 0, done: false, set: false, sChime: true, sAwake: true, sOver: 0, zoom: 2, sVeh: 1, view: '3d', mode: 'drive', vol: 0.8, setPg: 'home', theme: 'light' };
     // still boards can open Settings (",set") or pick a zoom step (",z0" … ",z4")
     if (/,set/.test(this.still)) this.state.set = true;
     // ",setpg-alerts" opens one Settings page; ",dark" shows the dark theme (still boards and renders)
