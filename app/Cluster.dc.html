@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <title>Road Sense — cluster</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=dc88c09-1795413480">
-<link rel="stylesheet" href="dash.css?v=dc88c09-1795413480">
-<link rel="stylesheet" href="cluster.css?v=dc88c09-1795413480">
+<link rel="stylesheet" href="rs2.css?v=7cc8138-1795413858">
+<link rel="stylesheet" href="dash.css?v=7cc8138-1795413858">
+<link rel="stylesheet" href="cluster.css?v=7cc8138-1795413858">
 </head>
 <body>
 <x-dc>
@@ -1403,7 +1403,7 @@ class Component extends DCLogic {
       // CarPlay: the signal is the details header (iOS 27); Android Auto: the first row
       const head = { show: cp, name: nv.name, sub: sigSub, d: nv.dstr.join(' '), L: 'cl-' + sig.L.c, S: 'cl-' + sig.S.c, R: 'cl-' + sig.R.c };
       const rows = cp ? [] : [{ cls: 'k-sig cl-' + sig.S.c, title: nv.name, sub: sigSub, d: nv.dstr.join(' '), ic: 'info-w', lim: '' }];
-      if (!al.length) rows.push({ cls: 'k-al lv-ok', title: 'No alerts ahead', sub: 'Connected to UDOT signals', d: '', ic: 'check-w', lim: '' });
+      // no "No alerts ahead" all-clear row either (user, v50e): with no alert the list is the signal + the speed limit
       for (const a of al) rows.push({ cls: 'k-al lv-' + a.lv, title: a.title, sub: a.sub, d: [a.dv, a.dl].filter(Boolean).join(' '), ic: a.ic, lim: '' });
       if (p) rows.push({ cls: 'k-al lv-' + (p.st === 'ok' ? 'ok' : p.st === 'no' ? 'crit' : 'adv'), title: p.st === 'req' ? 'Requesting priority' : p.st === 'ok' ? 'Priority granted' : 'Priority denied',
         sub: p.st === 'req' ? 'Sent automatically' : p.st === 'ok' ? 'Green held for you' : 'Signal stays red', d: '', ic: p.st === 'ok' ? 'check-w' : p.st === 'no' ? 'info-w' : 'siren-w', lim: '' });
