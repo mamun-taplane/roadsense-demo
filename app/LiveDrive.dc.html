@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Road Sense — live drive</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=0d8e4c5-1795415444">
+<link rel="stylesheet" href="rs2.css?v=71e0ae2-1795535119">
 </head>
 <body>
 <x-dc>
@@ -141,16 +141,16 @@
       </div>
       <sc-if value="{{ notWalk }}" hint-placeholder-val="{{ true }}">
       <div class="sighead {{ sigCls }}" role="img" aria-label="{{ sigLabel }}">
-        <div class="mv">
+        <div class="mv mv-{{ sig.L.c }}">
           <div class="lens {{ sig.L.c }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-6.5a4.5 4.5 0 0 0-4.5-4.5H6"/><path d="M10 5 6 9l4 4"/></svg></div>
           <div class="mv-n {{ sig.L.d }}">{{ sig.L.n }}</div>
           <span class="ut ut-{{ sig.L.ut }}" aria-hidden="true"><img class="ut-i ut-ok" src="v2/ic/uturn-ok.svg" alt=""><img class="ut-i ut-no" src="v2/ic/uturn-no.svg" alt=""></span>
         </div>
-        <div class="mv">
+        <div class="mv mv-{{ sig.S.c }}">
           <div class="lens {{ sig.S.c }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5"/><path d="M7 10l5-5 5 5"/></svg></div>
           <div class="mv-n {{ sig.S.d }}">{{ sig.S.n }}</div>
         </div>
-        <div class="mv">
+        <div class="mv mv-{{ sig.R.c }}">
           <div class="lens {{ sig.R.c }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20v-6.5A4.5 4.5 0 0 1 12.5 9H18"/><path d="M14 5l4 4-4 4"/></svg></div>
           <div class="mv-n {{ sig.R.d }}">{{ sig.R.n }}</div>
         </div>
@@ -587,7 +587,7 @@ class Component extends DCLogic {
       [32, -5340],
     ];
     this.REACT = 2.5; // seconds the simulated driver takes to slow down for a lower limit
-    this.WORD = { g: 'GO', r: 'STOP', y: 'SLOW', fy: 'YIELD', x: 'NO TURN' }; // shown under a lens that has no countdown
+    this.WORD = { g: 'GO', r: 'STOP', y: 'SLOW', fy: 'YIELD', x: '' }; // shown under a lens that has no countdown. x = the movement doesn't exist (one-way cross street): its lens is left out (DU-9)
     // movements that don't exist (one-way cross streets, checked with Mapbox Directions): 600 S (MLK Jr Blvd) is
     // one-way eastbound, so no left from northbound State St; 500 S is one-way westbound, so no right
     this.NO_TURN = { '600 S': 'L', '500 S': 'R' };
@@ -1856,7 +1856,7 @@ class Component extends DCLogic {
     // next intersection + its per-movement signals
     const nv = this.nextView(), dstr = nv.dstr, sig = nv.sig, nx = { n: nv.n };
     const word = { g: 'green', y: 'yellow', r: 'red', fy: 'flashing yellow', x: 'no turn' };
-    const sigLabel = this.mode() === 'walk' ? this.walkLabel() : `Left ${word[sig.L.c]}${sig.L.ut === 'ok' ? ' (U-turn allowed)' : sig.L.ut === 'no' ? ' (no U-turn)' : ''}, straight ${word[sig.S.c]}, right ${word[sig.R.c]}`;
+    const sigLabel = this.mode() === 'walk' ? this.walkLabel() : [sig.L.c !== 'x' && `left ${word[sig.L.c]}${sig.L.ut === 'ok' ? ' (U-turn allowed)' : sig.L.ut === 'no' ? ' (no U-turn)' : ''}`, `straight ${word[sig.S.c]}`, sig.R.c !== 'x' && `right ${word[sig.R.c]}`].filter(Boolean).join(', ').replace(/^./, c => c.toUpperCase());
     const p = this.prioState();
     const prio = p ? {
       show: true, req: p.st === 'req', ok: p.st === 'ok', no: p.st === 'no', cls: p.st,

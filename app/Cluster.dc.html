@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <title>Road Sense — cluster</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=0d8e4c5-1795415444">
-<link rel="stylesheet" href="dash.css?v=0d8e4c5-1795415444">
-<link rel="stylesheet" href="cluster.css?v=0d8e4c5-1795415444">
+<link rel="stylesheet" href="rs2.css?v=71e0ae2-1795535119">
+<link rel="stylesheet" href="dash.css?v=71e0ae2-1795535119">
+<link rel="stylesheet" href="cluster.css?v=71e0ae2-1795535119">
 </head>
 <body>
 <x-dc>
@@ -515,7 +515,7 @@ class Component extends DCLogic {
       [32, -5340],
     ];
     this.REACT = 2.5; // seconds the simulated driver takes to slow down for a lower limit
-    this.WORD = { g: 'GO', r: 'STOP', y: 'SLOW', fy: 'YIELD', x: 'NO TURN' }; // shown under a lens that has no countdown
+    this.WORD = { g: 'GO', r: 'STOP', y: 'SLOW', fy: 'YIELD', x: '' }; // shown under a lens that has no countdown. x = the movement doesn't exist (one-way cross street): its lens is left out (DU-9)
     // movements that don't exist (one-way cross streets, checked with Mapbox Directions): 600 S (MLK Jr Blvd) is
     // one-way eastbound, so no left from northbound State St; 500 S is one-way westbound, so no right
     this.NO_TURN = { '600 S': 'L', '500 S': 'R' };
