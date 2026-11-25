@@ -567,3 +567,13 @@
 .has-sec .ct-row.k-sig + .ct-row:last-child { border-radius: 18px; }
 .ct-sh { position: absolute; left: 6px; height: 30px; line-height: 30px; font-size: 16px; font-weight: 600; color: var(--ink-2); }
 .ct-sh1 { top: 0; } .ct-sh2 { top: 112px; }
+
+/* customer branding (v50p): Derq accent in the no-map app (rules shared with the map app are in rs2.css) */
+.ph.br-derq .cl-bc { background: rgba(17, 174, 197, .12); color: #0A8296; }
+.ph.br-derq .cl-bc i { background: #11AEC5; } .ph.br-derq .cl-bc i::after { border-color: #11AEC5; }
+.ph.br-derq.th-dark .cl-bc { background: rgba(17, 174, 197, .2); color: #4FD0E3; }
+.ph.br-derq .spd-r { border-color: rgba(17, 174, 197, .2); }
+@media (prefers-reduced-motion: no-preference) { .ph.br-derq .spd-r { animation-name: spd-ring-dq; } }
+@keyframes spd-ring-dq { 0%, 100% { border-color: rgba(17, 174, 197, .12); } 30% { border-color: rgba(17, 174, 197, .36); } }
+.ph.br-rs .d-cu { height: 24px; }
+.ph.br-rs .spd-cu { height: 40px; }

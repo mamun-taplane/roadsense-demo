@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <title>RoadSense — cluster</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=35e0da1-1795591658">
-<link rel="stylesheet" href="dash.css?v=35e0da1-1795591658">
-<link rel="stylesheet" href="cluster.css?v=35e0da1-1795591658">
+<link rel="stylesheet" href="rs2.css?v=95e3c5a-1795592022">
+<link rel="stylesheet" href="dash.css?v=95e3c5a-1795592022">
+<link rel="stylesheet" href="cluster.css?v=95e3c5a-1795592022">
 </head>
 <body>
 <x-dc>
@@ -26,7 +26,7 @@
   </div>
 
   <header class="d-top">
-    <div class="d-brand"><img class="d-cu" src="img/connected-utah.svg" alt="Connected Utah"></div>
+    <div class="d-brand"><img class="d-cu" src="img/connected-utah.svg" alt="{{ brandName }}"></div>
     <div class="d-top-r">
       <button class="d-vbtn" onClick="{{ toggleVoice }}" aria-label="{{ voiceLabel }}">
         <sc-if value="{{ voiceOn }}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></sc-if>
@@ -339,7 +339,7 @@
         <div class="spd-o o4"><img src="v2/ic/ped-k.svg" alt=""></div>
       </div>
       <div class="spb-body spd-body">
-        <img class="spd-cu" src="img/connected-utah.svg" alt="Connected Utah">
+        <img class="spd-cu" src="img/connected-utah.svg" alt="{{ brandName }}">
         <div class="spb-h">Connected roads, safer trips!</div>
         <div class="spb-p">Signals, work zones and emergency vehicles, before you see them.</div>
         <button class="spb-btn" onClick="{{ start }}">Start driving</button>
@@ -1092,6 +1092,12 @@ class Component extends DCLogic {
   // Settings (DU-5, same structure as the Flutter app): a short list with the current value on each row, every
   // group opens its own page (back arrow + Done). Controls with nothing behind them in the demo are greyed.
   get SET_PAGES() { return { home: 'Settings', alerts: 'Alerts', voice: 'Voice and sound', map: 'Map and display', units: 'Units and language', vehicle: 'Vehicle and data', app: 'App behaviour' }; }
+  // customer branding (demo Brand menu, user 2026-11-25): only the logo and the accent colours change.
+  // cu = Connected Utah (default), rs = RoadSense, derq = Derq. Demo page: props.brand; renders: ,brand-rs / ,brand-derq
+  brand() {
+    const b = (this.props && this.props.brand) || ((this.still || '').match(/,brand-(rs|derq)\b/) || [])[1];
+    return b === 'rs' || b === 'derq' ? b : 'cu';
+  }
   themeDark() {
     const t = (this.state && this.state.theme) || 'light';
     if (t === 'system') { try { return window.matchMedia('(prefers-color-scheme: dark)').matches; } catch (e) { return false; } }
@@ -1128,7 +1134,8 @@ class Component extends DCLogic {
       playSample: () => this.setVol(vol),
       thL: on(th === 'light'), thD: on(th === 'dark'), thS: on(th === 'system'),
       pickThL: () => this.setTheme('light'), pickThD: () => this.setTheme('dark'), pickThS: () => this.setTheme('system'),
-      themeCls: this.themeDark() ? 'th-dark' : '',
+      themeCls: (this.themeDark() ? 'th-dark' : '') + (this.brand() === 'cu' ? '' : ' br-' + this.brand()),
+      brandName: { cu: 'Connected Utah', rs: 'RoadSense', derq: 'Derq' }[this.brand()],
       sumAlerts: `${st.sChime ? 'Chime on' : 'Chime off'} · ${st.sOver === 0 ? 'warn over the limit' : 'warn at ' + st.sOver + ' mph over'}`,
       sumVoice: st.voice ? `On · ${Math.round(vol * 100)}%` : 'Off',
       sumMap: thName + (this.MS_NAME ? ' · ' + this.MS_NAME() : ''),

@@ -861,6 +861,32 @@
 .ph.th-dark.car-cp .ct-m-b { background: #2C333D; color: var(--accent-t); }
 .car-ui .ct-modal { pointer-events: auto; }
 
+
+
+/* ---- customer branding (v50p, user 2026-11-25): demo Brand menu. Only the logo and the accent colours change;
+   alert level colours (advisory blue, warning amber, critical red, ok green) stay: they are safety colours.
+   br-rs = RoadSense (same colours as Connected Utah, its logo, no "Powered by"); br-derq = Derq (teal accent
+   #11AEC5, navy #0B2646 instead of black on buttons). Default (no class) = Connected Utah. */
+.ph.br-rs .spm-cu, .ph.br-rs .spd-cu, .ph.br-rs .d-cu { content: url(img/roadsense.svg); }
+.ph.br-rs.th-dark .spm-cu, .ph.br-rs.th-dark .spd-cu, .ph.br-rs.th-dark .d-cu { content: url(img/roadsense-dark.svg); }
+.ph.br-rs .spm-cu { height: 40px; }
+.ph.br-rs .spm-pow, .ph.br-rs .spb-pow { visibility: hidden; } /* "RoadSense, powered by RoadSense" */
+.ph.br-derq .spm-cu, .ph.br-derq .spd-cu, .ph.br-derq .d-cu { content: url(img/derq.svg); }
+.ph.br-derq.th-dark .spm-cu, .ph.br-derq.th-dark .spd-cu, .ph.br-derq.th-dark .d-cu { content: url(img/derq-dark.svg); }
+.ph.br-derq { --accent: #11AEC5; }
+.ph.br-derq.th-dark { --accent-t: #4FD0E3; }
+.ph.br-derq .puck-disc { box-shadow: 0 12px 20px -6px rgba(17, 174, 197, .6); }
+.ph.br-derq .puck-glow { background: radial-gradient(closest-side, rgba(17, 174, 197, .26), rgba(17, 174, 197, 0)); }
+.ph.br-derq .spin { border-color: #BCE9F0; border-top-color: var(--accent); }
+.ph.br-derq .recenter, .ph.br-derq .set-link, .ph.br-derq .set-note svg, .ph.br-derq .ct-m-b { color: #0A8296; } /* text: darker teal, readable on white */
+.ph.br-derq .pm-ic { background: #E4F6F9; color: #0A8296; }
+.ph.br-derq.th-dark .recenter, .ph.br-derq.th-dark .set-link, .ph.br-derq.th-dark .set-note svg, .ph.br-derq.th-dark .ct-m-b { color: var(--accent-t); }
+.ph.br-derq.th-dark .pm-ic, .ph.br-derq.th-dark .prio.req .prio-ic { background: rgba(17, 174, 197, .2); color: var(--accent-t); }
+.ph.br-derq .spm-puck { background: #11AEC5; }
+.ph.br-derq .spm-route polygon { fill: #11AEC5; }
+.ph.br-derq:not(.th-dark) .spm-btn, .ph.br-derq:not(.th-dark) .spb-btn, .ph.br-derq:not(.th-dark) .pm-ok, .ph.br-derq:not(.th-dark) .set-done { background: #0B2646; }
+.ph.br-derq.th-dark .pm-ok:focus-visible, .ph.br-derq .pm-ok:focus-visible, .ph.br-derq .pm-demo:focus-visible { outline-color: #11AEC5; }
+
 /* ==== get started (from splash.css) ==== */
 /* Get started: shared by every version. Plain white page, the RoadSense mark in a few faint rings,
    the Connected Utah wordmark, one line, one button. */

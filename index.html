@@ -27,8 +27,14 @@
   .demo-seg a:hover { color: var(--ink); }
   .demo-seg a.on { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(16, 24, 40, .14); }
   .demo-seg a:focus-visible { outline: 2px solid #2563EB; outline-offset: 1px; }
+  /* device and brand: dropdowns (v50p, user: the device list got long) */
+  .demo-dd { position: relative; display: flex; align-items: center; height: 40px; border-radius: 12px; background: #EEF0F3; }
+  .demo-dd svg { position: absolute; left: 11px; width: 18px; height: 18px; color: var(--ink); pointer-events: none; }
+  .demo-dd::after { content: ""; position: absolute; right: 13px; top: 50%; width: 6px; height: 6px; margin-top: -5px; border: solid var(--ink2); border-width: 0 2px 2px 0; transform: rotate(45deg); pointer-events: none; }
+  .demo-dd select { appearance: none; -webkit-appearance: none; height: 100%; padding: 0 34px 0 37px; border: 0; border-radius: 12px; background: transparent; font: 600 14px/1 Inter, system-ui, sans-serif; color: var(--ink); cursor: pointer; }
+  .demo-dd select:focus-visible { outline: 2px solid #2563EB; outline-offset: 1px; }
   /* phone: no group labels, short names, device icons only */
-  @media (max-width: 760px) { .demo-bar { gap: 6px 8px; padding-left: 6px; padding-right: 6px; } .demo-k, .demo-bar .lg { display: none; } .demo-seg a { height: 32px; padding: 0 8px; font-size: 13px; gap: 5px; } .demo-seg a .dv-t { display: none; } #demo-open { height: 32px; padding: 0 10px; } }
+  @media (max-width: 760px) { .demo-bar { gap: 6px 8px; padding-left: 6px; padding-right: 6px; } .demo-k, .demo-bar .lg { display: none; } .demo-seg a { height: 32px; padding: 0 8px; font-size: 13px; gap: 5px; } .demo-seg a .dv-t { display: none; } #demo-open { height: 32px; padding: 0 10px; } .demo-dd { height: 38px; } .demo-dd select { font-size: 13px; padding: 0 26px 0 31px; max-width: 150px; } .demo-dd svg { left: 8px; width: 16px; height: 16px; } .demo-dd::after { right: 10px; } }
   @media (max-width: 400px) { .demo-seg a svg { width: 16px; height: 16px; } .demo-grp:first-of-type .demo-seg a svg { display: none; } }
   #root { padding-top: var(--barh, calc(var(--bar) + env(safe-area-inset-top, 0px))); }
   /* computer: the board (phone + side panel) centered under the bar */
@@ -153,13 +159,10 @@
     <a id="to-map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5V4l-6 2.5z"/><path d="M9 4v13M15 6.5v13"/></svg><span>Map<span class="lg"> app</span></span></a>
     <a id="to-cluster"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="8" height="16" rx="2"/><rect x="13" y="4" width="8" height="7" rx="2"/><rect x="13" y="13" width="8" height="7" rx="2"/></svg><span>No map<span class="lg"> app</span></span></a>
   </div></div>
-  <div class="demo-grp"><span class="demo-k">Device</span><div class="demo-seg" role="group" aria-label="Device">
-    <a id="d-phone" title="Phone" aria-label="Phone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg><span class="dv-t">Phone</span></a>
-    <a id="d-tl" title="Tablet, landscape" aria-label="Tablet, landscape"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M18.5 11v2"/></svg><span class="dv-t">Tablet landscape</span></a>
-    <a id="d-tp" title="Tablet, portrait" aria-label="Tablet, portrait"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M11 18.5h2"/></svg><span class="dv-t">Tablet portrait</span></a>
-    <a id="d-aa" title="Android Auto (car screen)" aria-label="Android Auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4.5 20l7.5-4 7.5 4z"/></svg><span class="dv-t">Android Auto</span></a>
-    <a id="d-cp" title="Apple CarPlay (car screen)" aria-label="Apple CarPlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M8.5 15.5 12 8l3.5 7.5"/></svg><span class="dv-t">CarPlay</span></a>
-  </div></div>
+  <div class="demo-grp"><label class="demo-k" for="d-sel">Device</label><div class="demo-dd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>
+    <select id="d-sel" aria-label="Device"><option value="phone">Phone</option><option value="tl">Tablet landscape</option><option value="tp">Tablet portrait</option><option value="aa">Android Auto</option><option value="cp">CarPlay</option></select></div></div>
+  <div class="demo-grp"><label class="demo-k" for="b-sel">Brand</label><div class="demo-dd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 3 7.5l9 4.5 9-4.5z"/><path d="m3 12 9 4.5 9-4.5M3 16.5 12 21l9-4.5"/></svg>
+    <select id="b-sel" aria-label="Brand"><option value="cu">Connected Utah</option><option value="rs">RoadSense</option><option value="derq">Derq</option></select></div></div>
   <button id="demo-open" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5z"/></svg>Controls</button>
 </nav>
 <div id="root"></div>
@@ -186,7 +189,7 @@
     <li><b style="display:inline">Another app in front:</b> only a notification + voice (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=29" target="_blank" rel="noopener">p. 28</a>); a Live Activity in CarPlay Dashboard (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=12" target="_blank" rel="noopener">p. 11</a>).</li>
   </ul></div>
 </aside>
-<script src="_dc.js?v=35e0da1-1795591658"></script>
+<script src="_dc.js?v=95e3c5a-1795592022"></script>
 <script>
 // Which app: /cluster/ (demo) or ?cluster (local) = the no-map cluster; else the map app.
 const q = new URLSearchParams(location.search);
@@ -196,7 +199,10 @@ const root = location.origin + location.pathname.replace(/cluster\/?$/, '');
 // device: phone, tablet landscape (tl, 1194×834), tablet portrait (tp, drawn 641×918), Android Auto (aa) or CarPlay (cp) car screen (800×480)
 const device = ['tl', 'tp', 'aa', 'cp'].includes(q.get('device')) ? q.get('device') : 'phone';
 const SIZE = { phone: [390, 844], tl: [1194, 834], tp: [641, 918], aa: [800, 480], cp: [800, 480] }[device];
-const keep = ['app', 'board'].filter(k => q.has(k)).concat(device !== 'phone' ? ['device=' + device] : []).join('&');
+// brand (v50p): the customer's logo + accent colour; cu = Connected Utah (default), rs = RoadSense, derq = Derq. Switches live.
+let brand = ['rs', 'derq'].includes(q.get('brand')) ? q.get('brand') : 'cu';
+const keepQ = () => ['app', 'board'].filter(k => q.has(k)).concat(device !== 'phone' ? ['device=' + device] : [], brand !== 'cu' ? ['brand=' + brand] : []).join('&');
+let keep = keepQ();
 const link = (c) => (c ? (local ? root + '?cluster' + (keep ? '&' + keep : '') : root + 'cluster/' + (keep ? '?' + keep : '')) : root + (keep ? '?' + keep : ''));
 for (const a of document.querySelectorAll('.fn-i')) {
   a.href = root + (a.dataset.fn === 'demo' ? '' : 'features/' + a.dataset.fn + '/');
@@ -205,21 +211,25 @@ for (const a of document.querySelectorAll('.fn-i')) {
 document.getElementById('fn-open').onclick = () => document.body.classList.add('fn-on');
 document.getElementById('fn-x').onclick = document.getElementById('fn-back').onclick = () => document.body.classList.remove('fn-on');
 const toMap = document.getElementById('to-map'), toCl = document.getElementById('to-cluster');
-toMap.href = link(false); toCl.href = link(true);
+const setLinks = () => { keep = keepQ(); toMap.href = link(false); toCl.href = link(true); };
+setLinks();
+const bSel = document.getElementById('b-sel'); bSel.value = brand;
+bSel.onchange = () => {
+  brand = bSel.value; setLinks();
+  const u = new URL(location.href); if (brand === 'cu') u.searchParams.delete('brand'); else u.searchParams.set('brand', brand); history.replaceState(null, '', u.toString());
+  render();
+};
 if (device === 'aa' || device === 'cp') document.body.classList.add('car-dev');
 (cluster ? toCl : toMap).className = 'on'; (cluster ? toCl : toMap).setAttribute('aria-current', 'page');
-for (const d of ['phone', 'tl', 'tp', 'aa', 'cp']) {
-  const a = document.getElementById('d-' + d), u = new URL(location.href);
-  if (d === 'phone') u.searchParams.delete('device'); else u.searchParams.set('device', d);
-  a.href = u.toString(); if (d === device) { a.className = 'on'; a.setAttribute('aria-current', 'true'); }
-}
+const dSel = document.getElementById('d-sel'); dSel.value = device;
+dSel.onchange = () => { const u = new URL(location.href); if (dSel.value === 'phone') u.searchParams.delete('device'); else u.searchParams.set('device', dSel.value); location.href = u.toString(); };
 // Always just the app, scaled to the space next to the controls pane (?board: the old board with the in-app side panel)
 const app = !q.has('board');
 const WIDE = matchMedia('(min-width: 900px)');
 const store = (k, v) => { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } };
 const setBar = () => document.documentElement.style.setProperty('--barh', document.querySelector('.demo-bar').getBoundingClientRect().height + 'px');
 setBar(); addEventListener('resize', setBar);
-let fit = () => {};
+let fit = () => {}, render = () => {};
 if (app) {
   document.body.classList.add('app');
   document.documentElement.style.setProperty('--aw', SIZE[0] + 'px'); document.documentElement.style.setProperty('--ah', SIZE[1] + 'px');
@@ -247,8 +257,10 @@ if (app) {
   try {
     // car screens: RoadSense is not a navigation app, so neither car platform allows it a map: both phone apps show the
     // same template screen there (list + system alert), which lives in the no-map app (docs/CAR-SCREENS.md §8)
-    const Root = await DC.load(cluster || device === 'aa' || device === 'cp' ? 'Cluster.dc.html?v=35e0da1-1795591658' : 'LiveDrive.dc.html?v=35e0da1-1795591658');
-    ReactDOM.createRoot(document.getElementById('root')).render(DC.h(Root, { ...(app ? { app: '1' } : {}), ...(device !== 'phone' ? { device } : {}) }));
+    const Root = await DC.load(cluster || device === 'aa' || device === 'cp' ? 'Cluster.dc.html?v=95e3c5a-1795592022' : 'LiveDrive.dc.html?v=95e3c5a-1795592022');
+    const R = ReactDOM.createRoot(document.getElementById('root'));
+    render = () => R.render(DC.h(Root, { ...(app ? { app: '1' } : {}), ...(device !== 'phone' ? { device } : {}), ...(brand !== 'cu' ? { brand } : {}) }));
+    render();
   } catch (e) { document.getElementById('root').innerHTML = '<pre style="padding:16px;color:#B91C1C">Could not load the app: ' + e.message + '</pre>'; }
 })();
 // ---- phone demo sheet: drives the app instance the app registers as window.__rsApp ----

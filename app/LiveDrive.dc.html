@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>RoadSense — live drive</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=35e0da1-1795591658">
+<link rel="stylesheet" href="rs2.css?v=95e3c5a-1795592022">
 </head>
 <body>
 <x-dc>
@@ -413,7 +413,7 @@
           <svg width="26" height="13" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="#15181D" opacity=".4"/><rect x="2" y="2" width="17" height="9" rx="2" fill="#15181D"/><rect x="23.5" y="4.5" width="2" height="4" rx="1" fill="#15181D" opacity=".4"/></svg>
         </span>
       </div>
-      <img class="spm-cu" src="img/connected-utah.svg" alt="Connected Utah">
+      <img class="spm-cu" src="img/connected-utah.svg" alt="{{ brandName }}">
       <div class="spm-h">Connected roads, safer trips!</div>
       <button class="spm-btn" onClick="{{ start }}">Start driving</button>
       <div class="spm-pow">Powered by <img src="img/roadsense.svg" alt="RoadSense"></div>
@@ -1164,6 +1164,12 @@ class Component extends DCLogic {
   // Settings (DU-5, same structure as the Flutter app): a short list with the current value on each row, every
   // group opens its own page (back arrow + Done). Controls with nothing behind them in the demo are greyed.
   get SET_PAGES() { return { home: 'Settings', alerts: 'Alerts', voice: 'Voice and sound', map: 'Map and display', units: 'Units and language', vehicle: 'Vehicle and data', app: 'App behaviour' }; }
+  // customer branding (demo Brand menu, user 2026-11-25): only the logo and the accent colours change.
+  // cu = Connected Utah (default), rs = RoadSense, derq = Derq. Demo page: props.brand; renders: ,brand-rs / ,brand-derq
+  brand() {
+    const b = (this.props && this.props.brand) || ((this.still || '').match(/,brand-(rs|derq)\b/) || [])[1];
+    return b === 'rs' || b === 'derq' ? b : 'cu';
+  }
   themeDark() {
     const t = (this.state && this.state.theme) || 'light';
     if (t === 'system') { try { return window.matchMedia('(prefers-color-scheme: dark)').matches; } catch (e) { return false; } }
@@ -1200,7 +1206,8 @@ class Component extends DCLogic {
       playSample: () => this.setVol(vol),
       thL: on(th === 'light'), thD: on(th === 'dark'), thS: on(th === 'system'),
       pickThL: () => this.setTheme('light'), pickThD: () => this.setTheme('dark'), pickThS: () => this.setTheme('system'),
-      themeCls: this.themeDark() ? 'th-dark' : '',
+      themeCls: (this.themeDark() ? 'th-dark' : '') + (this.brand() === 'cu' ? '' : ' br-' + this.brand()),
+      brandName: { cu: 'Connected Utah', rs: 'RoadSense', derq: 'Derq' }[this.brand()],
       sumAlerts: `${st.sChime ? 'Chime on' : 'Chime off'} · ${st.sOver === 0 ? 'warn over the limit' : 'warn at ' + st.sOver + ' mph over'}`,
       sumVoice: st.voice ? `On · ${Math.round(vol * 100)}%` : 'Off',
       sumMap: thName + (this.MS_NAME ? ' · ' + this.MS_NAME() : ''),
