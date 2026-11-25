@@ -227,15 +227,15 @@
 .dk-num.over { color: var(--crit); }
 /* over the limit: the bottom bar pulses (client meeting 2026-11-05); v4 pulses its speed block the same way */
 /* walker: visible to drivers | car approaching | facing (no speed); rider: speed | car behind | heading */
-.dk-vis, .dk-vis-sep, .dk-near, .dk-rear { display: none; }
+.dk-vis, .dk-vis-sep, .dk-near { display: none; }
 .dock.walk .dk-spd, .dock.walk .dk-lim, .dock.walk .dk-lim-sep { display: none; }
 .dock.walk .dk-vis, .dock.walk .dk-near { display: flex; } .dock.walk .dk-vis-sep { display: block; }
-.dock.bike .dk-lim { display: none; } .dock.bike .dk-rear { display: flex; }
-.dock.bike .dk-spd { order: 1; } .dock.bike .dk-lim-sep { order: 2; } .dock.bike .dk-rear { order: 3; } .dock.bike > .dk-sep:not(.dk-lim-sep):not(.dk-vis-sep) { order: 4; } .dock.bike > .dk:last-child { order: 5; } /* speed | car behind | heading */
+.dock.bike .dk-lim { display: none; } .dock.bike .dk-vis { display: flex; }
+.dock.bike .dk-spd { order: 1; } .dock.bike .dk-lim-sep { order: 2; } .dock.bike .dk-vis { order: 3; } .dock.bike > .dk-sep:not(.dk-lim-sep):not(.dk-vis-sep) { order: 4; } .dock.bike > .dk:last-child { order: 5; } /* speed | visible to nearby drivers | heading */
 .dk-vis-t { display: flex; align-items: center; gap: 7px; font-size: 19px; font-weight: 700; letter-spacing: -.3px; color: var(--ink); white-space: nowrap; }
 .dk-vis-t .bc-dot { flex: none; }
 .dk-word { font-size: 26px; letter-spacing: -.6px; white-space: nowrap; }
-.dk-near.warn .dk-word, .dk-rear.warn .dk-word { color: var(--warn-ink, #B26B00); }
+.dk-near.warn .dk-word { color: var(--warn-ink, #B26B00); }
 .ph-n { font-size: 24px !important; letter-spacing: -.5px !important; white-space: nowrap; }
 .ph-l { text-transform: none !important; letter-spacing: 0 !important; font-size: 12px !important; font-weight: 600 !important; }
 .dock.over { animation: rs-over 1.2s ease-in-out infinite; }
@@ -448,6 +448,10 @@
 .bgv-ban { position: absolute; left: 10px; right: 10px; top: 54px; max-width: 420px; margin: 0 auto; display: flex; gap: 12px; align-items: center; padding: 12px 14px; border: 0; border-radius: 22px; background: rgba(255, 255, 255, .96); box-shadow: 0 10px 30px rgba(16, 24, 40, .18); text-align: left; cursor: pointer; animation: bgv-in .35s cubic-bezier(.2, .9, .3, 1.2) both; border-left: 0; }
 @keyframes bgv-in { from { transform: translateY(-120%); opacity: 0; } to { transform: none; opacity: 1; } }
 .bgv-logo { width: 38px; height: 38px; border-radius: 10px; flex: none; }
+/* the banner shows the alert's own icon, as the alert cards do (user, 2026-11-25: was the app logo) */
+.bgv-aic { display: grid; place-items: center; background: var(--warn); }
+.bgv-ban.lv-crit .bgv-aic { background: var(--crit); } .bgv-ban.lv-adv .bgv-aic { background: var(--adv); } .bgv-ban.lv-ok .bgv-aic { background: var(--ok); }
+.bgv-aic .icset img { width: 24px; height: 24px; }
 .bgv-tx { display: flex; flex-direction: column; min-width: 0; }
 .bgv-k { font-size: 12px; font-weight: 600; color: #98A0AA; }
 .bgv-t { margin-top: 1px; font-size: 16px; font-weight: 700; color: #15181D; }

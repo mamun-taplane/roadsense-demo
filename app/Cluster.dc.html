@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <title>Road Sense — cluster</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=71e0ae2-1795535119">
-<link rel="stylesheet" href="dash.css?v=71e0ae2-1795535119">
-<link rel="stylesheet" href="cluster.css?v=71e0ae2-1795535119">
+<link rel="stylesheet" href="rs2.css?v=f31239f-1795579713">
+<link rel="stylesheet" href="dash.css?v=f31239f-1795579713">
+<link rel="stylesheet" href="cluster.css?v=f31239f-1795579713">
 </head>
 <body>
 <x-dc>
@@ -84,7 +84,7 @@
 
   <!-- 2 · you: speed on a gauge, the limit sign as it is on the road, heading -->
   <section class="cl-spd {{ spdCls }} {{ walkCls }} {{ bikeCls }}" aria-label="You">
-    <!-- walking: drivers can see you + a car coming (no speed); riding: a car behind you instead of the limit sign -->
+    <!-- walking: drivers can see you + a car coming (no speed); riding: visible to nearby drivers instead of the limit sign -->
     <div class="cl-vru cl-vis"><div class="cl-vru-t"><i class="bc-dot"></i>{{ vru.vis.t }}</div><div class="cl-vru-l">{{ vru.vis.l }}</div></div>
     <div class="cl-vru cl-near {{ vru.near.cls }}"><div class="cl-vru-n">{{ vru.near.t }}</div><div class="cl-vru-l">{{ vru.near.l }}</div></div>
     <div class="cl-gauge {{ spdCls }}">
@@ -96,7 +96,7 @@
       <div class="cl-g-c"><span class="cl-g-n">{{ mph }}</span><span class="cl-g-u">mph</span></div>
     </div>
     <div class="cl-spd-r">
-      <div class="cl-vru cl-rear {{ vru.rear.cls }}"><div class="cl-vru-n">{{ vru.rear.t }}</div><div class="cl-vru-l">{{ vru.rear.l }}</div></div>
+      <div class="cl-vru cl-rear"><div class="cl-vru-t"><i class="bc-dot"></i>{{ vru.vis.t }}</div><div class="cl-vru-l">{{ vru.vis.l }}</div></div>
       <div class="d-lim {{ limCls }}" aria-label="{{ limLabel }}">
         <div class="d-lim-sign"><span class="d-lim-w">SPEED</span><span class="d-lim-w">LIMIT</span><span class="d-lim-n">{{ limitText }}</span></div>
       </div>
@@ -322,7 +322,7 @@
     <div class="bgv" role="region" aria-label="Road Sense in the background">
       <div class="bgv-app"><div class="bgv-l">Another app is open</div><div class="bgv-s">Road Sense keeps watching the road and speaks every alert</div></div>
       <sc-if value="{{ bgb.show }}" hint-placeholder-val="{{ false }}">
-        <button class="bgv-ban {{ bgb.cls }}" onClick="{{ openApp }}" aria-label="Open Road Sense"><img class="bgv-logo" src="img/roadsense-icon.svg" alt=""><span class="bgv-tx"><span class="bgv-k">Road Sense · now</span><span class="bgv-t">{{ bgb.title }}</span><span class="bgv-sb">{{ bgb.sub }}</span></span></button>
+        <button class="bgv-ban {{ bgb.cls }}" onClick="{{ openApp }}" aria-label="Open Road Sense"><span class="bgv-logo bgv-aic"><span class="icset ic-{{ bgb.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></span><span class="bgv-tx"><span class="bgv-k">Road Sense · now</span><span class="bgv-t">{{ bgb.title }}</span><span class="bgv-sb">{{ bgb.sub }}</span></span></button>
       </sc-if>
       <button class="bgv-open" onClick="{{ openApp }}">Open Road Sense</button>
     </div>
@@ -429,7 +429,7 @@ class Component extends DCLogic {
       { id: 'granted', name: 'Signal priority granted', tag: 'ev', tagText: 'EV mode', s: 6420, mode: 'ev', modes: EV },
       { id: 'denied', name: 'Signal priority denied', tag: 'ev', tagText: 'EV mode', s: 7520, mode: 'ev', modes: EV },
       { id: 'bike', name: 'Start riding', tag: 'base', tagText: 'Normal', s: 0, mode: 'bike', modes: BK },
-      { id: 'behind', name: 'Car behind you', tag: 'warn', tagText: 'Warning', s: 610, mode: 'bike', modes: BK },
+      { id: 'lane', name: 'Lane closed ahead', tag: 'warn', tagText: 'Warning', s: 2060, mode: 'bike', modes: BK },
       { id: 'hook', name: 'Car turning right across you', tag: 'crit', tagText: 'Critical', s: 2640, mode: 'bike', modes: BK },
       { id: 'bus', name: 'Bus pulling out at a stop', tag: 'warn', tagText: 'Warning', s: 3080, mode: 'bike', modes: BK },
       { id: 'green', name: 'Hold speed for the green', tag: 'adv', tagText: 'Advisory', s: 3440, mode: 'bike', modes: BK },
@@ -464,7 +464,7 @@ class Component extends DCLogic {
       'p7-req': 'Requesting priority at 700 South.', 'p7-ok': 'Priority granted. Green held at 700 South.',
       'p4-req': 'Requesting priority at 400 South.', 'p4-ok': 'Priority granted. Green held at 400 South.',
       'ev-yield': 'Vehicles ahead are pulling over.',
-      'bk-behind': 'Car approaching from behind. Keep right.',
+      'bk-lane': 'Right lane closed ahead, past 600 South. Merge with care.',
       'bk-hook': 'Watch out. A car ahead is turning right across your path.',
       'bk-bus': 'Bus pulling out ahead. Slow down.',
       'bk-green': 'Hold 13 miles per hour to make the green at 500 South.',
@@ -534,6 +534,7 @@ class Component extends DCLogic {
     this.state = { screen: this.still && !/^splash\b/.test(this.still) ? 'drive' : 'splash', playing: false, rate: 1, voice: !(props && props.app), tick: 0, done: false, set: false, sChime: true, sAwake: true, sOver: 0, zoom: 2, sVeh: 1, view: '3d', mode: 'drive', vol: 0.8, setPg: 'home', theme: 'light' };
     // still boards can open Settings (",set") or pick a zoom step (",z0" … ",z4")
     if (/,set/.test(this.still)) this.state.set = true;
+    if (/,bg(,|$)/.test(this.still)) this.state.bg = true; // ',bg' = background preview (another app in front)
     // ",setpg-alerts" opens one Settings page; ",dark" shows the dark theme (still boards and renders)
     { const sp = this.still.match(/,setpg-(\w+)/); if (sp) this.state.setPg = sp[1]; }
     if (/,dark(,|$)/.test(this.still)) this.state.theme = 'dark';
@@ -747,14 +748,12 @@ class Component extends DCLogic {
   }
   // what a walker / rider needs instead of a speed-limit sign (research: UDOT PedApp; cyclist field studies —
   // audio first, glanceable icons, rear traffic like a bike radar). Walker: are drivers seeing me, is a car
-  // coming. Rider: is a car coming up behind me.
+  // coming. Rider: the same "Visible to nearby drivers" (the phone broadcasts PSM; user, 2026-11-25: no car-behind radar).
   vruVals() {
     const S = this.sim, m = this.mode();
     let near = { t: 'None', l: 'cars approaching', cls: '' };
     if (m === 'walk') { const c = this.carSW(); if (c != null && c < this.WK.xw + 20) { const ft = Math.max(0, (this.WK.xw - c) * this.FT); near = { t: ft > 30 ? Math.round(ft / 10) * 10 + ' ft' : 'Here', l: 'car approaching', cls: 'warn' }; } }
-    let rear = { t: 'Clear', l: 'behind you', cls: '' };
-    if (m === 'bike' && S.s >= 560 && S.s < 980) { const ft = Math.max(0, (980 - S.s) / 420 * 260); rear = { t: ft > 15 ? Math.round(ft / 10) * 10 + ' ft' : 'Passing', l: 'car behind', cls: 'warn' }; }
-    return { near, rear, vis: { t: 'Visible', l: 'to nearby drivers' } };
+    return { near, vis: { t: 'Visible', l: 'to nearby drivers' } };
   }
   nextView() {
     const S = this.sim, D = S.det, c = Math.ceil;
@@ -953,7 +952,8 @@ class Component extends DCLogic {
     if (this.mode() === 'ev' && s >= 2700 && s < 3150) A({ i: 3, lv: 'ok', ic: 'siren-w', title: 'Vehicles ahead yielding', sub: '3 vehicles pulling over right', dv: '', dl: '', d: 0, key: 'ev-yield' });
     // cyclist (VRU): your phone broadcasts PSM; vehicles' BSM warn you
     if (this.mode() === 'bike') {
-      if (s >= 650 && s < 980) A({ i: 0, lv: 'warn', ic: 'rlr-k', title: 'Car behind you', sub: 'Passing close · keep right', dv: '', dl: '', d: 0, key: 'bk-behind' });
+      // the work zone's closed right lane (cones from s 3260) is the lane a rider uses (user, 2026-11-25: was 'Car behind you')
+      if (s >= 2100 && s < 2700) A({ i: 0, lv: 'warn', ic: 'work-k', title: 'Lane closed ahead', sub: 'Right lane · past 600 S', dv: this.dist(3260 - s), dl: 'ahead', d: 3260 - s, key: 'bk-lane' });
       if (s >= 2780 && s < 3004) A({ i: 4, lv: 'crit', ic: 'rlr-w', title: 'Car turning right', sub: 'Across your path at 600 S', fsSub: 'A car ahead is turning right across your path at 600 S', dv: this.dist(Math.max(0, 2900 - s)), dl: 'ahead', d: 2900 - s, key: 'bk-hook' });
       // a UTA bus pulling out of its stop on your curb (real stop: State Street @ 575 South); its BSM warns you
       if (s >= 3110 && s < 3290) A({ i: 2, lv: 'warn', ic: 'bus-k', title: 'Bus pulling out', sub: 'UTA stop · State St & 575 S', dv: this.dist(Math.max(0, 3271 - s)), dl: 'ahead', d: 3271 - s, key: 'bk-bus' });
