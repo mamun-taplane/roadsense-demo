@@ -3,7 +3,6 @@
 Live demo of Road Sense (Connected Utah / UDOT V2X).
 - Map (live Mapbox map): https://mamun-taplane.github.io/roadsense-demo/
 - Dashboard (no map): https://mamun-taplane.github.io/roadsense-demo/cluster/
-- Feature designs (left "Features" menu): e.g. https://mamun-taplane.github.io/roadsense-demo/features/car-alerts/
 The bar at the top switches the main screen (Dashboard / Map, as in the app's Settings), device and brand (Connected Utah, RoadSense, Derq). Demo controls (screen size, who you are, play, speed,
 jump to scenes) are in a right pane: open on a computer (hide / show), "Controls" on a phone.
 Screen size: 100% (real size, scroll; default on a computer) or Fit to window.

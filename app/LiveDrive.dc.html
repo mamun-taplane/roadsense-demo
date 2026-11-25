@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>RoadSense — live drive</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=9813cad-1795592130">
+<link rel="stylesheet" href="rs2.css?v=26cb69d-1795593084">
 </head>
 <body>
 <x-dc>
@@ -59,6 +59,9 @@
     <div class="mp lv-adv {{ pins.school.cls }}" style="{{ pins.school.style }}"><div class="mp-g"></div><div class="mp-s"></div><div class="mp-b"><img src="v2/ic/school-w.svg" alt=""></div></div>
     <div class="mp lv-warn {{ pins.work.cls }}" style="{{ pins.work.style }}"><div class="mp-g"></div><div class="mp-s"></div><div class="mp-b"><img src="v2/ic/work-k.svg" alt=""></div></div>
     <div class="mp lv-warn {{ pins.icy.cls }}" style="{{ pins.icy.style }}"><div class="mp-g"></div><div class="mp-s"></div><div class="mp-b"><img src="v2/ic/snow-k.svg" alt=""></div></div>
+    <div class="mp lv-crit {{ pins.ww.cls }}" style="{{ pins.ww.style }}"><div class="mp-g"></div><div class="mp-s"></div><div class="mp-b"><img src="v2/ic/wrongway-w.svg" alt=""></div></div>
+    <div class="mp lv-warn {{ pins.crash.cls }}" style="{{ pins.crash.style }}"><div class="mp-g"></div><div class="mp-s"></div><div class="mp-b"><img src="v2/ic/crash-k.svg" alt=""></div></div>
+    <div class="mp lv-adv {{ pins.jam.cls }}" style="{{ pins.jam.style }}"><div class="mp-g"></div><div class="mp-s"></div><div class="mp-b"><img src="v2/ic/traffic-w.svg" alt=""></div></div>
     <div class="mp lv-warn {{ pins.ped.cls }}" style="{{ pins.ped.style }}"><div class="mp-g"></div><div class="mp-s"></div><div class="mp-b"><img src="v2/ic/ped-k.svg" alt=""></div></div>
     <div class="mp lv-crit {{ pins.stop.cls }}" style="{{ pins.stop.style }}"><div class="mp-g"></div><div class="mp-s"></div><div class="mp-b"><img src="v2/ic/stopped-w.svg" alt=""></div></div>
     <div class="mp lv-warn {{ pins.sig.cls }}" style="{{ pins.sig.style }}"><div class="mp-g"></div><div class="mp-s"></div><div class="mp-b"><img src="v2/ic/signal-k.svg" alt=""></div></div>
@@ -95,7 +98,7 @@
     </section>
     <sc-if value="{{ ca.show }}" hint-placeholder-val="{{ false }}">
       <div class="car-alert {{ ca.cls }}" role="alert">
-        <div class="ca-ic"><span class="icset ic-{{ ca.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-snow-w" src="v2/ic/snow-w.svg" alt=""><img class="i i-snow-k" src="v2/ic/snow-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></div>
+        <div class="ca-ic"><span class="icset ic-{{ ca.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-snow-w" src="v2/ic/snow-w.svg" alt=""><img class="i i-snow-k" src="v2/ic/snow-k.svg" alt=""><img class="i i-wrongway-w" src="v2/ic/wrongway-w.svg" alt=""><img class="i i-wrongway-k" src="v2/ic/wrongway-k.svg" alt=""><img class="i i-crash-w" src="v2/ic/crash-w.svg" alt=""><img class="i i-crash-k" src="v2/ic/crash-k.svg" alt=""><img class="i i-traffic-w" src="v2/ic/traffic-w.svg" alt=""><img class="i i-traffic-k" src="v2/ic/traffic-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></div>
         <div class="ca-tx"><div class="ca-t">{{ ca.title }}</div><div class="ca-s">{{ ca.sub }}</div></div>
       </div>
     </sc-if>
@@ -103,7 +106,7 @@
     <sc-if value="{{ cd.show }}" hint-placeholder-val="{{ false }}">
       <div class="ct-modal {{ cd.cls }}" role="alertdialog" aria-label="{{ cd.title }}">
         <div class="ct-m-card">
-          <div class="ct-m-ic"><span class="icset ic-{{ cd.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-snow-w" src="v2/ic/snow-w.svg" alt=""><img class="i i-snow-k" src="v2/ic/snow-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></div>
+          <div class="ct-m-ic"><span class="icset ic-{{ cd.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-snow-w" src="v2/ic/snow-w.svg" alt=""><img class="i i-snow-k" src="v2/ic/snow-k.svg" alt=""><img class="i i-wrongway-w" src="v2/ic/wrongway-w.svg" alt=""><img class="i i-wrongway-k" src="v2/ic/wrongway-k.svg" alt=""><img class="i i-crash-w" src="v2/ic/crash-w.svg" alt=""><img class="i i-crash-k" src="v2/ic/crash-k.svg" alt=""><img class="i i-traffic-w" src="v2/ic/traffic-w.svg" alt=""><img class="i i-traffic-k" src="v2/ic/traffic-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></div>
           <div class="ct-m-t">{{ cd.title }}</div>
           <div class="ct-m-s">{{ cd.sub }}</div>
           <sc-if value="{{ cd.ok }}" hint-placeholder-val="{{ false }}"><button class="ct-m-b" onClick="{{ cdOk }}">OK</button></sc-if>
@@ -180,7 +183,7 @@
   <!-- Alerts slide out from under the road-ahead card; the most critical leads -->
   <sc-for list="{{ alerts }}" as="a" hint-placeholder-count="0">
     <div class="al {{ a.cls }}" style="{{ a.style }}" role="status">
-      <div class="al-ic"><span class="icset ic-{{ a.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-snow-w" src="v2/ic/snow-w.svg" alt=""><img class="i i-snow-k" src="v2/ic/snow-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></div>
+      <div class="al-ic"><span class="icset ic-{{ a.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-snow-w" src="v2/ic/snow-w.svg" alt=""><img class="i i-snow-k" src="v2/ic/snow-k.svg" alt=""><img class="i i-wrongway-w" src="v2/ic/wrongway-w.svg" alt=""><img class="i i-wrongway-k" src="v2/ic/wrongway-k.svg" alt=""><img class="i i-crash-w" src="v2/ic/crash-w.svg" alt=""><img class="i i-crash-k" src="v2/ic/crash-k.svg" alt=""><img class="i i-traffic-w" src="v2/ic/traffic-w.svg" alt=""><img class="i i-traffic-k" src="v2/ic/traffic-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></div>
       <div class="al-txt"><div class="al-t">{{ a.title }}</div><div class="al-s">{{ a.sub }}</div></div>
       <div class="al-d"><b class="al-dv">{{ a.dv }}</b><span class="al-dl">{{ a.dl }}</span></div>
     </div>
@@ -191,7 +194,7 @@
   <!-- Full-screen alert: when a hazard is close, or at once when something happens suddenly -->
   <div class="tk {{ tk.cls }}" role="alert">
     <div class="tk-in">
-      <div class="tk-ic"><i class="rp"></i><i class="rp"></i><i class="rp"></i><div class="tk-disc"><span class="icset ic-{{ tk.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-snow-w" src="v2/ic/snow-w.svg" alt=""><img class="i i-snow-k" src="v2/ic/snow-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></div></div>
+      <div class="tk-ic"><i class="rp"></i><i class="rp"></i><i class="rp"></i><div class="tk-disc"><span class="icset ic-{{ tk.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-snow-w" src="v2/ic/snow-w.svg" alt=""><img class="i i-snow-k" src="v2/ic/snow-k.svg" alt=""><img class="i i-wrongway-w" src="v2/ic/wrongway-w.svg" alt=""><img class="i i-wrongway-k" src="v2/ic/wrongway-k.svg" alt=""><img class="i i-crash-w" src="v2/ic/crash-w.svg" alt=""><img class="i i-crash-k" src="v2/ic/crash-k.svg" alt=""><img class="i i-traffic-w" src="v2/ic/traffic-w.svg" alt=""><img class="i i-traffic-k" src="v2/ic/traffic-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></div></div>
       <div class="tk-t">{{ tk.title }}</div>
       <div class="tk-s">{{ tk.sub }}</div>
       <div class="tk-d">{{ tk.dv }}<small>{{ tk.du }}</small></div>
@@ -200,7 +203,7 @@
     <!-- a second alert: its own half, the same look as the lead (only the color differs) -->
     <div class="tk2 {{ tk2.cls }}" role="status">
       <div class="tk2-in">
-        <div class="tk-ic"><i class="rp"></i><i class="rp"></i><i class="rp"></i><div class="tk-disc"><span class="icset ic-{{ tk2.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-snow-w" src="v2/ic/snow-w.svg" alt=""><img class="i i-snow-k" src="v2/ic/snow-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></div></div>
+        <div class="tk-ic"><i class="rp"></i><i class="rp"></i><i class="rp"></i><div class="tk-disc"><span class="icset ic-{{ tk2.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-snow-w" src="v2/ic/snow-w.svg" alt=""><img class="i i-snow-k" src="v2/ic/snow-k.svg" alt=""><img class="i i-wrongway-w" src="v2/ic/wrongway-w.svg" alt=""><img class="i i-wrongway-k" src="v2/ic/wrongway-k.svg" alt=""><img class="i i-crash-w" src="v2/ic/crash-w.svg" alt=""><img class="i i-crash-k" src="v2/ic/crash-k.svg" alt=""><img class="i i-traffic-w" src="v2/ic/traffic-w.svg" alt=""><img class="i i-traffic-k" src="v2/ic/traffic-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></div></div>
         <div class="tk-t">{{ tk2.title }}</div>
         <div class="tk-s">{{ tk2.sub }}</div>
         <div class="tk-d">{{ tk2.dv }}<small>{{ tk2.du }}</small></div>
@@ -208,9 +211,9 @@
       </div>
     </div>
     <!-- three or more at once (phone): the lead stays big on top, every other alert as a row (scrolls) -->
-    <div class="tkr"><sc-for list="{{ tkRows }}" as="r" hint-placeholder-count="0"><div class="tkr-row {{ r.cls }}"><div class="tkr-ic"><span class="icset ic-{{ r.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-snow-w" src="v2/ic/snow-w.svg" alt=""><img class="i i-snow-k" src="v2/ic/snow-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></div><div class="tkr-txt"><div class="tkr-t">{{ r.title }}</div><div class="tkr-s">{{ r.sub }}</div></div><div class="tkr-d"><div class="tkr-dv">{{ r.dv }}</div><div class="tkr-dl">{{ r.dl }}</div></div></div></sc-for></div>
+    <div class="tkr"><sc-for list="{{ tkRows }}" as="r" hint-placeholder-count="0"><div class="tkr-row {{ r.cls }}"><div class="tkr-ic"><span class="icset ic-{{ r.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-snow-w" src="v2/ic/snow-w.svg" alt=""><img class="i i-snow-k" src="v2/ic/snow-k.svg" alt=""><img class="i i-wrongway-w" src="v2/ic/wrongway-w.svg" alt=""><img class="i i-wrongway-k" src="v2/ic/wrongway-k.svg" alt=""><img class="i i-crash-w" src="v2/ic/crash-w.svg" alt=""><img class="i i-crash-k" src="v2/ic/crash-k.svg" alt=""><img class="i i-traffic-w" src="v2/ic/traffic-w.svg" alt=""><img class="i i-traffic-k" src="v2/ic/traffic-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></div><div class="tkr-txt"><div class="tkr-t">{{ r.title }}</div><div class="tkr-s">{{ r.sub }}</div></div><div class="tkr-d"><div class="tkr-dv">{{ r.dv }}</div><div class="tkr-dl">{{ r.dl }}</div></div></div></sc-for></div>
     <!-- phone (DU-6 / DU-7): one card per alert, keyed; moves / resizes into its place, slides out right when it ends -->
-    <div class="fcs"><sc-for list="{{ fsCards }}" as="c" hint-placeholder-count="0"><div class="fc {{ c.cls }}" style="{{ c.style }}"><div class="fc-p"><div class="fc-c" style="{{ c.cStyle }}"><div class="tk-ic"><i class="rp"></i><i class="rp"></i><i class="rp"></i><div class="tk-disc"><span class="icset ic-{{ c.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-snow-w" src="v2/ic/snow-w.svg" alt=""><img class="i i-snow-k" src="v2/ic/snow-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></div></div><div class="tk-t">{{ c.title }}</div><div class="tk-s">{{ c.sub }}</div><div class="tk-d">{{ c.dv }}<small>{{ c.du }}</small></div><div class="tk-l">{{ c.dl }}</div></div></div><div class="fc-r"><div class="tkr-ic"><span class="icset ic-{{ c.ric }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-snow-w" src="v2/ic/snow-w.svg" alt=""><img class="i i-snow-k" src="v2/ic/snow-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></div><div class="tkr-txt"><div class="tkr-t">{{ c.rTitle }}</div><div class="tkr-s">{{ c.rSub }}</div></div><div class="tkr-d"><div class="tkr-dv">{{ c.rdv }}</div><div class="tkr-dl">{{ c.dl }}</div></div></div></div></sc-for></div>
+    <div class="fcs"><sc-for list="{{ fsCards }}" as="c" hint-placeholder-count="0"><div class="fc {{ c.cls }}" style="{{ c.style }}"><div class="fc-p"><div class="fc-c" style="{{ c.cStyle }}"><div class="tk-ic"><i class="rp"></i><i class="rp"></i><i class="rp"></i><div class="tk-disc"><span class="icset ic-{{ c.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-snow-w" src="v2/ic/snow-w.svg" alt=""><img class="i i-snow-k" src="v2/ic/snow-k.svg" alt=""><img class="i i-wrongway-w" src="v2/ic/wrongway-w.svg" alt=""><img class="i i-wrongway-k" src="v2/ic/wrongway-k.svg" alt=""><img class="i i-crash-w" src="v2/ic/crash-w.svg" alt=""><img class="i i-crash-k" src="v2/ic/crash-k.svg" alt=""><img class="i i-traffic-w" src="v2/ic/traffic-w.svg" alt=""><img class="i i-traffic-k" src="v2/ic/traffic-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></div></div><div class="tk-t">{{ c.title }}</div><div class="tk-s">{{ c.sub }}</div><div class="tk-d">{{ c.dv }}<small>{{ c.du }}</small></div><div class="tk-l">{{ c.dl }}</div></div></div><div class="fc-r"><div class="tkr-ic"><span class="icset ic-{{ c.ric }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-snow-w" src="v2/ic/snow-w.svg" alt=""><img class="i i-snow-k" src="v2/ic/snow-k.svg" alt=""><img class="i i-wrongway-w" src="v2/ic/wrongway-w.svg" alt=""><img class="i i-wrongway-k" src="v2/ic/wrongway-k.svg" alt=""><img class="i i-crash-w" src="v2/ic/crash-w.svg" alt=""><img class="i i-crash-k" src="v2/ic/crash-k.svg" alt=""><img class="i i-traffic-w" src="v2/ic/traffic-w.svg" alt=""><img class="i i-traffic-k" src="v2/ic/traffic-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></div><div class="tkr-txt"><div class="tkr-t">{{ c.rTitle }}</div><div class="tkr-s">{{ c.rSub }}</div></div><div class="tkr-d"><div class="tkr-dv">{{ c.rdv }}</div><div class="tkr-dl">{{ c.dl }}</div></div></div></div></sc-for></div>
   </div>
 
   <!-- You: connection, voice, speed, limit, heading -->
@@ -387,7 +390,7 @@
     <div class="bgv" role="region" aria-label="RoadSense in the background">
       <div class="bgv-app"><div class="bgv-l">Another app is open</div><div class="bgv-s">RoadSense keeps watching the road and speaks every alert</div></div>
       <sc-if value="{{ bgb.show }}" hint-placeholder-val="{{ false }}">
-        <button class="bgv-ban {{ bgb.cls }}" onClick="{{ openApp }}" aria-label="Open RoadSense"><span class="bgv-logo bgv-aic"><span class="icset ic-{{ bgb.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-snow-w" src="v2/ic/snow-w.svg" alt=""><img class="i i-snow-k" src="v2/ic/snow-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></span><span class="bgv-tx"><span class="bgv-k">RoadSense · now</span><span class="bgv-t">{{ bgb.title }}</span><span class="bgv-sb">{{ bgb.sub }}</span></span></button>
+        <button class="bgv-ban {{ bgb.cls }}" onClick="{{ openApp }}" aria-label="Open RoadSense"><span class="bgv-logo bgv-aic"><span class="icset ic-{{ bgb.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-snow-w" src="v2/ic/snow-w.svg" alt=""><img class="i i-snow-k" src="v2/ic/snow-k.svg" alt=""><img class="i i-wrongway-w" src="v2/ic/wrongway-w.svg" alt=""><img class="i i-wrongway-k" src="v2/ic/wrongway-k.svg" alt=""><img class="i i-crash-w" src="v2/ic/crash-w.svg" alt=""><img class="i i-crash-k" src="v2/ic/crash-k.svg" alt=""><img class="i i-traffic-w" src="v2/ic/traffic-w.svg" alt=""><img class="i i-traffic-k" src="v2/ic/traffic-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></span><span class="bgv-tx"><span class="bgv-k">RoadSense · now</span><span class="bgv-t">{{ bgb.title }}</span><span class="bgv-sb">{{ bgb.sub }}</span></span></button>
       </sc-if>
       <button class="bgv-open" onClick="{{ openApp }}">Open RoadSense</button>
     </div>
@@ -484,6 +487,11 @@ class Component extends DCLogic {
       { id: 'school', name: 'School zone', tag: 'adv', tagText: 'Advisory', s: 300, modes: DR },
       { id: 'red', name: 'Signal turning red', tag: 'warn', tagText: 'Warning', s: 1560, modes: DR },
       { id: 'ped', name: 'Pedestrian in crosswalk', tag: 'warn', tagText: 'Warning', s: 1960, modes: DR },
+      // HiDOT proposal (Derq, Nov 20 2026; docs/features/HIDOT-PROPOSAL-NOTES.md): isNew = "New" badge in Jump to.
+      // variant scenes replay an existing event (same place); solo scenes play their own event on the quiet stretch
+      // between 300 S and 200 S, with the regular events paused until it ends (the full drive is unchanged)
+      { id: 'pnight', name: 'Pedestrian crossing at night', tag: 'warn', tagText: 'Warning', s: 1960, modes: DR, variant: true, night: true, isNew: true },
+      { id: 'xwalk', name: 'Active crosswalk · lights flashing', tag: 'warn', tagText: 'Warning', s: 1960, modes: DR, variant: true, isNew: true },
       { id: 'work', name: 'Work zone', tag: 'warn', tagText: 'Warning', s: 2660, modes: DR },
       { id: 'stopped', name: 'Stopped vehicle in work zone', tag: 'two', tagText: 'Two at once', s: 3150, modes: DR },
       { id: 'bridge', name: 'Low clearance · too tall', tag: 'crit', tagText: 'Critical', s: 3720, veh: 2, modes: DR },
@@ -493,6 +501,9 @@ class Component extends DCLogic {
       { id: 'ev', name: 'Emergency vehicle', tag: 'crit', tagText: 'Critical', s: 5290, modes: DR },
       { id: 'pred', name: 'Pedestrian crossing on red · camera', tag: 'crit', tagText: 'Critical', s: 5900, modes: DR },
       { id: 'bkr', name: 'Cyclist on your right', tag: 'warn', tagText: 'Warning', s: 6420, modes: DR },
+      { id: 'ww', name: 'Wrong-way vehicle ahead', tag: 'crit', tagText: 'Critical', s: 6300, modes: DR, solo: true, isNew: true },
+      { id: 'crash', name: 'Crash ahead · lane blocked', tag: 'warn', tagText: 'Warning', s: 6300, modes: DR, solo: true, isNew: true },
+      { id: 'jam', name: 'Slow traffic ahead', tag: 'adv', tagText: 'Advisory', s: 6300, modes: DR, solo: true, isNew: true },
       { id: 'icy', name: 'Icy road conditions', tag: 'warn', tagText: 'Warning', s: 7160, modes: DR },
       { id: 'nolimit', name: 'No speed limit data', tag: 'base', tagText: 'Normal', s: 7400, modes: DR },
       { id: 'uturn', name: 'No U-turn sign at S Temple', tag: 'base', tagText: 'Signal', s: 8470, modes: DR },
@@ -507,7 +518,8 @@ class Component extends DCLogic {
       { id: 'bus', name: 'Bus pulling out at a stop', tag: 'warn', tagText: 'Warning', s: 3080, mode: 'bike', modes: BK },
       { id: 'green', name: 'Hold speed for the green', tag: 'adv', tagText: 'Advisory', s: 3440, mode: 'bike', modes: BK },
       { id: 'det', name: 'Detected at the signal', tag: 'base', tagText: 'Signal', s: 4900, mode: 'bike', modes: BK },
-      { id: 'walk', name: 'Walk to the crosswalk · cross State St', tag: 'warn', tagText: 'Crossing', s: 2410, mode: 'walk', modes: WK },
+      { id: 'bkww', name: 'Wrong-way vehicle in your lane', tag: 'crit', tagText: 'Critical', s: 5300, mode: 'bike', modes: BK, isNew: true },
+      { id: 'walk', name: 'Walk signal · push button from the phone', tag: 'warn', tagText: 'Crossing', s: 2410, mode: 'walk', modes: WK, isUpd: true },
       { id: 'walkwest', name: 'West sidewalk · emergency vehicle', tag: 'crit', tagText: 'Critical', s: 2492, mode: 'walk', modes: WK },
     ];
     this.END = 8800;
@@ -516,11 +528,12 @@ class Component extends DCLogic {
       'school-a': 'School zone ahead. Slow to 20.', 'school-e': 'School zone ended.',
       'red-y': 'Signal turning red. Prepare to stop.',
       'ped': 'Pedestrian at the crosswalk ahead. Slow down.',
+      'ped-x': 'Pedestrian at the crosswalk ahead. Crosswalk lights are flashing. Slow down.',
       'work-a': 'Work zone ahead. Right lane closed, limit 25.', 'work-e': 'Work zone ended.',
       'stop': 'Stopped vehicle ahead. Change lanes.',
       // pedestrian: orientation first, every step said once (accessibility: the screen may not be seen)
       'w-near': 'You are on the east side of State Street, walking north. Mid-block crosswalk ahead.',
-      'w-wait': 'You are at the crosswalk. Crossing requested. Wait.',
+      'w-wait': 'You are at the crosswalk. Crossing requested from your phone. Wait for the walk signal.',
       'w-car': 'Wait. A car is coming from the left and is not slowing down.',
       'w-walk': 'Walk sign is on to cross State Street. Cross now.',
       'w-done': 'You crossed State Street. You are on the west side, facing north.',
@@ -544,6 +557,9 @@ class Component extends DCLogic {
       'bk-det': 'You have been detected at 400 South.',
       'ev': 'Emergency vehicle approaching, heading to 300 South. Pull over to the right.',
       'icy-a': 'Icy road conditions ahead, between 200 South and 100 South. Slow down.',
+      'ww': 'Warning! Wrong-way vehicle coming toward you. Keep right and slow down.',
+      'crash-a': 'Crash ahead. Left lane blocked. Keep right.', 'jam-a': 'Slow traffic ahead, before 200 South.',
+      'bk-ww': 'Warning! A car is coming the wrong way in your lane. Move to the curb.',
       'speed-20': 'Slow down. School zone, 20.', 'speed-25': 'Slow down. Work zone, 25.', 'speed-35': 'Slow down. Limit 35.', 'speed-30': 'Slow down. Limit 30.',
       'p2-ok': 'Priority granted. Green light held.',
       'p1-no': 'Priority denied. Stop at the red light.',
@@ -555,9 +571,9 @@ class Component extends DCLogic {
     this.tkCache = null; this.tk2Cache = null;
     // full screen: zones take over well before you reach them and stay until you are in; everything else stays until cleared.
     // values are distances (map px) at which the alert takes the screen; Infinity = at once
-    this.FS = { 'pred': Infinity, 'bk-hook': 140, 'w-wait': Infinity, 'w-car': Infinity, 'w-walk': Infinity, 'w-ev': Infinity, 'school-a': 480, 'red-y': Infinity, 'ped': 330, 'work-a': 420, 'icy-a': 420, 'stop': Infinity, 'bridge': 800, 'bridge-ok': 0, 'rlr': Infinity, 'ev': 600, 'speed': Infinity, 'prio-ok': Infinity, 'prio-no': Infinity };
+    this.FS = { 'pred': Infinity, 'bk-hook': 140, 'w-wait': Infinity, 'w-car': Infinity, 'w-walk': Infinity, 'w-ev': Infinity, 'school-a': 480, 'red-y': Infinity, 'ped': 330, 'work-a': 420, 'icy-a': 420, 'crash-a': 330, 'ww': Infinity, 'bk-ww': Infinity, 'stop': Infinity, 'bridge': 800, 'bridge-ok': 0, 'rlr': Infinity, 'ev': 600, 'speed': Infinity, 'prio-ok': Infinity, 'prio-no': Infinity };
     // an alert that went full screen keeps it for its whole area: approach, inside, ended are one episode
-    this.GROUP = { 'w-wait': 'wx', 'w-car': 'wx', 'w-walk': 'wx', 'school-a': 'school', 'school-i': 'school', 'school-e': 'school', 'work-a': 'work', 'work-i': 'work', 'work-e': 'work', 'icy-a': 'icy', 'icy-i': 'icy', 'icy-e': 'icy' };
+    this.GROUP = { 'w-wait': 'wx', 'w-car': 'wx', 'w-walk': 'wx', 'school-a': 'school', 'school-i': 'school', 'school-e': 'school', 'work-a': 'work', 'work-i': 'work', 'work-e': 'work', 'icy-a': 'icy', 'icy-i': 'icy', 'icy-e': 'icy', 'crash-a': 'crash', 'crash-i': 'crash', 'crash-e': 'crash' };
     // after the area is left, a short "clear" screen before the map or dashboard comes back (seconds)
     this.HOLD = 2;
     this.DONE = {
@@ -567,6 +583,7 @@ class Component extends DCLogic {
       'ped': ['Crosswalk passed', 'All clear'],
       'stop': ['Stopped vehicle passed', 'All clear'],
       'rlr': ['All clear', 'Red light runner has passed'],
+      'ww': ['Wrong-way vehicle passed', 'All clear'], 'bk-ww': ['Wrong-way car passed', 'All clear'],
       'bridge': ['On another route', 'Overpass avoided'],
       'prio-ok': ['Through 200 S', 'Priority used'],
       'prio-no': ['Through 100 S', 'All clear'],
@@ -637,6 +654,7 @@ class Component extends DCLogic {
       const sc = this.SCENES.find(x => x.id === id) || this.SCENES[0];
       if (sc.veh != null) this.state.sVeh = sc.veh;
       if (sc.mode && !/,(ev|bike|walk)\b/.test(this.still)) this.state.mode = sc.mode;
+      this.solo = sc.solo ? sc.id : null; this.variant = sc.variant ? sc.id : null; this.night = !!sc.night;
       this.reset(sc.s);
       const n = Math.round((parseFloat(secs) || 0) * 60);
       for (let i = 0; i < n; i++) this.step(1 / 60);
@@ -653,16 +671,19 @@ class Component extends DCLogic {
     }
     const D = -1e9; // "already happened" for events behind the start point
     const at = (trig) => (s0 > trig ? D : null);
+    const solo = this.solo; this.solo = null; // solo scene: regular events before 200 S count as done
     this.sim = {
       t: 0, s: s0, v: 0, x: 32, vx: 0,
       tRed: this.on('red') ? at(1600) : null, tPed: this.on('ped') ? at(2017) : null, tRlr: this.on('rlr') ? at(4800) : null, tRlrPass: this.on('rlr') && s0 > 4800 ? D : null,
       tEv: this.on('evp') ? at(5420) : null, tEvPass: this.on('evp') && s0 > 5420 ? D : null,
       tPr: this.on('pred') && s0 > 5960 ? D : null, tBk: this.on('bkr') && s0 > 6480 ? D : null,
+      tWw: null, tWwPass: null, tBw: this.mode() === 'bike' && s0 > 5360 ? D : null, tBwPass: this.mode() === 'bike' && s0 > 5360 ? D : null,
       tR7: this.mode() === 'ev' ? at(1250) : null, tR4: this.mode() === 'ev' ? at(4560) : null,
       tR2: this.mode() === 'ev' ? at(6550) : null, tR1: this.mode() === 'ev' ? at(7650) : null, tStop1: s0 > 8300 ? D : null, // signal priority: EV mode only
       exitSchool: D, exitWork: D, G: {}, fs: null, ep: {}, hold: null, cLim: null, slowAt: null, hdg: 0,
       det: null, detDone: false, tBack: null, wx: 32, wy: -s0, rot: 0, // world position and map rotation (heading up)
     };
+    this.solo = solo;
     const lim = this.limitAt(s0);
     this.sim.v = (this.mode() === 'bike' ? 13 : (lim || 35) - 2) * this.MPH;
     this.sim.x = this.laneTarget();
@@ -679,12 +700,18 @@ class Component extends DCLogic {
   pedX() { const S = this.sim, t = S.tPed == null ? 0 : Math.max(0, S.t - S.tPed - 2); return Math.max(-64, 64 - 7 * t); }
   rlrX() { const S = this.sim; return S.tRlr == null ? -420 : Math.min(720, -420 + 100 * (S.t - S.tRlr)); }
   evS() { const S = this.sim; return S.tEv == null ? 6400 : Math.max(-2000, 6400 - 95 * (S.t - S.tEv)); }
+  // HiDOT: wrong-way vehicle (driver: left northbound lane, coming south from 200 S; rider: in the curb lane)
+  wwS() { const S = this.sim; return S.tWw == null ? null : 7150 - 30 * this.MPH * (S.t - S.tWw); }
+  bkwwS() { const S = this.sim; return S.tBw == null ? null : 6150 - 24 * this.MPH * (S.t - S.tBw); }
   evActive() { const S = this.sim; return S.tEv != null && (S.tEvPass == null || S.t < S.tEvPass + 1.4); }
   laneTarget() {
     const s = this.sim.s;
     if (this.evActive()) return 50;
+    { const w = this.wwS(); if (w != null && this.sim.tWwPass == null) return 54; } // keep right of the wrong-way car
+    if (this.on('crash') && s >= 6600 && s < 6960) return 54; // left lane blocked
     if (this.on('stop') && s >= 3440 && s < 3960) return 16;
     { const b = this.bkS(); if (b != null && b - s > -60 && b - s < 260) return 14; } // give the cyclist room
+    { const w = this.bkwwS(); if (this.mode() === 'bike' && w != null && this.sim.tBwPass == null) return 64; } // squeeze to the curb
     if (this.mode() === 'bike') return 57; // by the right curb: State St has no bike lane here (Mapbox: sidewalk ~10 m east of the lane line)
     return 32;
   }
@@ -700,6 +727,11 @@ class Component extends DCLogic {
     if (this.on('evp') && S.tEv == null && S.s >= 5420) S.tEv = S.t;
     if (this.on('pred') && S.tPr == null && S.s >= 5960) S.tPr = S.t;   // pedestrian crossing on red at 300 S (camera)
     if (this.on('bkr') && S.tBk == null && S.s >= 6480) S.tBk = S.t;    // cyclist ahead on your right (their phone)
+    if (this.on('ww') && S.tWw == null && S.s >= 6330) S.tWw = S.t;      // HiDOT: wrong-way vehicle (camera)
+    if (S.tWw != null && S.tWwPass == null && this.wwS() < S.s - 30) S.tWwPass = S.t;
+    if (this.mode() === 'bike' && S.tBw == null && S.s >= 5360) S.tBw = S.t; // HiDOT: wrong-way car, rider's lane
+    if (S.tBw != null && S.tBwPass == null && this.bkwwS() < S.s - 20) S.tBwPass = S.t;
+    if (this.solo && S.s > 7150) this.solo = null;                         // solo stretch done: regular events again
     if (this.mode() === 'ev' && S.tR7 == null && S.s >= 1250) S.tR7 = S.t; // EV: priority at 700 S
     if (this.mode() === 'ev' && S.tR4 == null && S.s >= 4560) S.tR4 = S.t; // and at 400 S
     if (S.tEv != null && S.tEvPass == null && this.evS() < S.s - 50) S.tEvPass = S.t;
@@ -718,6 +750,10 @@ class Component extends DCLogic {
     const pedX = this.pedX();
     if (S.tPed != null && pedX > -58 && S.s > 2117 && S.s < 2487) cruise = Math.min(cruise, 15 * M);
     if (this.on('icy') && S.s > 7650 && S.s < 8380) cruise = Math.min(cruise, 25 * M); // icy stretch: the driver slows down
+    if (S.tWw != null && S.tWwPass == null) cruise = Math.min(cruise, 12 * M);            // wrong-way car: slow, keep right
+    if (this.on('crash') && S.s > 6620 && S.s < 6960) cruise = Math.min(cruise, 15 * M);  // past the crash
+    if (this.on('jam') && S.s > 6760 && S.s < 7150) cruise = Math.min(cruise, 14 * M);    // in the queue
+    if (this.mode() === 'bike' && S.tBw != null && S.tBwPass == null) cruise = Math.min(cruise, 5 * M);
     if (this.on('stop') && S.s >= 3330 && S.s < 3740) cruise = Math.min(cruise, 14 * M);
     if (this.mode() === 'bike' && S.s >= 2930 && S.s < 3004) cruise = Math.min(cruise, 7 * M); // a car turning right across you
     if (this.mode() === 'bike' && S.s >= 3150 && S.s < 3280) cruise = Math.min(cruise, 9 * M); // easing off for the bus
@@ -974,7 +1010,7 @@ class Component extends DCLogic {
     }
     // 2 pedestrian in the mid-block crosswalk
     const px = this.pedX();
-    if (S.tPed != null && px > -58 && s < 2497) A({ i: 2, lv: 'warn', ic: 'ped-k', title: this.pedWaiting() ? 'Pedestrian ahead' : 'Pedestrian in crosswalk', sub: this.pedWaiting() ? 'At the curb' : S.v < 0.5 ? 'Wait for them to cross' : 'Slow down · State St', dv: this.dist(2487 - s), dl: 'ahead', d: 2487 - s, key: 'ped' });
+    if (S.tPed != null && px > -58 && s < 2497) A({ i: 2, lv: 'warn', ic: 'ped-k', title: this.pedWaiting() ? 'Pedestrian ahead' : 'Pedestrian in crosswalk', sub: this.variant === 'xwalk' ? 'Crosswalk lights flashing' : this.pedWaiting() ? 'At the curb' : S.v < 0.5 ? 'Wait for them to cross' : 'Slow down · State St', dv: this.dist(2487 - s), dl: 'ahead', d: 2487 - s, key: 'ped', vk: this.variant === 'xwalk' ? 'ped-x' : 'ped' });
     else if (S.tPed != null && s < 2497) A({ i: 2, lv: 'ok', ic: 'check-w', title: 'Crosswalk clear', sub: 'Go ahead', dv: this.dist(Math.max(0, 2487 - s)), dl: 'to crosswalk', d: 2487 - s, key: 'ped' });
     // 3 work zone
     if (s >= 2750 && s < 3250) A({ i: 3, lv: 'warn', ic: 'work-k', title: 'Work zone ahead', sub: 'Right lane closed', dv: this.dist(3250 - s), dl: 'ahead', d: 3250 - s, key: 'work-a' });
@@ -1025,6 +1061,14 @@ class Component extends DCLogic {
     else if (this.on('icy') && s >= 7900 && s < 8380) A({ i: 12, lv: 'warn', ic: 'snow-k', title: 'Icy road', sub: 'Slippery surface · no hard braking', dv: this.dist(8380 - s), dl: 'to end', d: 9999, key: 'icy-i' });
     else if (this.on('icy') && s >= 8380 && s < 8500) A({ i: 12, lv: 'ok', ic: 'check-w', title: 'Icy road ended', sub: 'Road clear ahead', dv: '', dl: '', d: 9999, key: 'icy-e' });
     // driver: a pedestrian crossing on red (intersection camera) and a cyclist on your right (their phone)
+    // 13 wrong-way vehicle · 14 crash · 15 slow traffic (HiDOT solo scenes, between 300 S and 200 S)
+    { const w = this.wwS(); if (w != null && (S.tWwPass == null || t < S.tWwPass + 1.5)) A({ i: 13, lv: S.tWwPass == null ? 'crit' : 'ok', ic: S.tWwPass == null ? 'wrongway-w' : 'check-w', title: S.tWwPass == null ? 'Wrong-way vehicle ahead' : 'Wrong-way vehicle passed', sub: S.tWwPass == null ? 'Coming toward you · keep right' : 'All clear', dv: S.tWwPass == null ? this.dist(w - s) : '', dl: S.tWwPass == null ? 'away' : '', d: S.tWwPass == null ? 0 : 9999, key: 'ww' }); }
+    if (this.on('crash') && s >= 6300 && s < 6900) A({ i: 14, lv: 'warn', ic: 'crash-k', title: 'Crash ahead', sub: 'Left lane blocked · keep right', dv: this.dist(6900 - s), dl: 'ahead', d: 6900 - s, key: 'crash-a' });
+    else if (this.on('crash') && s >= 6900 && s < 6960) A({ i: 14, lv: 'warn', ic: 'crash-k', title: 'Crash', sub: 'Left lane blocked · pass slowly', dv: '', dl: '', d: 9999, key: 'crash-i' });
+    else if (this.on('crash') && s >= 6960 && s < 7080) A({ i: 14, lv: 'ok', ic: 'check-w', title: 'Crash passed', sub: 'All lanes open ahead', dv: '', dl: '', d: 9999, key: 'crash-e' });
+    if (this.on('jam') && s >= 6300 && s < 6760) A({ i: 15, lv: 'adv', ic: 'traffic-w', title: 'Slow traffic ahead', sub: 'About 15 mph · to 200 S', dv: this.dist(6760 - s), dl: 'ahead', d: 6760 - s, key: 'jam-a' });
+    else if (this.on('jam') && s >= 6760 && s < 7150) A({ i: 15, lv: 'adv', ic: 'traffic-w', title: 'Slow traffic', sub: 'About 15 mph', dv: this.dist(7150 - s), dl: 'to clear', d: 7150 - s, key: 'jam-i', vk: 'jam-a' });
+    else if (this.on('jam') && s >= 7150 && s < 7260) A({ i: 15, lv: 'ok', ic: 'check-w', title: 'Traffic clearing', sub: 'Back to normal speed', dv: '', dl: '', d: 9999, key: 'jam-e' });
     if (S.tPr != null && this.prX() < 62 && s < 6160) A({ i: 9, lv: 'crit', ic: 'ped-k', title: 'Pedestrian crossing on red', sub: 'Camera · 300 S', fsSub: 'Intersection camera · 300 S', dv: s < 6100 ? this.dist(6137 - s) : 'Stop', dl: s < 6100 ? 'to stop line' : 'wait', d: 0, key: 'pred' });
     { const b = this.bkS(); if (b != null && b - s > -40 && s < 7150) A({ i: 5, lv: 'warn', ic: 'bike-k', title: 'Cyclist on your right', sub: 'Give 3 ft', dv: b - s < 50 ? 'Passing' : this.dist(b - s), dl: b - s < 50 ? '' : 'ahead', d: b - s, key: 'bkr' }); }
     // EV: vehicles ahead pulling over (they broadcast BSM; their apps told them you're coming)
@@ -1037,6 +1081,7 @@ class Component extends DCLogic {
       // a UTA bus pulling out of its stop on your curb (real stop: State Street @ 575 South); its BSM warns you
       if (s >= 3110 && s < 3290) A({ i: 2, lv: 'warn', ic: 'bus-k', title: 'Bus pulling out', sub: 'UTA stop · State St & 575 S', dv: this.dist(Math.max(0, 3271 - s)), dl: 'ahead', d: 3271 - s, key: 'bk-bus' });
       if (s >= 3500 && s < 3964) A({ i: 1, lv: 'adv', ic: 'signal-w', title: 'Hold 13 mph', sub: 'Green at 500 S', dv: this.dist(3964 - s), dl: 'to 500 S', d: 3964 - s, key: 'bk-green' });
+      { const w = this.bkwwS(); if (w != null && S.tBw > -1e8 && (S.tBwPass == null || t < S.tBwPass + 1.5)) A({ i: 13, lv: S.tBwPass == null ? 'crit' : 'ok', ic: S.tBwPass == null ? 'wrongway-w' : 'check-w', title: S.tBwPass == null ? 'Wrong-way car in your lane' : 'Wrong-way car passed', sub: S.tBwPass == null ? 'Coming toward you · move to the curb' : 'All clear', dv: S.tBwPass == null ? this.dist(w - s) : '', dl: S.tBwPass == null ? 'away' : '', d: S.tBwPass == null ? 0 : 9999, key: 'bk-ww' }); }
       if (s >= 4960 && s < 5082) A({ i: 5, lv: 'ok', ic: 'check-w', title: 'Detected at 400 S', sub: 'The signal knows you are here', dv: '', dl: '', d: 0, key: 'bk-det' });
     }
     const H = S.hold;
@@ -1090,6 +1135,8 @@ class Component extends DCLogic {
   }
   isLive() { return !window.__rsLive || window.__rsLive === this; }
   speak(key, urgent) {
+    // HiDOT: walkers also feel the walk alerts (vibration where the phone supports it; no-op elsewhere)
+    if (/^w-(wait|walk|car|ev)$/.test(key) && !this.still) { try { navigator.vibrate && navigator.vibrate(key === 'w-walk' ? [200, 100, 200] : 300); } catch (e) {} }
     const line = this.SAY[key]; if (!line) return;
     this.lastSay = line;
     if (!this.state.voice || !this.isLive()) return;
@@ -1121,7 +1168,8 @@ class Component extends DCLogic {
     // first start: the launch permissions, one per screen (client meeting: location, notifications,
     // background operation, draw over other apps); then the drive
     if (!this.still && !this.permDone) return this.setState({ screen: 'perm', pstep: 0 });
-    this.claim(); this.reset(0); this.setState({ screen: 'drive', playing: true, done: false });
+    this.claim(); this.solo = null; this.variant = null; if (this.night) { this.night = false; if (this.mapTheme) setTimeout(() => this.mapTheme(), 0); }
+    this.reset(0); this.setState({ screen: 'drive', playing: true, done: false });
   };
   get PERMS() { return [
     { ic: 'loc', t: 'Use your location', s: 'RoadSense needs your precise location, also while it runs in the background, for the signals and alerts on your way.', ok: 'Allow', note: 'Choose “Precise” and “Always”' },
@@ -1171,6 +1219,7 @@ class Component extends DCLogic {
     return b === 'rs' || b === 'derq' ? b : 'cu';
   }
   themeDark() {
+    if (this.night) return true; // "Pedestrian crossing at night" scene: night look while it plays
     const t = (this.state && this.state.theme) || 'light';
     if (t === 'system') { try { return window.matchMedia('(prefers-color-scheme: dark)').matches; } catch (e) { return false; } }
     return t === 'dark';
@@ -1288,6 +1337,9 @@ class Component extends DCLogic {
   // cyclist: car from behind, car turning right across you (600 S), hold speed for the green (500 S),
   // detected at the signal (400 S); pedestrian: its own sim (walkAlerts).
   on(evt) {
+    // solo scenes (HiDOT): their own event only, the regular drive events pause until it ends
+    if (evt === 'ww' || evt === 'crash' || evt === 'jam') return this.mode() === 'drive' && this.solo === evt;
+    if (this.solo && this.mode() === 'drive') return evt === 'speed';
     const E = { drive: ['school', 'red', 'ped', 'work', 'stop', 'bridge', 'trax', 'rlr', 'evp', 'speed', 'bkr', 'pred', 'icy'], ev: ['prio', 'yield', 'rlr'], bike: ['bk'], walk: [] };
     return (E[this.mode()] || E.drive).includes(evt);
   }
@@ -1368,7 +1420,7 @@ class Component extends DCLogic {
     if (S.wph === 'curb') {
       const carNear = cs != null && cs < K.xw + 20;
       if (sg.c !== 'dw' && carNear) A({ i: 6, lv: 'crit', ic: 'rlr-w', title: 'Wait · car not stopping', sub: 'From the left · northbound', fsTitle: 'Car not stopping', fsSub: 'Coming from the left · northbound', dv: 'Wait', dl: 'stay on the curb', d: 0, key: 'w-car' });
-      else A({ i: 2, lv: 'warn', ic: 'ped-k', title: 'Wait to cross', sub: 'Crossing requested', fsTitle: 'Wait', fsSub: 'Crossing requested · State St', dv: sg.n != null ? sg.n + ' s' : '', dl: 'to walk', d: 0, key: 'w-wait' });
+      else A({ i: 2, lv: 'warn', ic: 'ped-k', title: 'Wait to cross', sub: 'Crossing requested from this phone', fsTitle: 'Wait', fsSub: 'Requested from this phone · no button needed', dv: sg.n != null ? sg.n + ' s' : '', dl: 'to walk', d: 0, key: 'w-wait' });
     }
     if (S.wph === 'cross') A({ i: 2, lv: 'ok', ic: 'ped-k', title: 'Walk', sub: 'Cross State St', fsTitle: 'Walk', fsSub: 'Cross State Street to the west side', dv: sg.n != null ? sg.n + ' s' : '', dl: 'to cross', d: 0, key: 'w-walk', vk: 'w-walk' });
     if (S.wph === 'west' && S.t - S.tDone < 3) A({ i: 2, lv: 'ok', ic: 'check-w', title: 'Crossed State St', sub: 'West side · facing north', dv: '', dl: '', d: 0, key: 'w-done' });
@@ -1395,7 +1447,9 @@ class Component extends DCLogic {
   // the scene the drive is in now (the two overpass scenes share a start; pick the one that matches the vehicle)
   sceneIdx() {
     const s = this.sim.s, tall = this.tooTall();
-    return this.SCENES.reduce((acc, sc, k) => (this.sceneFits(sc) && s >= sc.s - 1 && (sc.veh == null || (sc.veh === 2) === tall) ? k : acc), -1);
+    const pin = this.solo || this.variant;
+    if (pin) { const k = this.SCENES.findIndex(x => x.id === pin); if (k >= 0) return k; }
+    return this.SCENES.reduce((acc, sc, k) => (this.sceneFits(sc) && !sc.solo && !sc.variant && s >= sc.s - 1 && (sc.veh == null || (sc.veh === 2) === tall) ? k : acc), -1);
   }
   // timeline: drag anywhere on the drive (by position s). The drive is replayed up to that spot, so a
   // pedestrian half-way across or a red light counting down is exactly as it would be. Snapshots every
@@ -1404,20 +1458,22 @@ class Component extends DCLogic {
   driveSnaps() {
     const veh = this.state.sVeh + '/' + this.mode();
     if (this.snaps && this.snaps.veh === veh) return this.snaps.list;
-    const keep = this.sim, list = [];
+    const keep = this.sim, list = [], solo = this.solo;
+    this.solo = null; // the timeline is the regular drive
     this.reset(0);
     for (let i = 0; i < 60 * 400; i++) {
       if (i % 60 === 0) list.push({ s: this.sim.s, sim: this.cloneSim(this.sim) });
       if (this.sim.s > this.END - 40 && this.sim.v < 0.5) break;
       this.step(1 / 60);
     }
-    this.sim = keep;
+    this.sim = keep; this.solo = solo;
     this.snaps = { veh, list };
     return list;
   }
   cloneSim(o) { return typeof structuredClone === 'function' ? structuredClone(o) : JSON.parse(JSON.stringify(o)); }
   scrubTo(s) {
     try { window.speechSynthesis.cancel(); } catch (e) {}
+    this.solo = null; this.variant = null;
     this.claim();
     const target = Math.max(0, Math.min(this.END - 40, s)), list = this.driveSnaps();
     let k = 0; while (k < list.length - 1 && list[k + 1].s <= target) k++;
@@ -1434,6 +1490,9 @@ class Component extends DCLogic {
     this.claim();
     if (sc.mode && sc.mode !== this.mode()) { this.state.mode = sc.mode; this.snaps = null; }
     if (sc.veh != null) this.state.sVeh = sc.veh;
+    this.solo = sc.solo ? sc.id : null; this.variant = sc.variant ? sc.id : null;
+    const wasNight = this.night; this.night = !!sc.night;
+    if (wasNight !== this.night && this.mapTheme) setTimeout(() => this.mapTheme(), 0);
     this.reset(sc.s); this.lastSay = '';
     this.setState({ screen: 'drive', playing: true, done: false, mode: this.state.mode, ...(sc.veh != null ? { sVeh: sc.veh } : {}) });
   }
@@ -1887,7 +1946,7 @@ class Component extends DCLogic {
     let y = top0;
     const pos = {};
     order.forEach((a, k) => { pos[a.i] = { y, small: k > 0, z: 30 - k }; y += (k === 0 ? (a.lv === 'crit' ? 92 : 76) : 54) + 8; });
-    for (let i = 0; i < 13; i++) { // slots 0–12 (10: clear / arrived, 11: light rail, 12: icy road)
+    for (let i = 0; i < 16; i++) { // slots 0–15 (10: clear / arrived, 11: light rail, 12: icy road, 13 wrong-way, 14 crash, 15 slow traffic)
       const a = list.find(x => x.i === i);
       if (a) this.alCache[i] = a;
       const c = a || this.alCache[i] || { lv: 'adv', ic: 'info-w', title: '', sub: '', dv: '', dl: '' };
@@ -1959,7 +2018,11 @@ class Component extends DCLogic {
     const pins = {
       school: mk(this.on('school'), -26, -1090, has(0, ['school-a'])),                       // inside the shaded zone, at its start
       work: mk(this.on('work'), 48, -3290, has(3, ['work-a'])),
-      icy: mk(this.on('icy'), 0, -7900, has(12, ['icy-a'])),                         // start of the icy stretch                          // on the closed-lane strip
+      icy: mk(this.on('icy'), 0, -7900, has(12, ['icy-a'])),
+      ww: this.mode() === 'bike' ? mk(this.bkwwS() != null && S.tBwPass == null && S.tBw > -1e8, 60, -(this.bkwwS() || 0), has(13))
+        : mk(this.wwS() != null && S.tWwPass == null, 12, -(this.wwS() || 0), has(13)), // the wrong-way car, moving
+      crash: mk(this.on('crash') && S.s < 6960, 12, -6900, has(14, ['crash-a'])),
+      jam: mk(this.on('jam') && S.s < 6760, 32, -6760, has(15, ['jam-a'])),      // the back of the queue                         // start of the icy stretch                          // on the closed-lane strip
       ped: mk(this.on('ped') && (this.pedX() > -58 || S.s < 2487), this.pedX(), -2487, has(2)), // on the curb, then crossing
       stop: mk(this.on('stop'), 32, -3700, has(4)),                          // the stopped vehicle in the middle lane
       bridge: mk(this.tooTall(), -26, -4600, has(5)),              // under the overpass, only if you won't fit

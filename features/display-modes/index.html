@@ -9,7 +9,17 @@
      Local: http://localhost:5178/web/features/display-modes/  ·  demo: <demo>/features/display-modes/ -->
 <base href="../../app/">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<script>
+/* Features menu = team only (user 2026-11-25: customers get this link). Open any page once with ?team to show it on
+   this browser (remembered); ?team=0 hides it again. */
+(function () { var q = new URLSearchParams(location.search), on = null; try { on = localStorage.getItem('rs-team'); } catch (e) {}
+  if (q.has('team')) { on = q.get('team') === '0' ? '0' : '1'; try { localStorage.setItem('rs-team', on); } catch (e) {} }
+  if (on === '1') document.documentElement.classList.add('team'); })();
+</script>
 <style>
+  /* team-only Features menu (see the script above) */
+  html:not(.team) .fn, html:not(.team) .fn-open, html:not(.team) .fn-back { display: none !important; }
+  html:not(.team) { --navw: 0px !important; }
   /* ---------- Features nav (same as the demo page) ---------- */
   .fn { position: fixed; z-index: 160; left: 0; top: 0; bottom: 0; width: 248px; background: #fff; border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: calc(12px + env(safe-area-inset-top, 0px)) 10px 12px; transform: translateX(-102%); transition: transform .26s cubic-bezier(.2, .8, .2, 1); }
   .fn-h { display: flex; align-items: center; gap: 10px; padding: 4px 8px 14px; }
