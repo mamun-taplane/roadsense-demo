@@ -216,7 +216,7 @@
     <li><b style="display:inline">Another app in front:</b> only a notification + voice (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=29" target="_blank" rel="noopener">p. 28</a>); a Live Activity in CarPlay Dashboard (<a href="https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=12" target="_blank" rel="noopener">p. 11</a>).</li>
   </ul></div>
 </aside>
-<script src="_dc.js?v=26cb69d-1795593084"></script>
+<script src="_dc.js?v=e35da9a-1795593425"></script>
 <script>
 // Which app: /cluster/ (demo) or ?cluster (local) = the no-map cluster; else the map app.
 const q = new URLSearchParams(location.search);
@@ -317,7 +317,7 @@ if (app) {
   try {
     // car screens: RoadSense is not a navigation app, so neither car platform allows it a map: both phone apps show the
     // same template screen there (list + system alert), which lives in the no-map app (docs/CAR-SCREENS.md §8)
-    const Root = await DC.load(cluster || device === 'aa' || device === 'cp' ? 'Cluster.dc.html?v=26cb69d-1795593084' : 'LiveDrive.dc.html?v=26cb69d-1795593084');
+    const Root = await DC.load(cluster || device === 'aa' || device === 'cp' ? 'Cluster.dc.html?v=e35da9a-1795593425' : 'LiveDrive.dc.html?v=e35da9a-1795593425');
     const R = ReactDOM.createRoot(document.getElementById('root'));
     render = () => R.render(DC.h(Root, { ...(app ? { app: '1' } : {}), ...(device !== 'phone' ? { device } : {}), ...(brand !== 'cu' ? { brand } : {}) }));
     render();

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>RoadSense — live drive</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=26cb69d-1795593084">
+<link rel="stylesheet" href="rs2.css?v=e35da9a-1795593425">
 </head>
 <body>
 <x-dc>
@@ -490,7 +490,7 @@ class Component extends DCLogic {
       // HiDOT proposal (Derq, Nov 20 2026; docs/features/HIDOT-PROPOSAL-NOTES.md): isNew = "New" badge in Jump to.
       // variant scenes replay an existing event (same place); solo scenes play their own event on the quiet stretch
       // between 300 S and 200 S, with the regular events paused until it ends (the full drive is unchanged)
-      { id: 'pnight', name: 'Pedestrian crossing at night', tag: 'warn', tagText: 'Warning', s: 1960, modes: DR, variant: true, night: true, isNew: true },
+      { id: 'pnight', name: 'Pedestrian crossing at night', tag: 'warn', tagText: 'Warning', s: 1960, modes: DR, variant: true, isNew: true },
       { id: 'xwalk', name: 'Active crosswalk · lights flashing', tag: 'warn', tagText: 'Warning', s: 1960, modes: DR, variant: true, isNew: true },
       { id: 'work', name: 'Work zone', tag: 'warn', tagText: 'Warning', s: 2660, modes: DR },
       { id: 'stopped', name: 'Stopped vehicle in work zone', tag: 'two', tagText: 'Two at once', s: 3150, modes: DR },
@@ -654,7 +654,7 @@ class Component extends DCLogic {
       const sc = this.SCENES.find(x => x.id === id) || this.SCENES[0];
       if (sc.veh != null) this.state.sVeh = sc.veh;
       if (sc.mode && !/,(ev|bike|walk)\b/.test(this.still)) this.state.mode = sc.mode;
-      this.solo = sc.solo ? sc.id : null; this.variant = sc.variant ? sc.id : null; this.night = !!sc.night;
+      this.solo = sc.solo ? sc.id : null; this.variant = sc.variant ? sc.id : null;
       this.reset(sc.s);
       const n = Math.round((parseFloat(secs) || 0) * 60);
       for (let i = 0; i < n; i++) this.step(1 / 60);
@@ -1168,7 +1168,7 @@ class Component extends DCLogic {
     // first start: the launch permissions, one per screen (client meeting: location, notifications,
     // background operation, draw over other apps); then the drive
     if (!this.still && !this.permDone) return this.setState({ screen: 'perm', pstep: 0 });
-    this.claim(); this.solo = null; this.variant = null; if (this.night) { this.night = false; if (this.mapTheme) setTimeout(() => this.mapTheme(), 0); }
+    this.claim(); this.solo = null; this.variant = null;
     this.reset(0); this.setState({ screen: 'drive', playing: true, done: false });
   };
   get PERMS() { return [
@@ -1219,7 +1219,6 @@ class Component extends DCLogic {
     return b === 'rs' || b === 'derq' ? b : 'cu';
   }
   themeDark() {
-    if (this.night) return true; // "Pedestrian crossing at night" scene: night look while it plays
     const t = (this.state && this.state.theme) || 'light';
     if (t === 'system') { try { return window.matchMedia('(prefers-color-scheme: dark)').matches; } catch (e) { return false; } }
     return t === 'dark';
@@ -1491,8 +1490,6 @@ class Component extends DCLogic {
     if (sc.mode && sc.mode !== this.mode()) { this.state.mode = sc.mode; this.snaps = null; }
     if (sc.veh != null) this.state.sVeh = sc.veh;
     this.solo = sc.solo ? sc.id : null; this.variant = sc.variant ? sc.id : null;
-    const wasNight = this.night; this.night = !!sc.night;
-    if (wasNight !== this.night && this.mapTheme) setTimeout(() => this.mapTheme(), 0);
     this.reset(sc.s); this.lastSay = '';
     this.setState({ screen: 'drive', playing: true, done: false, mode: this.state.mode, ...(sc.veh != null ? { sVeh: sc.veh } : {}) });
   }
