@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <title>RoadSense — cluster</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=81eb10d-1795590133">
-<link rel="stylesheet" href="dash.css?v=81eb10d-1795590133">
-<link rel="stylesheet" href="cluster.css?v=81eb10d-1795590133">
+<link rel="stylesheet" href="rs2.css?v=962a4dd-1795590375">
+<link rel="stylesheet" href="dash.css?v=962a4dd-1795590375">
+<link rel="stylesheet" href="cluster.css?v=962a4dd-1795590375">
 </head>
 <body>
 <x-dc>
@@ -1068,7 +1068,7 @@ class Component extends DCLogic {
   }
   bgBanner(list) {
     const rank = { crit: 3, warn: 2, adv: 1, ok: 0 }, a = list.slice().sort((x, y) => rank[y.lv] - rank[x.lv])[0];
-    return a ? { show: true, cls: 'lv-' + a.lv, title: a.fsTitle || a.title, sub: a.fsSub || a.sub, ic: a.ic } : { show: false, cls: '', title: '', sub: '', ic: 'info-w' };
+    return a ? { show: true, cls: 'lv-' + a.lv, title: a.fsTitle || a.title, sub: a.fsSub || a.sub, ic: this.icOn(a.lv, a.ic) } : { show: false, cls: '', title: '', sub: '', ic: 'info-w' };
   }
   togglePlay() {
     if (this.state.screen !== 'drive') return this.start();
@@ -1163,7 +1163,7 @@ class Component extends DCLogic {
     if (!a) return { show: false, ic: 'info-w', cls: '', title: '', sub: '' };
     const dist = [a.dv, a.dl].filter(Boolean).join(' ');
     return {
-      show: true, ic: a.ic, cls: 'lv-' + a.lv, title: a.fsTitle || a.title,
+      show: true, ic: this.icOn(a.lv, a.ic), cls: 'lv-' + a.lv, title: a.fsTitle || a.title,
       sub: [a.fsSub || a.sub, dist].filter(Boolean).join(' · '),
     };
   }
@@ -1186,9 +1186,9 @@ class Component extends DCLogic {
     return {
       // CarPlay: CPAlertTemplate has only title variants + actions (no icon, no second text, text in system
       // colors); OK in the system's neutral style
-      cd: cp ? { show: true, cls: 'lv-' + a.lv, ic: a.ic, ok: true, sub: '',
+      cd: cp ? { show: true, cls: 'lv-' + a.lv, ic: this.icOn(a.lv, a.ic), ok: true, sub: '',
         title: [a.fsTitle || a.title, a.fsSub || a.sub].filter(Boolean).join(' · ') }
-        : { show: true, cls: 'lv-' + a.lv, ic: a.ic, ok: false, title: a.fsTitle || a.title,
+        : { show: true, cls: 'lv-' + a.lv, ic: this.icOn(a.lv, a.ic), ok: false, title: a.fsTitle || a.title,
           sub: [a.fsSub || a.sub, dist].filter(Boolean).join(' · ') },
       cdOk: () => { seen[a.key] = true; this.setState({ tick: this.state.tick + 1 }); },
     };
