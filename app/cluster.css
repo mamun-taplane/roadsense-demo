@@ -1,4 +1,4 @@
-/* Road Sense · cluster edition (v4). The map app's palette and type on a fixed layout:
+/* RoadSense · cluster edition (v4). The map app's palette and type on a fixed layout:
    signal head, speed gauge, alert slot. Nothing moves; a close alert covers the screen. */
 .dash.cl {
   --d-bg: #F3F4F6; --d-card: #FFFFFF; --d-line: #E6E8EC; --d-soft: #F3F4F6;

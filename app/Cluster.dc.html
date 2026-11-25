@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Road Sense — cluster</title>
+<title>RoadSense — cluster</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=26c0f9b-1795580197">
-<link rel="stylesheet" href="dash.css?v=26c0f9b-1795580197">
-<link rel="stylesheet" href="cluster.css?v=26c0f9b-1795580197">
+<link rel="stylesheet" href="rs2.css?v=81eb10d-1795590133">
+<link rel="stylesheet" href="dash.css?v=81eb10d-1795590133">
+<link rel="stylesheet" href="cluster.css?v=81eb10d-1795590133">
 </head>
 <body>
 <x-dc>
@@ -162,7 +162,7 @@
     </div>
     <header class="ct-h">
       <img class="ct-app" src="img/roadsense-icon.svg" alt="">
-      <div class="ct-title">Road Sense</div>
+      <div class="ct-title">RoadSense</div>
       <button class="cn-b ct-hb" onClick="{{ toggleVoice }}" aria-label="{{ voiceLabel }}"><sc-if value="{{ voiceOn }}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></sc-if><sc-if value="{{ voiceOff }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9l5 6M21 9l-5 6"/></svg></sc-if></button>
     </header>
     <!-- CarPlay (iOS 27): the list's details header shows the next signal prominently, like the phone's signal card
@@ -226,7 +226,7 @@
         <sc-if value="{{ notVru }}" hint-placeholder-val="{{ true }}"><button class="d-set-row d-set-btn d-set-nav" onClick="{{ goVehicle }}"><div class="d-set-rt"><div class="d-set-l">Vehicle and data</div><div class="d-set-d d-set-sum">{{ sumVeh }}</div></div><svg class="d-set-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></sc-if>
         <button class="d-set-row d-set-btn d-set-nav" onClick="{{ goApp }}"><div class="d-set-rt"><div class="d-set-l">App behaviour</div><div class="d-set-d d-set-sum">{{ sumApp }}</div></div><svg class="d-set-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
       </div>
-      <div class="d-set-foot">Connected Utah · Powered by Road Sense 1.0</div>
+      <div class="d-set-foot">Connected Utah · Powered by RoadSense 1.0</div>
       </div>
       <div class="d-set-pg d-set-pg-alerts" role="region" aria-label="Alerts">
       <div class="d-set-sec" role="heading" aria-level="2">Sounds</div>
@@ -293,7 +293,7 @@
       </div>
       <div class="d-set-pg d-set-pg-app" role="region" aria-label="App behaviour">
       <div class="d-set-grp">
-        <button class="d-set-row d-set-btn" onClick="{{ fAwake }}" role="switch" aria-checked="{{ aAwake }}"><div class="d-set-rt"><div class="d-set-l">Keep screen on</div><div class="d-set-d">While Road Sense is open</div></div><i class="d-set-tg {{ tAwake }}" aria-hidden="true"><i></i></i></button>
+        <button class="d-set-row d-set-btn" onClick="{{ fAwake }}" role="switch" aria-checked="{{ aAwake }}"><div class="d-set-rt"><div class="d-set-l">Keep screen on</div><div class="d-set-d">While RoadSense is open</div></div><i class="d-set-tg {{ tAwake }}" aria-hidden="true"><i></i></i></button>
         <button class="d-set-row d-set-btn" onClick="{{ goBg }}"><div class="d-set-rt"><div class="d-set-l">Background alerts</div><div class="d-set-d">See how alerts arrive while another app is open</div></div><span class="d-set-v d-set-link">Preview</span></button>
         <div class="d-set-row d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">Auto start<span class="d-set-soon">Coming soon</span></div><div class="d-set-d">Open the app when the car starts moving</div></div><i class="d-set-tg" aria-hidden="true"><i></i></i></div>
         <div class="d-set-row d-set-dis" aria-disabled="true"><div class="d-set-rt"><div class="d-set-l">Run in the background<span class="d-set-soon">Coming soon</span></div><div class="d-set-d">Keep alerts coming when the app is closed</div></div><i class="d-set-tg on" aria-hidden="true"><i></i></i></div>
@@ -313,18 +313,18 @@
       <sc-if value="{{ perm.hasNote }}" hint-placeholder-val="{{ false }}"><div class="pm-note">{{ perm.note }}</div></sc-if>
       <div class="pm-dots"><sc-for list="{{ dots }}" as="d" hint-placeholder-count="4"><i class="{{ d.cls }}"></i></sc-for></div>
       <button class="pm-ok" onClick="{{ permAllow }}">{{ perm.ok }}</button>
-      <div class="pm-req">Required to use Road Sense</div>
+      <div class="pm-req">Required to use RoadSense</div>
       <button class="pm-demo" onClick="{{ permSkip }}">Skip setup · demo only</button>
     </div>
   </sc-if>
-  <!-- Background preview: another app in front; Road Sense alerts arrive as a banner (+ voice) -->
+  <!-- Background preview: another app in front; RoadSense alerts arrive as a banner (+ voice) -->
   <sc-if value="{{ bgOn }}" hint-placeholder-val="{{ false }}">
-    <div class="bgv" role="region" aria-label="Road Sense in the background">
-      <div class="bgv-app"><div class="bgv-l">Another app is open</div><div class="bgv-s">Road Sense keeps watching the road and speaks every alert</div></div>
+    <div class="bgv" role="region" aria-label="RoadSense in the background">
+      <div class="bgv-app"><div class="bgv-l">Another app is open</div><div class="bgv-s">RoadSense keeps watching the road and speaks every alert</div></div>
       <sc-if value="{{ bgb.show }}" hint-placeholder-val="{{ false }}">
-        <button class="bgv-ban {{ bgb.cls }}" onClick="{{ openApp }}" aria-label="Open Road Sense"><span class="bgv-logo bgv-aic"><span class="icset ic-{{ bgb.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></span><span class="bgv-tx"><span class="bgv-k">Road Sense · now</span><span class="bgv-t">{{ bgb.title }}</span><span class="bgv-sb">{{ bgb.sub }}</span></span></button>
+        <button class="bgv-ban {{ bgb.cls }}" onClick="{{ openApp }}" aria-label="Open RoadSense"><span class="bgv-logo bgv-aic"><span class="icset ic-{{ bgb.ic }}"><img class="i i-school-w" src="v2/ic/school-w.svg" alt=""><img class="i i-school-k" src="v2/ic/school-k.svg" alt=""><img class="i i-signal-w" src="v2/ic/signal-w.svg" alt=""><img class="i i-signal-k" src="v2/ic/signal-k.svg" alt=""><img class="i i-ped-w" src="v2/ic/ped-w.svg" alt=""><img class="i i-ped-k" src="v2/ic/ped-k.svg" alt=""><img class="i i-bike-w" src="v2/ic/bike-w.svg" alt=""><img class="i i-bike-k" src="v2/ic/bike-k.svg" alt=""><img class="i i-work-w" src="v2/ic/work-w.svg" alt=""><img class="i i-work-k" src="v2/ic/work-k.svg" alt=""><img class="i i-stopped-w" src="v2/ic/stopped-w.svg" alt=""><img class="i i-stopped-k" src="v2/ic/stopped-k.svg" alt=""><img class="i i-bridge-w" src="v2/ic/bridge-w.svg" alt=""><img class="i i-bridge-k" src="v2/ic/bridge-k.svg" alt=""><img class="i i-rlr-w" src="v2/ic/rlr-w.svg" alt=""><img class="i i-rlr-k" src="v2/ic/rlr-k.svg" alt=""><img class="i i-siren-w" src="v2/ic/siren-w.svg" alt=""><img class="i i-siren-k" src="v2/ic/siren-k.svg" alt=""><img class="i i-check-w" src="v2/ic/check-w.svg" alt=""><img class="i i-check-k" src="v2/ic/check-k.svg" alt=""><img class="i i-info-w" src="v2/ic/info-w.svg" alt=""><img class="i i-info-k" src="v2/ic/info-k.svg" alt=""><img class="i i-speed-w" src="v2/ic/speed-w.svg" alt=""><img class="i i-speed-k" src="v2/ic/speed-k.svg" alt=""><img class="i i-tram-w" src="v2/ic/tram-w.svg" alt=""><img class="i i-tram-k" src="v2/ic/tram-k.svg" alt=""><img class="i i-bus-w" src="v2/ic/bus-w.svg" alt=""><img class="i i-bus-k" src="v2/ic/bus-k.svg" alt=""></span></span><span class="bgv-tx"><span class="bgv-k">RoadSense · now</span><span class="bgv-t">{{ bgb.title }}</span><span class="bgv-sb">{{ bgb.sub }}</span></span></button>
       </sc-if>
-      <button class="bgv-open" onClick="{{ openApp }}">Open Road Sense</button>
+      <button class="bgv-open" onClick="{{ openApp }}">Open RoadSense</button>
     </div>
   </sc-if>
 
@@ -343,7 +343,7 @@
         <div class="spb-h">Connected to Utah's roads.</div>
         <div class="spb-p">Signals, work zones and emergency vehicles, before you see them.</div>
         <button class="spb-btn" onClick="{{ start }}">Start driving</button>
-        <div class="spb-pow">Powered by <img src="img/roadsense.svg" alt="Road Sense"></div>
+        <div class="spb-pow">Powered by <img src="img/roadsense.svg" alt="RoadSense"></div>
       </div>
     </div>
   </sc-if>
@@ -601,8 +601,8 @@ class Component extends DCLogic {
   limitAt(s) { return s >= 1050 && s < 1550 ? 20 : s >= 3250 && s < 3900 ? 25 : s >= 7440 && s < 8000 ? null : 35; } // no limit data: the quiet block between 200 S and 100 S (was over the camera / cyclist events)
   // pedestrian: waits on the east curb at the crosswalk (the road is x -58..58), steps off after 7 s,
   // walks across at ~1.6 m/s (7 map px/s) and stops on the far curb
-  pedWaiting() { const S = this.sim; return S.tPed != null && S.t - S.tPed < 7; }
-  pedX() { const S = this.sim, t = S.tPed == null ? 0 : Math.max(0, S.t - S.tPed - 7); return Math.max(-64, 64 - 7 * t); }
+  pedWaiting() { const S = this.sim; return S.tPed != null && S.t - S.tPed < 2; }
+  pedX() { const S = this.sim, t = S.tPed == null ? 0 : Math.max(0, S.t - S.tPed - 2); return Math.max(-64, 64 - 7 * t); }
   rlrX() { const S = this.sim; return S.tRlr == null ? -420 : Math.min(720, -420 + 100 * (S.t - S.tRlr)); }
   evS() { const S = this.sim; return S.tEv == null ? 6400 : Math.max(-2000, 6400 - 95 * (S.t - S.tEv)); }
   evActive() { const S = this.sim; return S.tEv != null && (S.tEvPass == null || S.t < S.tEvPass + 1.4); }
@@ -899,7 +899,7 @@ class Component extends DCLogic {
     }
     // 2 pedestrian in the mid-block crosswalk
     const px = this.pedX();
-    if (S.tPed != null && px > -58 && s < 2497) A({ i: 2, lv: 'warn', ic: 'ped-k', title: this.pedWaiting() ? 'Pedestrian ahead' : 'Pedestrian crossing', sub: this.pedWaiting() ? 'At the curb · from their phone' : S.v < 0.5 ? 'Wait for them to cross' : 'In the crosswalk · from their phone', dv: this.dist(2487 - s), dl: 'ahead', d: 2487 - s, key: 'ped' });
+    if (S.tPed != null && px > -58 && s < 2497) A({ i: 2, lv: 'warn', ic: 'ped-k', title: this.pedWaiting() ? 'Pedestrian ahead' : 'Pedestrian in crosswalk', sub: this.pedWaiting() ? 'At the curb' : S.v < 0.5 ? 'Wait for them to cross' : 'Slow down · State St', dv: this.dist(2487 - s), dl: 'ahead', d: 2487 - s, key: 'ped' });
     else if (S.tPed != null && s < 2497) A({ i: 2, lv: 'ok', ic: 'check-w', title: 'Crosswalk clear', sub: 'Go ahead', dv: this.dist(Math.max(0, 2487 - s)), dl: 'to crosswalk', d: 2487 - s, key: 'ped' });
     // 3 work zone
     if (s >= 2750 && s < 3250) A({ i: 3, lv: 'warn', ic: 'work-k', title: 'Work zone ahead', sub: 'Right lane closed', dv: this.dist(3250 - s), dl: 'ahead', d: 3250 - s, key: 'work-a' });
@@ -947,7 +947,7 @@ class Component extends DCLogic {
     if (this.on('trax') && !this.onDetour() && s >= 4260 && s < 4790) A({ i: 11, lv: 'adv', ic: 'tram-w', title: 'Light rail crossing', sub: 'TRAX · keep the tracks clear', dv: this.dist(5100 - s), dl: 'ahead', d: 5100 - s, key: 'trax' });
     // driver: a pedestrian crossing on red (intersection camera) and a cyclist on your right (their phone)
     if (S.tPr != null && this.prX() < 62 && s < 6160) A({ i: 9, lv: 'crit', ic: 'ped-k', title: 'Pedestrian crossing on red', sub: 'Camera · 300 S', fsSub: 'Intersection camera · 300 S', dv: s < 6100 ? this.dist(6137 - s) : 'Stop', dl: s < 6100 ? 'to stop line' : 'wait', d: 0, key: 'pred' });
-    { const b = this.bkS(); if (b != null && b - s > -40 && s < 7150) A({ i: 5, lv: 'warn', ic: 'bike-k', title: 'Cyclist on your right', sub: 'From their phone · give 3 ft', dv: b - s < 50 ? 'Passing' : this.dist(b - s), dl: b - s < 50 ? '' : 'ahead', d: b - s, key: 'bkr' }); }
+    { const b = this.bkS(); if (b != null && b - s > -40 && s < 7150) A({ i: 5, lv: 'warn', ic: 'bike-k', title: 'Cyclist on your right', sub: 'Give 3 ft', dv: b - s < 50 ? 'Passing' : this.dist(b - s), dl: b - s < 50 ? '' : 'ahead', d: b - s, key: 'bkr' }); }
     // EV: vehicles ahead pulling over (they broadcast BSM; their apps told them you're coming)
     if (this.mode() === 'ev' && s >= 2700 && s < 3150) A({ i: 3, lv: 'ok', ic: 'siren-w', title: 'Vehicles ahead yielding', sub: '3 vehicles pulling over right', dv: '', dl: '', d: 0, key: 'ev-yield' });
     // cyclist (VRU): your phone broadcasts PSM; vehicles' BSM warn you
@@ -1045,9 +1045,9 @@ class Component extends DCLogic {
     this.claim(); this.reset(0); this.setState({ screen: 'drive', playing: true, done: false });
   };
   get PERMS() { return [
-    { ic: 'loc', t: 'Use your location', s: 'Road Sense needs your precise location, also while it runs in the background, for the signals and alerts on your way.', ok: 'Allow', note: 'Choose “Precise” and “Always”' },
+    { ic: 'loc', t: 'Use your location', s: 'RoadSense needs your precise location, also while it runs in the background, for the signals and alerts on your way.', ok: 'Allow', note: 'Choose “Precise” and “Always”' },
     { ic: 'bell', t: 'Allow notifications', s: 'So alerts reach you when the screen is off or another app is open.', ok: 'Allow', note: '' },
-    { ic: 'bg', t: 'Keep running in the background', s: 'Voice alerts keep working while you use navigation or music.', ok: 'Allow', note: 'Turn off battery optimization for Road Sense' },
+    { ic: 'bg', t: 'Keep running in the background', s: 'Voice alerts keep working while you use navigation or music.', ok: 'Allow', note: 'Turn off battery optimization for RoadSense' },
     { ic: 'over', t: 'Show over other apps', s: 'Critical alerts appear on top of the app you are using (Android).', ok: 'Allow', note: '' },
   ]; }
   permNext() {
