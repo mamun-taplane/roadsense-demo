@@ -232,9 +232,9 @@
 .dock.walk .dk-vis, .dock.walk .dk-near { display: flex; } .dock.walk .dk-vis-sep { display: block; }
 .dock.bike .dk-lim { display: none; } .dock.bike .dk-vis { display: flex; }
 .dock.bike .dk-spd { order: 1; } .dock.bike .dk-lim-sep { order: 2; } .dock.bike .dk-vis { order: 3; } .dock.bike > .dk-sep:not(.dk-lim-sep):not(.dk-vis-sep) { order: 4; } .dock.bike > .dk:last-child { order: 5; } /* speed | visible to nearby drivers | heading */
-.dk-vis-t { display: flex; align-items: center; gap: 7px; font-size: 19px; font-weight: 700; letter-spacing: -.3px; color: var(--ink); white-space: nowrap; }
+.dk-vis-t { display: flex; align-items: center; gap: 7px; font-size: 22px; font-weight: 700; letter-spacing: -.3px; color: var(--ink); white-space: nowrap; }
 .dk-vis-t .bc-dot { flex: none; }
-.dk-word { font-size: 26px; letter-spacing: -.6px; white-space: nowrap; }
+.dk-word { font-size: 22px; letter-spacing: -.4px; white-space: nowrap; }
 .dk-near.warn .dk-word { color: var(--warn-ink, #B26B00); }
 .ph-n { font-size: 24px !important; letter-spacing: -.5px !important; white-space: nowrap; }
 .ph-l { text-transform: none !important; letter-spacing: 0 !important; font-size: 12px !important; font-weight: 600 !important; }

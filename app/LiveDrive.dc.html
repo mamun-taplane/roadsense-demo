@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>RoadSense — live drive</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=962a4dd-1795590375">
+<link rel="stylesheet" href="rs2.css?v=35e0da1-1795590727">
 </head>
 <body>
 <x-dc>
@@ -822,9 +822,9 @@ class Component extends DCLogic {
   // coming. Rider: the same "Visible to nearby drivers" (the phone broadcasts PSM; user, 2026-11-25: no car-behind radar).
   vruVals() {
     const S = this.sim, m = this.mode();
-    let near = { t: 'None', l: 'cars approaching', cls: '' };
-    if (m === 'walk') { const c = this.carSW(); if (c != null && c < this.WK.xw + 20) { const ft = Math.max(0, (this.WK.xw - c) * this.FT); near = { t: ft > 30 ? Math.round(ft / 10) * 10 + ' ft' : 'Here', l: 'car approaching', cls: 'warn' }; } }
-    return { near, vis: { t: 'Visible', l: 'to nearby drivers' } };
+    let near = { t: 'No cars', l: 'nearby', cls: '' };
+    if (m === 'walk') { const c = this.carSW(); if (c != null && c < this.WK.xw + 20) { const ft = Math.max(0, (this.WK.xw - c) * this.FT); near = { t: ft > 30 ? Math.round(ft / 10) * 10 + ' ft' : 'Here', l: 'car coming', cls: 'warn' }; } }
+    return { near, vis: { t: 'Visible', l: 'to drivers' } };
   }
   nextView() {
     const S = this.sim, D = S.det, c = Math.ceil;

@@ -276,8 +276,8 @@
 .cl-spd.walk { justify-content: space-around; }
 .cl-spd.walk .cl-vis, .cl-spd.walk .cl-near, .cl-spd.bike .cl-rear { display: flex; }
 .cl-spd.walk .cl-spd-r { flex: none; }
-.cl-vru-t { display: flex; align-items: center; gap: 9px; font-size: 26px; font-weight: 800; letter-spacing: -.6px; color: var(--d-ink); }
-.cl-vru-n { font-size: 34px; font-weight: 800; letter-spacing: -1px; line-height: 1; color: var(--d-ink); white-space: nowrap; }
+.cl-vru-t { display: flex; align-items: center; gap: 7px; font-size: 22px; line-height: 1.2; font-weight: 800; letter-spacing: -.6px; color: var(--d-ink); }
+.cl-vru-n { font-size: 22px; font-weight: 800; letter-spacing: -.6px; line-height: 1.2; color: var(--d-ink); white-space: nowrap; }
 .cl-vru.warn .cl-vru-n { color: #B26B00; }
 .cl-vru-l { margin-top: 6px; font-size: 13px; font-weight: 600; color: var(--d-ink3); }
 .cl-wk-n { font-size: 48px !important; letter-spacing: -1.5px !important; white-space: nowrap; }
