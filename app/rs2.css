@@ -169,7 +169,7 @@
 .icset { display: grid; place-items: center; }
 .icset .i { display: none; }
 /* every icon in both colors; icOn() picks white or dark by alert level */
-.ic-school-w .i-school-w, .ic-school-k .i-school-k, .ic-signal-w .i-signal-w, .ic-signal-k .i-signal-k, .ic-ped-w .i-ped-w, .ic-ped-k .i-ped-k, .ic-bike-w .i-bike-w, .ic-bike-k .i-bike-k, .ic-work-w .i-work-w, .ic-work-k .i-work-k, .ic-stopped-w .i-stopped-w, .ic-stopped-k .i-stopped-k, .ic-bridge-w .i-bridge-w, .ic-bridge-k .i-bridge-k, .ic-rlr-w .i-rlr-w, .ic-rlr-k .i-rlr-k, .ic-siren-w .i-siren-w, .ic-siren-k .i-siren-k, .ic-check-w .i-check-w, .ic-check-k .i-check-k, .ic-info-w .i-info-w, .ic-info-k .i-info-k, .ic-speed-w .i-speed-w, .ic-speed-k .i-speed-k, .ic-tram-w .i-tram-w, .ic-tram-k .i-tram-k, .ic-bus-w .i-bus-w, .ic-bus-k .i-bus-k { display: block; }
+.ic-school-w .i-school-w, .ic-school-k .i-school-k, .ic-signal-w .i-signal-w, .ic-signal-k .i-signal-k, .ic-ped-w .i-ped-w, .ic-ped-k .i-ped-k, .ic-bike-w .i-bike-w, .ic-bike-k .i-bike-k, .ic-work-w .i-work-w, .ic-work-k .i-work-k, .ic-snow-w .i-snow-w, .ic-snow-k .i-snow-k, .ic-stopped-w .i-stopped-w, .ic-stopped-k .i-stopped-k, .ic-bridge-w .i-bridge-w, .ic-bridge-k .i-bridge-k, .ic-rlr-w .i-rlr-w, .ic-rlr-k .i-rlr-k, .ic-siren-w .i-siren-w, .ic-siren-k .i-siren-k, .ic-check-w .i-check-w, .ic-check-k .i-check-k, .ic-info-w .i-info-w, .ic-info-k .i-info-k, .ic-speed-w .i-speed-w, .ic-speed-k .i-speed-k, .ic-tram-w .i-tram-w, .ic-tram-k .i-tram-k, .ic-bus-w .i-bus-w, .ic-bus-k .i-bus-k { display: block; }
 
 /* ---------- Full-screen alert ---------- */
 .tk { position: absolute; inset: 0; z-index: 31; background: #fff; display: flex; align-items: center; justify-content: center; padding-bottom: 120px; opacity: 0; pointer-events: none; transition: opacity .35s ease, padding .5s cubic-bezier(.2, .8, .2, 1); }
@@ -411,14 +411,14 @@
 .ph.tab-l .spm-vis { left: auto; right: 64px; top: 36px; transform-origin: top right; }
 .ph.tab-l .spm-vis .spm-tf, .ph.tab-p .spm-vis .spm-tf { translate: none; height: 90px; background: linear-gradient(#F3F4F6, rgba(243, 244, 246, 0)); }
 .ph.tab .spm-sheet { display: none; }
-.ph.tab-l .spm-cu { left: 96px; top: 250px; bottom: auto; height: 28px; }
-.ph.tab-l .spm-h { left: 96px; right: auto; width: 520px; top: 300px; bottom: auto; font-size: 60px; letter-spacing: -2.4px; line-height: 1.02; }
-.ph.tab-l .spm-btn { left: 96px; right: auto; width: 400px; bottom: 250px; }
-.ph.tab-l .spm-pow { left: 96px; right: auto; bottom: 205px; justify-content: flex-start; }
+.ph.tab-l .spm-cu { left: 96px; top: 270px; bottom: auto; height: 72px; transform: none; }
+.ph.tab-l .spm-h { left: 96px; right: auto; width: 520px; top: 362px; bottom: auto; font-size: 22px; text-align: left; }
+.ph.tab-l .spm-btn { left: 96px; right: auto; width: 400px; bottom: 330px; }
+.ph.tab-l .spm-pow { left: 96px; right: auto; bottom: 285px; justify-content: flex-start; }
 .ph.tab-p .spm { left: 0; right: 0; width: auto; margin: 0; top: 0; bottom: 0; height: auto; box-shadow: none; overflow: hidden; }
 .ph.tab-p .spm-vis { left: 50%; top: 60px; margin-left: -244px; transform-origin: top left; height: 400px; }
-.ph.tab-p .spm-cu { left: 76px; top: 610px; bottom: auto; height: 24px; }
-.ph.tab-p .spm-h { left: 76px; right: 76px; top: 650px; bottom: auto; font-size: 44px; letter-spacing: -1.6px; }
+.ph.tab-p .spm-cu { top: 592px; bottom: auto; height: 64px; }
+.ph.tab-p .spm-h { left: 76px; right: 76px; top: 672px; bottom: auto; font-size: 22px; }
 .ph.tab-p .spm-btn { left: 76px; right: 76px; bottom: 96px; }
 .ph.tab-p .spm-pow { bottom: 54px; }
 .ph.tab .pm-t, .ph.tab .pm-s { max-width: 460px; }
@@ -732,6 +732,7 @@
 .ph.th-dark .sp3-pow, .ph.th-dark .spb-pow, .ph.th-dark .spm-pow { color: var(--ink-3); }
 .ph.th-dark .sp3-btn, .ph.th-dark .spb-btn, .ph.th-dark .spm-btn { background: var(--ink); color: var(--bg); }
 .ph.th-dark .sp3-cu, .ph.th-dark .spb-cu, .ph.th-dark .spm-cu { content: url(img/connected-utah-dark.svg); }
+.ph.th-dark .spm-h { color: var(--ink-2); }
 .ph.th-dark .sp3-pow img, .ph.th-dark .spb-pow img, .ph.th-dark .spm-pow img, .ph.th-dark .sp-pow img { content: url(img/roadsense-dark.svg); }
 .ph.th-dark .spb-sig { background: var(--head); box-shadow: inset 0 0 0 1px #262C35; }
 .ph.th-dark .spb-al { background: #18223A; }
@@ -954,8 +955,8 @@
 .spm-tf { height: 150px; background: linear-gradient(#F3F4F6 0, rgba(243, 244, 246, .85) 96px, rgba(243, 244, 246, 0) 150px); }
 .spm-bf { display: none; }
 .spm-sheet { position: absolute; left: 0; right: 0; bottom: 0; height: 300px; z-index: 4; background: #fff; border-radius: 28px 28px 0 0; box-shadow: 0 -10px 30px -16px rgba(16, 24, 40, .25); }
-.spm-cu { top: auto; bottom: 246px; height: 20px; }
-.spm-h { top: auto; bottom: 166px; font-size: 30px; letter-spacing: -1.1px; }
+.spm-cu { top: auto; bottom: 214px; left: 50%; transform: translateX(-50%); height: 50px; } /* stacked Connected Utah logo, centered */
+.spm-h { top: auto; bottom: 166px; font-size: 16px; font-weight: 500; letter-spacing: 0; line-height: 1.3; color: #5B636E; text-align: center; }
 .spm-btn { bottom: 76px; }
 .spm-pow { bottom: 34px; }
 

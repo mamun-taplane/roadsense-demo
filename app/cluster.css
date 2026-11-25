@@ -180,7 +180,7 @@
 .cl-fs-lim .d-lim-n { font-size: 27px; margin-top: 2px; }
 /* every icon in both colors (icOn() picks one by alert level). !important: dash.css (frozen v3) hides any
    icon it doesn't list, which left the cyclist icon empty */
-.ic-school-w .i-school-w, .ic-school-k .i-school-k, .ic-signal-w .i-signal-w, .ic-signal-k .i-signal-k, .ic-ped-w .i-ped-w, .ic-ped-k .i-ped-k, .ic-bike-w .i-bike-w, .ic-bike-k .i-bike-k, .ic-work-w .i-work-w, .ic-work-k .i-work-k, .ic-stopped-w .i-stopped-w, .ic-stopped-k .i-stopped-k, .ic-bridge-w .i-bridge-w, .ic-bridge-k .i-bridge-k, .ic-rlr-w .i-rlr-w, .ic-rlr-k .i-rlr-k, .ic-siren-w .i-siren-w, .ic-siren-k .i-siren-k, .ic-check-w .i-check-w, .ic-check-k .i-check-k, .ic-info-w .i-info-w, .ic-info-k .i-info-k, .ic-speed-w .i-speed-w, .ic-speed-k .i-speed-k, .ic-tram-w .i-tram-w, .ic-tram-k .i-tram-k, .ic-bus-w .i-bus-w, .ic-bus-k .i-bus-k { display: block !important; }
+.ic-school-w .i-school-w, .ic-school-k .i-school-k, .ic-signal-w .i-signal-w, .ic-signal-k .i-signal-k, .ic-ped-w .i-ped-w, .ic-ped-k .i-ped-k, .ic-bike-w .i-bike-w, .ic-bike-k .i-bike-k, .ic-work-w .i-work-w, .ic-work-k .i-work-k, .ic-snow-w .i-snow-w, .ic-snow-k .i-snow-k, .ic-stopped-w .i-stopped-w, .ic-stopped-k .i-stopped-k, .ic-bridge-w .i-bridge-w, .ic-bridge-k .i-bridge-k, .ic-rlr-w .i-rlr-w, .ic-rlr-k .i-rlr-k, .ic-siren-w .i-siren-w, .ic-siren-k .i-siren-k, .ic-check-w .i-check-w, .ic-check-k .i-check-k, .ic-info-w .i-info-w, .ic-info-k .i-info-k, .ic-speed-w .i-speed-w, .ic-speed-k .i-speed-k, .ic-tram-w .i-tram-w, .ic-tram-k .i-tram-k, .ic-bus-w .i-bus-w, .ic-bus-k .i-bus-k { display: block !important; }
 
 /* ---------- Tablet (v37 redesign) ----------
    Landscape (tab-l, 1194×834): a three-column dashboard, like a car cluster: signal head | your speed |
@@ -327,14 +327,15 @@
 .spd-o.o1 { background: #22C55E; transform: translate(-90px, -80px); } .spd-o.o2 { background: #2563EB; transform: translate(105px, -60px); }
 .spd-o.o3 { background: #E5383B; transform: translate(-115px, 100px); } .spd-o.o4 { background: #F5A524; transform: translate(95px, 90px); }
 .spd-body { top: auto; height: 330px; }
-.spd-cu { height: 20px; width: auto; display: block; align-self: flex-start; margin-bottom: 16px; }
+.spd-cu { height: 46px; width: auto; display: block; align-self: flex-start; margin-bottom: 18px; } /* stacked Connected Utah logo */
+.d-cu { height: 32px; } /* header: the stacked logo needs the height to stay readable */
 .spd .spb-h { font-size: 34px; letter-spacing: -1.3px; line-height: 1.06; }
 @media (prefers-reduced-motion: no-preference) { .spd-r { animation: spd-ring 3.2s ease-out infinite; } .spd-r.r2 { animation-delay: .5s; } .spd-r.r3 { animation-delay: 1s; } }
 @keyframes spd-ring { 0%, 100% { border-color: rgba(37, 99, 235, .1); } 30% { border-color: rgba(37, 99, 235, .32); } }
 .cl-ph.tab-l .spd-art { left: auto; right: 0; width: 56%; top: 0; bottom: 0; height: auto; }
 .cl-ph.tab-l .spd-r.r1 { width: 220px; height: 220px; } .cl-ph.tab-l .spd-r.r2 { width: 380px; height: 380px; } .cl-ph.tab-l .spd-r.r3 { width: 560px; height: 560px; }
 .cl-ph.tab-l .spd-body { left: 96px; width: 480px; top: 50%; bottom: auto; height: 420px; transform: translateY(-50%); }
-.cl-ph.tab-l .spd-cu { height: 28px; margin-bottom: 24px; }
+.cl-ph.tab-l .spd-cu { height: 64px; margin-bottom: 24px; }
 .cl-ph.tab-l .spd .spb-h, .cl-ph.tab-l .spd-body .spb-h { font-size: 52px; letter-spacing: -2px; }
 .cl-ph.tab-p .spd-art { top: 64px; height: 440px; }
 .cl-ph.tab-p .spd-r.r3 { width: 440px; height: 440px; }
