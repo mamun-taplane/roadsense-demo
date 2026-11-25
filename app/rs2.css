@@ -453,9 +453,7 @@
 .bgv-ban.lv-crit .bgv-aic { background: var(--crit); } .bgv-ban.lv-adv .bgv-aic { background: var(--adv); } .bgv-ban.lv-ok .bgv-aic { background: var(--ok); }
 .bgv-aic .icset img { width: 24px; height: 24px; }
 .bgv-tx { display: flex; flex-direction: column; min-width: 0; }
-.bgv-k { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; color: #98A0AA; }
-.bgv-k-i { width: 14px; height: 14px; flex: none; } /* the app's notification icon next to its name (user, 2026-11-25) */
-.ph.th-dark .bgv-k-i { filter: invert(1) hue-rotate(180deg); }
+.bgv-k { font-size: 12px; font-weight: 600; color: #98A0AA; }
 .bgv-t { margin-top: 1px; font-size: 16px; font-weight: 700; color: #15181D; }
 .bgv-ban.lv-crit .bgv-t { color: #E5383B; }
 .bgv-sb { font-size: 14px; color: #5B636E; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
