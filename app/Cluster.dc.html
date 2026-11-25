@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <title>RoadSense — cluster</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="rs2.css?v=e35da9a-1795593425">
-<link rel="stylesheet" href="dash.css?v=e35da9a-1795593425">
-<link rel="stylesheet" href="cluster.css?v=e35da9a-1795593425">
+<link rel="stylesheet" href="rs2.css?v=a793ebf-1795593769">
+<link rel="stylesheet" href="dash.css?v=a793ebf-1795593769">
+<link rel="stylesheet" href="cluster.css?v=a793ebf-1795593769">
 </head>
 <body>
 <x-dc>
@@ -409,7 +409,7 @@ class Component extends DCLogic {
     const DR = ['drive'], EV = ['ev'], BK = ['bike'], WK = ['walk'];
     this.SCENES = [
       { id: 'start', name: 'Start driving', tag: 'base', tagText: 'Normal', s: 0, modes: ['drive', 'ev'] },
-      { id: 'school', name: 'School zone', tag: 'adv', tagText: 'Advisory', s: 300, modes: DR },
+      { id: 'school', name: 'School zone + over the speed limit', tag: 'adv', tagText: 'Two at once', s: 250, modes: DR },
       { id: 'red', name: 'Signal turning red', tag: 'warn', tagText: 'Warning', s: 1560, modes: DR },
       { id: 'ped', name: 'Pedestrian in crosswalk', tag: 'warn', tagText: 'Warning', s: 1960, modes: DR },
       // HiDOT proposal (Derq, Nov 20 2026; docs/features/HIDOT-PROPOSAL-NOTES.md): isNew = "New" badge in Jump to.
@@ -501,6 +501,8 @@ class Component extends DCLogic {
     this.GROUP = { 'w-wait': 'wx', 'w-car': 'wx', 'w-walk': 'wx', 'school-a': 'school', 'school-i': 'school', 'school-e': 'school', 'work-a': 'work', 'work-i': 'work', 'work-e': 'work', 'icy-a': 'icy', 'icy-i': 'icy', 'icy-e': 'icy', 'crash-a': 'crash', 'crash-i': 'crash', 'crash-e': 'crash' };
     // after the area is left, a short "clear" screen before the map or dashboard comes back (seconds)
     this.HOLD = 2;
+    this.CARD = 2;  // s a new (not critical) alert shows as a card before it goes full screen
+    this.BREAK = 3; // s of map / dashboard between two full-screen episodes (critical alerts don't wait)
     this.DONE = {
       'w-walk': ['You crossed State Street', 'West side · facing north'], 'bk-hook': ['All clear', 'The car has turned'], 'pred': ['All clear', 'The pedestrian has crossed'], 'w-ev': ['Emergency vehicle passed', 'Walk on'],
       'speed': ['Back under the limit', 'Speed OK'],
@@ -618,7 +620,7 @@ class Component extends DCLogic {
     this.tkCache = null; this.tk2Cache = null;
   }
   // null = no speed limit data for this stretch
-  limitAt(s) { return s >= 1050 && s < 1550 ? 20 : s >= 3250 && s < 3900 ? 25 : s >= 7440 && s < 8000 ? null : 35; } // no limit data: the quiet block between 200 S and 100 S (was over the camera / cyclist events)
+  limitAt(s) { return s >= 950 && s < 1400 ? 20 : s >= 3250 && s < 3900 ? 25 : s >= 7440 && s < 8000 ? null : 35; } // no limit data: the quiet block between 200 S and 100 S (was over the camera / cyclist events)
   // pedestrian: waits on the east curb at the crosswalk (the road is x -58..58), steps off after 7 s,
   // walks across at ~1.6 m/s (7 map px/s) and stops on the far curb
   pedWaiting() { const S = this.sim; return S.tPed != null && S.t - S.tPed < 2; }
@@ -706,7 +708,7 @@ class Component extends DCLogic {
     const dx = Math.max(-14 * dt, Math.min(14 * dt, tx - S.x));
     S.vx = S.v > 1 ? dx / dt : 0; S.x += S.v > 1 || Math.abs(dx) > 0 ? dx : 0;
     // zone exits (for the short "ended" message)
-    if (S.s >= 1550 && S.s - S.v * dt < 1550) S.exitSchool = S.t;
+    if (S.s >= 1400 && S.s - S.v * dt < 1400) S.exitSchool = S.t;
     if (S.s >= 3900 && S.s - S.v * dt < 3900) S.exitWork = S.t;
     // heading as a phone reports it: follows lane changes, drifts a degree or two, holds when stopped
     if (S.v > 2) S.hdg = Math.max(-12, Math.min(12, Math.atan2(S.vx * 0.25, S.v) * 180 / Math.PI)) + 1.4 * Math.sin(S.t * 0.31) + 0.7 * Math.sin(S.t * 1.07 + 1);
@@ -826,6 +828,9 @@ class Component extends DCLogic {
     const here = {};
     for (const a of list) here[grp(a.key)] = 1;
     for (const g in S.ep) if (!here[g]) delete S.ep[g]; // area left
+    const seen = S.seen || (S.seen = {});               // when each alert first showed (as a card)
+    for (const g in seen) if (!here[g]) delete seen[g];
+    for (const g in here) if (seen[g] == null) seen[g] = S.t;
     for (const a of list) { const lim = this.FS[a.key]; if (lim != null && a.fd <= lim) S.ep[grp(a.key)] = 1; }
     // "on another route" is only a moment; it does not hold the screen for the whole detour
     const want = list.filter(a => a.key === 'hold' || (a.key === 'bridge-ok' ? a.fd <= 0 : S.ep[grp(a.key)]));
@@ -833,6 +838,15 @@ class Component extends DCLogic {
     const cur = S.fs ? real.find(a => a.key === S.fs.key) : null;
     let best = cur || null;
     for (const a of real) if (!best || rank[a.lv] > rank[best.lv]) best = a;
+    // pacing (v50t): after a full-screen episode ends, the map / dashboard shows for BREAK s before the next full
+    // screen, and a new alert shows as a card for at least CARD s first. Critical alerts never wait.
+    if (best && best.lv !== 'crit' && this.mode() !== 'walk' && grp(best.key) !== (S.fs && S.fs.key !== 'hold' ? grp(S.fs.key) : null)) { // walking: no pacing (you stand at the curb)
+      const ending = S.fs && (S.fs.key === 'hold' || S.fs.lv === 'ok');
+      if (ending && cur) { S.fs.lv = cur.lv; return; }                                   // let "… ended" finish
+      if (ending && S.fs.key === 'hold' && S.hold && S.t < S.hold.until) return;           // clear screen first
+      if (ending && !cur) { S.fs = null; S.hold = null; S.mapAt = S.t; return; }
+      if (!S.fs && ((S.mapAt != null && S.t < S.mapAt + this.BREAK) || S.t < seen[grp(best.key)] + this.CARD)) return; // map, then the card
+    }
     if (best) { S.hold = null; if (!cur || best.key !== cur.key) S.fs = { key: best.key, t0: S.t, lv: best.lv }; else S.fs.lv = best.lv; return; }
     // nothing in its area any more: a short clear screen, unless the last one already said it ended
     if (S.fs && S.fs.key !== 'hold' && S.fs.lv !== 'ok' && this.DONE[S.fs.key]) {
@@ -842,6 +856,7 @@ class Component extends DCLogic {
       return;
     }
     if (S.fs && S.fs.key === 'hold' && S.hold && S.t < S.hold.until) return;
+    if (S.fs) S.mapAt = S.t;
     S.fs = null; S.hold = null;
   }
 
@@ -921,9 +936,9 @@ class Component extends DCLogic {
     const S = this.sim, s = S.s, t = S.t, out = [];
     const A = (o) => out.push(o);
     // 0 school zone
-    if (s >= 450 && s < 1050) A({ i: 0, lv: 'adv', ic: 'school-w', title: 'School zone ahead', sub: 'Limit drops to 20 mph', dv: this.dist(1050 - s), dl: 'ahead', d: 1050 - s, key: 'school-a' });
-    else if (s >= 1050 && s < 1550) A({ i: 0, lv: 'adv', ic: 'school-w', title: 'School zone', sub: 'Slow to 20 mph', dv: this.dist(1550 - s), dl: 'to end', d: 0, key: 'school-i' });
-    else if (s >= 1550 && t - S.exitSchool < this.HOLD) A({ i: 0, lv: 'ok', ic: 'check-w', title: 'School zone ended', sub: 'Limit back to 35 mph', dv: '', dl: '', d: 0, key: 'school-e' });
+    if (s >= 400 && s < 950) A({ i: 0, lv: 'adv', ic: 'school-w', title: 'School zone ahead', sub: 'Limit drops to 20 mph', dv: this.dist(950 - s), dl: 'ahead', d: 950 - s, key: 'school-a' });
+    else if (s >= 950 && s < 1400) A({ i: 0, lv: 'adv', ic: 'school-w', title: 'School zone', sub: 'Slow to 20 mph', dv: this.dist(1400 - s), dl: 'to end', d: 0, key: 'school-i' });
+    else if (s >= 1400 && t - S.exitSchool < this.HOLD) A({ i: 0, lv: 'ok', ic: 'check-w', title: 'School zone ended', sub: 'Limit back to 35 mph', dv: '', dl: '', d: 0, key: 'school-e' });
     // 1 signal turning red at 700 S (until the car has stopped)
     const p7 = this.sig700();
     if (p7 && s < 1934) {
@@ -975,7 +990,7 @@ class Component extends DCLogic {
     // 8 over the speed limit (anywhere a limit is known; named when inside a zone)
     const lim = this.limHere(), mph = Math.round(S.v / this.MPH);
     if (lim != null && this.mode() !== 'bike' && mph > lim + ((this.state && this.state.sOver) || 0)) { // tolerance from Settings; not for cyclists
-      const zone = this.onDetour() ? '' : s >= 1050 && s < 1550 ? 'School zone · ' : s >= 3250 && s < 3900 ? 'Work zone · ' : '';
+      const zone = this.onDetour() ? '' : s >= 950 && s < 1400 ? 'School zone · ' : s >= 3250 && s < 3900 ? 'Work zone · ' : '';
       A({ i: 8, lv: 'warn', ic: 'speed-k', title: 'Slow down', sub: zone + 'Limit ' + lim + ' mph', dv: mph + ' mph', dl: 'your speed', d: -1, key: 'speed', vk: 'speed-' + lim });
     }
     // driver: the TRAX light-rail level crossing at 400 S (real: Mapbox Streets shows the rail crossing State St
